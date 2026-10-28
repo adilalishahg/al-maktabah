@@ -1,0 +1,6 @@
+{
+  "name": "Al-Maktabah | Digital Library & Archives",
+  "description": "Authentic Islamic Books & Scholarly Knowledge. Preserving and digitizing timeless classical treatises, contemporary research, Qur’anic exegesis, and authenticated hadith collections in pristine typography.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing & Coverage
+coverage/
+
+# Next.js build output & cache
+.next/
+out/
+build/
+dist/
+
+# Production & temporary files
+*.log
+*.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment files
+.env*.local
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+
+# Vercel & Turbopack
+.vercel
+.turbo
+
+# TypeScript cache
+*.tsbuildinfo
+
+# OS & Editor files
+.DS_Store
+*.pem
+Thumbs.db
+ehthumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Graft local AST cache (regenerated with `graft build`)
+/graft/

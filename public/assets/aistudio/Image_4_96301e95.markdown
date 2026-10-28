@@ -1,0 +1,245 @@
+---
+name: Sacred Manuscript
+colors:
+  surface: '#fbf9f5'
+  surface-dim: '#dbdad6'
+  surface-bright: '#fbf9f5'
+  surface-container-lowest: '#ffffff'
+  surface-container-low: '#f5f3ef'
+  surface-container: '#efeeea'
+  surface-container-high: '#eae8e4'
+  surface-container-highest: '#e4e2de'
+  on-surface: '#1b1c1a'
+  on-surface-variant: '#414845'
+  inverse-surface: '#30312e'
+  inverse-on-surface: '#f2f0ed'
+  outline: '#717975'
+  outline-variant: '#c1c8c3'
+  surface-tint: '#3f6658'
+  primary: '#002218'
+  on-primary: '#ffffff'
+  primary-container: '#0f382c'
+  on-primary-container: '#79a292'
+  inverse-primary: '#a6d0be'
+  secondary: '#515f78'
+  on-secondary: '#ffffff'
+  secondary-container: '#d2e0fe'
+  on-secondary-container: '#55637d'
+  tertiary: '#735c00'
+  on-tertiary: '#ffffff'
+  tertiary-container: '#cba72f'
+  on-tertiary-container: '#4e3d00'
+  error: '#ba1a1a'
+  on-error: '#ffffff'
+  error-container: '#ffdad6'
+  on-error-container: '#93000a'
+  primary-fixed: '#c1ecda'
+  primary-fixed-dim: '#a6d0be'
+  on-primary-fixed: '#002117'
+  on-primary-fixed-variant: '#274e41'
+  secondary-fixed: '#d6e3ff'
+  secondary-fixed-dim: '#b9c7e4'
+  on-secondary-fixed: '#0d1c32'
+  on-secondary-fixed-variant: '#39475f'
+  tertiary-fixed: '#ffe088'
+  tertiary-fixed-dim: '#e9c349'
+  on-tertiary-fixed: '#241a00'
+  on-tertiary-fixed-variant: '#574500'
+  background: '#fbf9f5'
+  on-background: '#1b1c1a'
+  surface-variant: '#e4e2de'
+typography:
+  display:
+    fontFamily: Playfair Display
+    fontSize: 48px
+    fontWeight: '600'
+    lineHeight: 56px
+    letterSpacing: -0.02em
+  display-mobile:
+    fontFamily: Playfair Display
+    fontSize: 32px
+    fontWeight: '600'
+    lineHeight: 40px
+    letterSpacing: -0.01em
+  headline-lg:
+    fontFamily: Playfair Display
+    fontSize: 36px
+    fontWeight: '600'
+    lineHeight: 44px
+    letterSpacing: -0.015em
+  headline-lg-mobile:
+    fontFamily: Playfair Display
+    fontSize: 26px
+    fontWeight: '600'
+    lineHeight: 34px
+    letterSpacing: -0.01em
+  headline-md:
+    fontFamily: Playfair Display
+    fontSize: 28px
+    fontWeight: '500'
+    lineHeight: 36px
+  headline-sm:
+    fontFamily: Playfair Display
+    fontSize: 22px
+    fontWeight: '500'
+    lineHeight: 30px
+  title-lg:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 18px
+    fontWeight: '600'
+    lineHeight: 26px
+  title-md:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 16px
+    fontWeight: '600'
+    lineHeight: 24px
+  body-lg:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 18px
+    fontWeight: '400'
+    lineHeight: 28px
+  body-md:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 15px
+    fontWeight: '400'
+    lineHeight: 24px
+  body-sm:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 13px
+    fontWeight: '400'
+    lineHeight: 20px
+  label-md:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 12px
+    fontWeight: '600'
+    lineHeight: 16px
+    letterSpacing: 0.04em
+  label-sm:
+    fontFamily: Plus Jakarta Sans
+    fontSize: 11px
+    fontWeight: '500'
+    lineHeight: 14px
+    letterSpacing: 0.06em
+rounded:
+  sm: 0.125rem
+  DEFAULT: 0.25rem
+  md: 0.375rem
+  lg: 0.5rem
+  xl: 0.75rem
+  full: 9999px
+spacing:
+  gutter: 1.5rem
+  gutter-mobile: 1rem
+  margin: 3rem
+  margin-mobile: 1.25rem
+  space-xs: 0.25rem
+  space-sm: 0.5rem
+  space-md: 1rem
+  space-lg: 1.5rem
+  space-xl: 2.5rem
+---
+
+## Brand & Style
+
+This design system embodies an authentic, serene, and scholarly atmosphere tailored for an Islamic digital library and classical knowledge portal. The aesthetic balances timeless manuscript tradition with clean, contemporary digital craftsmanship. 
+
+### Core Ethos
+- **Reverent & Tranquil:** Generous, breathable layouts evoking historical reading rooms and sunlit courtyard libraries.
+- **Scholarly & Authoritative:** Precision typography, rigorous metadata organization, and dignified visual proportioning that honor centuries of classical scholarship.
+- **Artisan Elegance:** Muted warm parchment tones punctuated by deep mineral pigments and burnished metallic accents.
+
+### Design Movement: Classical Editorial Meets Modern Luminescence
+The interface moves away from generic minimalist SaaS by employing architectural discipline: fine-line geometric borders, warm layered parchment surfaces, and understated gilded accents reminiscent of gilded leaf illumination (*tahdhib*), translated into a razor-sharp modern web experience.
+
+## Colors
+
+The palette draws inspiration from historical manuscript inks, naturally aged cotton paper, and lapis/malachite bookbindings.
+
+### Palette Roles
+- **Primary (`#0F382C` — Deep Emerald):** Represents foundational knowledge, sanctuary, and life. Used for active navigation anchors, primary action buttons, focused tab states, and significant section headers.
+- **Secondary (`#0A192F` — Royal Dark Navy):** Echoes deep nocturnal celestial skies and indigo dye. Used for primary text, deep structural panels, footers, and contrasting night-study surfaces.
+- **Tertiary (`#D4AF37` — Burnished Gold):** Evokes illuminated manuscript detailing. Reserved strictly for key highlights, verified scholarly badges, fine divider rules, active verse counters, and active rating/bookmark markers.
+- **Neutral Surface (`#FDFBF7` — Warm Ivory):** A gentle, eye-friendly paper base that prevents glare during sustained reading.
+- **Border & Structure Neutral (`#E5DFD3` — Muted Sand):** Hairline delineation for cards, separators, table cells, and input borders.
+- **Text Charcoal (`#1F2937`):** The primary reading ink, balanced to offer high legibility without the harshness of pitch black on cream.
+
+## Typography
+
+The typographic hierarchy pairs the literary gravitas of high-contrast transitional serifs with the frictionless clarity of a contemporary grotesque sans-serif.
+
+### Implementation Principles
+- **Editorial Headings:** `Playfair Display` governs all entry titles, volume headings, and section openings, providing a stately, published aura.
+- **Analytical & Body Copy:** `Plus Jakarta Sans` is applied to annotations, continuous translation prose, UI controls, navigation indices, and metadata to maintain effortless scanning over long study periods.
+- **Arabic Text Integration:** When presenting Quranic, Hadith, or classical Arabic commentaries inline or in dual-column view, apply an authentic Naskh or Amiri web typeface styled with 1.8x line height relative to its Latin body pair, preserving the natural flow of ligatures, diacritics (*harakat*), and vocalizations.
+- **Case & Metrics:** Category labels and book accession tags use uppercase styling with expanded tracking (`0.04em` to `0.06em`) for classical catalog precision.
+
+## Layout & Spacing
+
+The layout adheres to a fixed-max-width grid with fluid responsiveness, echoing the disciplined proportions of classical book layout margins.
+
+### Grid & Breakpoints
+- **Desktop (≥ 1200px):** 12-column grid constrained to a maximum content width of `1280px` (`1440px` for reader interfaces). Outer page margins are `3rem` (`48px`) with `1.5rem` (`24px`) gutters.
+- **Tablet (768px – 1199px):** 8-column grid with `2rem` (`32px`) margins and `1.25rem` (`20px`) gutters. Sidebars fold into collapsible overlay panels or slide-out drawer sheets.
+- **Mobile (< 768px):** 4-column grid with `1.25rem` (`20px`) margins and `1rem` (`16px`) gutters.
+
+### Spacing Rhythm
+Vertical rhythm follows multiples of `8px` (`0.5rem`). Scholarly annotation spaces and reference indices use tight inner padding (`space-sm` to `space-md`), while reading viewports and category gateways rely on wide, contemplative intervals (`space-xl`).
+
+## Elevation & Depth
+
+Visual hierarchy relies on crisp parchment layering, fine golden hairline borders, and soft ambient illumination rather than harsh drop shadows.
+
+### Surface Tiers
+- **Base Canvas:** Neutral Warm Ivory (`#FDFBF7`).
+- **Raised Containers (Cards, Modals, Panels):** Pure White parchment (`#FFFFFF`) with a 1px perimeter border rendered in Muted Sand (`#E5DFD3`).
+- **Active / Highlighted Layer:** Raised containers feature a 1px border accented by Burnished Gold (`#D4AF37` at 60% opacity) or a faint interior golden rim glow.
+
+### Ambient Shadows
+- **Card Rest:** `0 2px 8px -2px rgba(10, 25, 47, 0.04), 0 1px 2px -1px rgba(10, 25, 47, 0.02)`.
+- **Card Hover / Elevation 1:** `0 8px 24px -4px rgba(10, 25, 47, 0.07), 0 2px 6px -1px rgba(10, 25, 47, 0.03)`.
+- **Modals & Flyouts / Elevation 2:** `0 16px 40px -8px rgba(10, 25, 47, 0.12), 0 4px 12px -2px rgba(10, 25, 47, 0.04)`.
+- **Subtle Arabesque Background Nuance:** Deep background sections (such as headers or reader banners) may feature an ultra-faint 8-point geometric rosette or interlaced octagonal lattice watermark at 2–3% opacity, rendered in `#0F382C` or `#D4AF37`.
+
+## Shapes
+
+This design system uses a disciplined **Soft (1)** shape language to honor historical manuscript leaves, architectural architraves, and hardcover library folios.
+
+### Geometry Rules
+- **Base Components (Inputs, Buttons, Badges):** `4px` (`0.25rem`) corner radius. Rounded corners remain subtle to retain architectural weight.
+- **Cards & Reading Containers:** `8px` (`0.5rem`) corner radius (`rounded-lg`), ensuring clean geometric alignment within grid columns.
+- **Modal Sheets & Overlays:** `12px` (`0.75rem`) corner radius (`rounded-xl`).
+- **Pill Exceptions:** Restricted exclusively to status dots, chapter micro-badges, and audio playhead scrubbing handles.
+
+## Components
+
+### Buttons
+- **Primary:** Deep Emerald background (`#0F382C`), crisp ivory text (`#FDFBF7`), subtle `4px` border radius. On hover, background shifts to slightly deeper tone with a `0 0 0 1px #D4AF37` burnished gold hairline ring.
+- **Secondary / Outline:** Transparent background, 1px solid `#E5DFD3` border, charcoal text (`#1F2937`). On hover, border transitions to `#0F382C` with ivory tint fill (`#F7F4EC`).
+- **Tertiary (Illuminated):** Deep Navy background (`#0A192F`), burnished gold text (`#D4AF37`), 1px solid border (`#D4AF37` at 40% opacity).
+
+### Chips & Manuscript Book Tags
+- Compact height (`24px` to `28px`), `4px` border radius, uppercase `label-sm` font.
+- Composed with sand background (`#F4EFE6`), subtle border (`#E5DFD3`), and charcoal text.
+- Scholarly verification chips (e.g., "Verified Isnād", "Sahih", "Critical Edition") utilize a soft cream base, emerald text (`#0F382C`), and a hairline gold border (`#D4AF37`).
+
+### Input Fields
+- Background: Pure White (`#FFFFFF`).
+- Resting Border: 1px solid `#E5DFD3`.
+- Focus State: 1px solid `#0F382C` accompanied by an outer halo ring (`rgba(15, 56, 44, 0.15)`).
+- Placeholder text in muted charcoal (`#8C827A`), text in `#1F2937`.
+- Search bars in the library catalog feature a subtle gold search icon and optional dual-language (Arabic/English) toggle switch within the field inset.
+
+### Checkboxes & Radio Buttons
+- 16px square (checkbox) or circle (radio), 1.5px border in `#C5BEB3`.
+- Selected State: Emerald Green fill (`#0F382C`) displaying a white interior mark.
+- Focus Indicator: Subtle gold outline offset by 2px.
+
+### Cards (Manuscript & Volume Displays)
+- Crisp white surface with 1px border (`#E5DFD3`) and `8px` radius.
+- Cards feature an optional 2px top decorative accent stripe colored in `#0F382C` or `#D4AF37`.
+- Structural composition: Header contains category chip and transliterated volume tag; body contains the title in `Playfair Display` alongside authentic Arabic calligraphy; footer presents author, publication era (Hijri/CE), and shelf reference.
+
+### Specialized Components
+- **Dual-Pane Scholarly Reader:** Synchronized view holding the classical Arabic text on the right (RTL) with the vernacular translation/exegesis on the left (LTR), connected by golden cross-reference markers.
+- **Isnād (Chain of Transmission) Node Tree:** Minimal vertical hairline diagram with gold nodes depicting classical narrators, hoverable for biographical detail (*‘Ilm al-Rijāl*).
+- **Verse & Footnote Accordion:** Collapsible marginalia containers set off by a 2px left border in `#D4AF37` on an ivory-tinted surface.

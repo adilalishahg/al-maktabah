@@ -1,0 +1,227 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: var(--color-surface, #fbf9f5);
+  --color-surface-dim: var(--color-surface-dim, #dbdad6);
+  --color-surface-bright: var(--color-surface-bright, #fbf9f5);
+  --color-surface-container-lowest: var(--color-surface-container-lowest, #ffffff);
+  --color-surface-container-low: var(--color-surface-container-low, #f5f3ef);
+  --color-surface-container: var(--color-surface-container, #efeeea);
+  --color-surface-container-high: var(--color-surface-container-high, #eae8e4);
+  --color-surface-container-highest: var(--color-surface-container-highest, #e4e2de);
+  --color-on-surface: var(--color-on-surface, #1b1c1a);
+  --color-on-surface-variant: var(--color-on-surface-variant, #414845);
+  --color-inverse-surface: #30312e;
+  --color-inverse-on-surface: #f2f0ed;
+  --color-outline: #717975;
+  --color-outline-variant: #c1c8c3;
+  --color-surface-tint: #3f6658;
+  --color-primary: #002218;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #0f382c;
+  --color-on-primary-container: #79a292;
+  --color-inverse-primary: #a6d0be;
+  --color-secondary: #515f78;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #d2e0fe;
+  --color-on-secondary-container: #55637d;
+  --color-tertiary: #735c00;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #cba72f;
+  --color-on-tertiary-container: #4e3d00;
+  --color-tertiary-fixed: #ffe088;
+  --color-tertiary-fixed-dim: #e9c349;
+  --color-on-tertiary-fixed: #241a00;
+  --color-on-tertiary-fixed-variant: #574500;
+  --color-primary-fixed: #c1ecda;
+  --color-primary-fixed-dim: #a6d0be;
+  --color-on-primary-fixed: #002117;
+  --color-on-primary-fixed-variant: #274e41;
+  --color-secondary-fixed: #d6e3ff;
+  --color-secondary-fixed-dim: #b9c7e4;
+  --color-on-secondary-fixed: #0d1c32;
+  --color-on-secondary-fixed-variant: #39475f;
+  --color-background: var(--color-surface, #fbf9f5);
+  --color-on-background: var(--color-on-surface, #1b1c1a);
+  --color-surface-variant: #e4e2de;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #93000a;
+
+  --spacing-space-xs: 0.25rem;
+  --spacing-space-sm: 0.5rem;
+  --spacing-space-md: 1rem;
+  --spacing-space-lg: 1.5rem;
+  --spacing-space-xl: 2.5rem;
+  --spacing-margin: 3rem;
+  --spacing-margin-mobile: 1.25rem;
+  --spacing-gutter: 1.5rem;
+  --spacing-gutter-mobile: 1rem;
+
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arabic: "Amiri", "Traditional Arabic", serif;
+}
+
+:root {
+  --color-surface: #fbf9f5;
+  --color-surface-dim: #dbdad6;
+  --color-surface-bright: #fbf9f5;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f5f3ef;
+  --color-surface-container: #efeeea;
+  --color-surface-container-high: #eae8e4;
+  --color-surface-container-highest: #e4e2de;
+  --color-on-surface: #1b1c1a;
+  --color-on-surface-variant: #414845;
+}
+
+body.theme-sepia {
+  --color-surface: #f5ede1;
+  --color-surface-dim: #ded3c1;
+  --color-surface-bright: #faf5ed;
+  --color-surface-container-lowest: #fffcf7;
+  --color-surface-container-low: #ede4d5;
+  --color-surface-container: #e6dcce;
+  --color-surface-container-high: #ded1c1;
+  --color-surface-container-highest: #d6c6b3;
+  --color-on-surface: #26211a;
+  --color-on-surface-variant: #4f473c;
+}
+
+body.theme-night {
+  --color-surface: #0a1410;
+  --color-surface-dim: #060e0a;
+  --color-surface-bright: #101d18;
+  --color-surface-container-lowest: #0d1a14;
+  --color-surface-container-low: #13241d;
+  --color-surface-container: #192e25;
+  --color-surface-container-high: #21392e;
+  --color-surface-container-highest: #2b493b;
+  --color-on-surface: #e5ede9;
+  --color-on-surface-variant: #a2b7ad;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Typography Utility Classes matching design system */
+.font-display {
+  font-family: "Playfair Display", Georgia, serif;
+}
+
+.font-arabic {
+  font-family: "Amiri", "Traditional Arabic", serif;
+  line-height: 1.85;
+}
+
+.font-headline-lg {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 36px;
+  line-height: 44px;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+}
+
+.font-headline-md {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 500;
+}
+
+.font-headline-sm {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 500;
+}
+
+.font-title-lg {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 600;
+}
+
+.font-title-md {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+.font-body-lg {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 400;
+}
+
+.font-body-md {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 15px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.font-body-sm {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+.font-label-md {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.font-label-sm {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 11px;
+  line-height: 14px;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+
+/* Material Symbols font settings */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga';
+}
+
+/* Custom scrollbars for scholar reader panes */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(113, 121, 117, 0.25);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(113, 121, 117, 0.45);
+}
