@@ -123,10 +123,11 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
 
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className={`px-2 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs shrink-0 cursor-pointer ${sidebarOpen
+                className={`px-2 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs shrink-0 cursor-pointer ${
+                  sidebarOpen
                     ? 'bg-primary text-on-primary ring-2 ring-primary/20'
                     : 'bg-surface-container hover:bg-surface-container-high text-primary'
-                  }`}
+                }`}
                 title="Table of Contents (Chapters)"
               >
                 <span className="material-symbols-outlined text-sm sm:text-base">menu_book</span>
@@ -152,10 +153,11 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
             <div className="flex md:hidden items-center bg-surface-container-low rounded-xl p-0.5 border border-surface-container shrink-0">
               <button
                 onClick={() => setReadingFormat('facsimile')}
-                className={`px-2 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${readingFormat === 'facsimile'
+                className={`px-2 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                  readingFormat === 'facsimile'
                     ? 'bg-primary text-on-primary shadow-xs'
                     : 'text-on-surface-variant hover:text-on-surface'
-                  }`}
+                }`}
                 title="Facsimile Continuous Manuscript"
               >
                 <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
@@ -163,10 +165,11 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
               </button>
               <button
                 onClick={() => setReadingFormat('matn')}
-                className={`px-2 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${readingFormat === 'matn'
+                className={`px-2 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                  readingFormat === 'matn'
                     ? 'bg-primary text-on-primary shadow-xs'
                     : 'text-on-surface-variant hover:text-on-surface'
-                  }`}
+                }`}
                 title="Digitized Arabic Matn & Translation"
               >
                 <span className="material-symbols-outlined text-sm">auto_stories</span>
@@ -272,10 +275,11 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
             <div className="hidden md:flex items-center bg-surface-container-low rounded-xl p-0.5 border border-surface-container shrink-0">
               <button
                 onClick={() => setReadingFormat('facsimile')}
-                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${readingFormat === 'facsimile'
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                  readingFormat === 'facsimile'
                     ? 'bg-primary text-on-primary shadow-xs'
                     : 'text-on-surface-variant hover:text-on-surface'
-                  }`}
+                }`}
                 title="Facsimile Continuous Manuscript"
               >
                 <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
@@ -283,10 +287,11 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
               </button>
               <button
                 onClick={() => setReadingFormat('matn')}
-                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${readingFormat === 'matn'
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                  readingFormat === 'matn'
                     ? 'bg-primary text-on-primary shadow-xs'
                     : 'text-on-surface-variant hover:text-on-surface'
-                  }`}
+                }`}
                 title="Digitized Arabic Matn & Translation"
               >
                 <span className="material-symbols-outlined text-sm">auto_stories</span>
@@ -345,24 +350,27 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
             <div className="flex items-center bg-surface-container-low rounded-xl p-0.5 border border-surface-container shrink-0">
               <button
                 onClick={() => onThemeChange('parchment')}
-                className={`p-1 rounded-lg transition-colors cursor-pointer ${theme === 'parchment' ? 'bg-surface-container-lowest shadow-xs text-primary' : 'text-on-surface-variant'
-                  }`}
+                className={`p-1 rounded-lg transition-colors cursor-pointer ${
+                  theme === 'parchment' ? 'bg-surface-container-lowest shadow-xs text-primary' : 'text-on-surface-variant'
+                }`}
                 title="Light Theme"
               >
                 <span className="material-symbols-outlined text-sm text-tertiary">light_mode</span>
               </button>
               <button
                 onClick={() => onThemeChange('sepia')}
-                className={`p-1 rounded-lg transition-colors cursor-pointer ${theme === 'sepia' ? 'bg-surface-container-lowest shadow-xs text-primary' : 'text-on-surface-variant'
-                  }`}
+                className={`p-1 rounded-lg transition-colors cursor-pointer ${
+                  theme === 'sepia' ? 'bg-surface-container-lowest shadow-xs text-primary' : 'text-on-surface-variant'
+                }`}
                 title="Sepia Paper"
               >
                 <span className="material-symbols-outlined text-sm text-tertiary">auto_stories</span>
               </button>
               <button
                 onClick={() => onThemeChange('night')}
-                className={`p-1 rounded-lg transition-colors cursor-pointer ${theme === 'night' ? 'bg-surface-container-lowest shadow-xs text-primary' : 'text-on-surface-variant'
-                  }`}
+                className={`p-1 rounded-lg transition-colors cursor-pointer ${
+                  theme === 'night' ? 'bg-surface-container-lowest shadow-xs text-primary' : 'text-on-surface-variant'
+                }`}
                 title="Dark Emerald"
               >
                 <span className="material-symbols-outlined text-sm text-primary">dark_mode</span>
@@ -404,8 +412,9 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Chapters / Table of Contents Sidebar */}
           <aside
-            className={`lg:col-span-4 bg-surface-container-lowest border border-surface-container rounded-2xl p-4 shadow-sm space-y-3 transition-all ${sidebarOpen ? 'block' : 'hidden lg:block'
-              }`}
+            className={`lg:col-span-4 bg-surface-container-lowest border border-surface-container rounded-2xl p-4 shadow-sm space-y-3 transition-all ${
+              sidebarOpen ? 'block' : 'hidden lg:block'
+            }`}
           >
             <div className="flex items-center justify-between pb-3 border-b border-surface-container">
               <div className="flex items-center gap-2">
@@ -430,10 +439,11 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
                       if (window.innerWidth < 1024) setSidebarOpen(false);
                       window.scrollTo({ top: 120, behavior: 'smooth' });
                     }}
-                    className={`p-3 rounded-xl cursor-pointer transition-all border flex items-center justify-between gap-3 ${isSelected
+                    className={`p-3 rounded-xl cursor-pointer transition-all border flex items-center justify-between gap-3 ${
+                      isSelected
                         ? 'bg-primary-container text-on-primary border-primary shadow-xs'
                         : 'bg-surface-container-low/40 hover:bg-surface-container border-surface-container text-on-surface'
-                      }`}
+                    }`}
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
@@ -542,10 +552,11 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
               <button
                 onClick={handlePrevChapter}
                 disabled={currentChapterIndex === 0}
-                className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${currentChapterIndex === 0
+                className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+                  currentChapterIndex === 0
                     ? 'opacity-40 cursor-not-allowed bg-surface-container text-on-surface-variant'
                     : 'bg-surface-container hover:bg-surface-container-high text-primary cursor-pointer'
-                  }`}
+                }`}
               >
                 <span className="material-symbols-outlined text-base">arrow_back</span>
                 <span>Previous Chapter</span>
@@ -558,10 +569,11 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
               <button
                 onClick={handleNextChapter}
                 disabled={currentChapterIndex === chapters.length - 1}
-                className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${currentChapterIndex === chapters.length - 1
+                className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+                  currentChapterIndex === chapters.length - 1
                     ? 'opacity-40 cursor-not-allowed bg-surface-container text-on-surface-variant'
                     : 'bg-primary-container hover:bg-primary text-on-primary cursor-pointer'
-                  }`}
+                }`}
               >
                 <span>Next Chapter</span>
                 <span className="material-symbols-outlined text-base">arrow_forward</span>
