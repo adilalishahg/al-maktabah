@@ -14,12 +14,6 @@ export async function GET(request: Request) {
     const db = await connectToDatabase();
 
     if (db) {
-      // Auto-seed initial books if MongoDB collection is empty
-      const count = await BookModel.countDocuments();
-      if (count === 0) {
-        await BookModel.insertMany(INITIAL_DETAILED_BOOKS);
-      }
-
       const filter: any = {};
       if (!admin) {
         filter.published = { $ne: false };
@@ -45,36 +39,13 @@ export async function GET(request: Request) {
       });
     }
 
-    // Fallback when MongoDB is not connected
-    let results = [...INITIAL_DETAILED_BOOKS];
-
-    if (!admin) {
-      results = results.filter((b) => b.published !== false);
-    }
-
-    if (query) {
-      results = results.filter(
-        (b) =>
-          b.title.toLowerCase().includes(query) ||
-          b.arabicTitle.toLowerCase().includes(query) ||
-          b.author.toLowerCase().includes(query) ||
-          b.disciplineName.toLowerCase().includes(query)
-      );
-    }
-
-    if (category && category !== 'all') {
-      results = results.filter(
-        (b) =>
-          b.discipline.toLowerCase() === category ||
-          b.disciplineName.toLowerCase().includes(category)
-      );
-    }
-
+    // When MongoDB is not connected, return empty list without loading mock data
     return NextResponse.json({
       success: true,
-      source: 'In-Memory Server Fallback (Add MONGODB_URI to .env.local to persist)',
-      count: results.length,
-      data: results,
+      source: 'No Database Connection',
+      count: 0,
+      data: [],
+      message: 'MongoDB is not connected. Add MONGODB_URI to .env.local to load live codices from database.',
     });
   } catch (error: any) {
     console.error('API /api/books GET Error:', error);

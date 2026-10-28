@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { DetailedBook, BookChapter } from '@/types/bookContent';
 import { CategoryScience } from '@/types/library';
-import { getStoredBooks, saveBook, deleteBook } from '@/data/bookStore';
+import { getStoredBooks, saveBook, deleteBook, saveStoredBooks } from '@/data/bookStore';
 import { getStoredCategories, saveCategory, deleteCategory as deleteStoredCategory } from '@/data/categoryStore';
 import { BookReaderView } from '@/views/BookReaderView';
 
@@ -42,13 +42,18 @@ export default function AdminPortalPage() {
   const loadBooks = async () => {
     setDbSyncStatus('connecting');
     try {
-      const res = await fetch('/api/books');
+      const res = await fetch('/api/books?admin=true');
       if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
+        const json = await res.json();
+        const data = Array.isArray(json) ? json : (Array.isArray(json?.data) ? json.data : null);
+        if (data !== null) {
           setBooks(data);
-          localStorage.setItem('al_maktabah_detailed_books_v2', JSON.stringify(data));
-          setDbSyncStatus('online');
+          saveStoredBooks(data);
+          if (json?.source?.includes('MongoDB')) {
+            setDbSyncStatus('online');
+          } else {
+            setDbSyncStatus('local');
+          }
           return;
         }
       }
@@ -255,6 +260,93 @@ export default function AdminPortalPage() {
     }
   };
 
+  // Upload Asset Helper: Supports direct browser-to-Cloudinary upload (bypasses Vercel 4.5MB limit)
+  const uploadAsset = async (file: File, folder: string): Promise<{ url: string; provider: string }> => {
+    // 1. Try direct upload to Cloudinary (bypassing Vercel 4.5MB server payload limit)
+    try {
+      const paramRes = await fetch(`/api/upload?folder=${encodeURIComponent(folder)}`);
+      if (paramRes.ok) {
+        const config = await paramRes.json();
+        if (config.configured && config.cloudName && config.apiKey && config.signature) {
+          const directForm = new FormData();
+          directForm.append('file', file);
+          directForm.append('api_key', config.apiKey);
+          directForm.append('timestamp', config.timestamp.toString());
+          directForm.append('signature', config.signature);
+          directForm.append('folder', config.folder);
+
+          const cdnRes = await fetch(`https://api.cloudinary.com/v1_1/${config.cloudName}/auto/upload`, {
+            method: 'POST',
+            body: directForm,
+          });
+
+          if (!cdnRes.ok) {
+            const errData = await cdnRes.json().catch(() => ({}));
+            throw new Error(errData.error?.message || `Cloudinary rejected upload (${cdnRes.status})`);
+          }
+
+          const cdnData = await cdnRes.json();
+          if (cdnData.secure_url) {
+            return {
+              url: cdnData.secure_url,
+              provider: 'Cloudinary CDN (Direct Edge Upload)',
+            };
+          }
+        }
+      }
+    } catch (directErr: any) {
+      console.warn('Direct upload notice:', directErr);
+      if (directErr.message && !directErr.message.includes('fetch')) {
+        throw directErr;
+      }
+    }
+
+    // 2. If Cloudinary is not configured in Vercel, check Vercel payload limit (4.5 MB)
+    const MAX_VERCEL_BYTES = 4.2 * 1024 * 1024;
+    if (file.size > MAX_VERCEL_BYTES) {
+      throw new Error(
+        `PAYLOAD_TOO_LARGE: This file is ${(file.size / (1024 * 1024)).toFixed(1)} MB.\n\n` +
+        `Vercel serverless functions enforce a 4.5 MB request limit for server uploads.\n\n` +
+        `To solve this:\n` +
+        `1. Add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET to your Vercel Project Settings > Environment Variables for direct high-speed uploads up to 100MB+.\n\n` +
+        `2. OR: Paste a direct URL to the PDF (from Google Drive, Archive.org, Dropbox, or any CDN) directly in the PDF field.`
+      );
+    }
+
+    // 3. Fallback to /api/upload for small files (< 4.2 MB)
+    const uploadForm = new FormData();
+    uploadForm.append('file', file);
+    uploadForm.append('folder', folder);
+
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      body: uploadForm,
+    });
+
+    if (res.status === 413) {
+      throw new Error(
+        `Vercel payload limit (413): File is too large (${(file.size / (1024 * 1024)).toFixed(1)} MB). Add Cloudinary credentials to Vercel for unlimited direct uploads, or paste a direct PDF URL.`
+      );
+    }
+
+    let data: any;
+    try {
+      data = await res.json();
+    } catch {
+      const text = await res.text();
+      throw new Error(`Upload server error (${res.status}): ${text.slice(0, 150)}`);
+    }
+
+    if (data.success && data.url) {
+      return {
+        url: data.url,
+        provider: data.provider || 'In-Memory Fallback',
+      };
+    }
+
+    throw new Error(data.message || 'Upload failed');
+  };
+
   // Upload to Cloudinary / CDN (Cover Image)
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -264,26 +356,14 @@ export default function AdminPortalPage() {
     setUploadSuccess('');
 
     try {
-      const uploadForm = new FormData();
-      uploadForm.append('file', file);
-      uploadForm.append('folder', 'al-maktabah/books');
-
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: uploadForm,
-      });
-
-      const data = await res.json();
-      if (data.success && data.url) {
-        setEditingBook((prev) => (prev ? { ...prev, coverImage: data.url } : null));
-        setUploadSuccess(`Uploaded to ${data.provider || 'CDN'}`);
-      } else {
-        alert(data.message || 'Upload failed');
-      }
+      const result = await uploadAsset(file, 'al-maktabah/books');
+      setEditingBook((prev) => (prev ? { ...prev, coverImage: result.url } : null));
+      setUploadSuccess(`Cover uploaded (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
     } catch (err: any) {
-      alert('Upload error: ' + err.message);
+      alert(err.message || 'Cover upload failed');
     } finally {
       setIsUploading(false);
+      e.target.value = '';
     }
   };
 
@@ -296,26 +376,14 @@ export default function AdminPortalPage() {
     setPdfUploadSuccess('');
 
     try {
-      const uploadForm = new FormData();
-      uploadForm.append('file', file);
-      uploadForm.append('folder', 'al-maktabah/manuscripts');
-
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: uploadForm,
-      });
-
-      const data = await res.json();
-      if (data.success && data.url) {
-        setEditingBook((prev) => (prev ? { ...prev, pdfUrl: data.url } : null));
-        setPdfUploadSuccess(`PDF attached (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
-      } else {
-        alert(data.message || 'PDF upload failed');
-      }
+      const result = await uploadAsset(file, 'al-maktabah/manuscripts');
+      setEditingBook((prev) => (prev ? { ...prev, pdfUrl: result.url } : null));
+      setPdfUploadSuccess(`PDF attached (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
     } catch (err: any) {
-      alert('PDF upload error: ' + err.message);
+      alert(err.message || 'PDF upload failed');
     } finally {
       setIsUploadingPdf(false);
+      e.target.value = '';
     }
   };
 
@@ -1205,6 +1273,10 @@ export default function AdminPortalPage() {
                     </label>
                   </div>
                   {pdfUploadSuccess && <span className="text-[11px] text-emerald-400 font-medium mt-1 block">✓ {pdfUploadSuccess}</span>}
+                  <p className="text-[11px] text-on-surface-variant/80 mt-1.5 flex items-center gap-1">
+                    <span className="material-symbols-outlined text-xs text-tertiary shrink-0">info</span>
+                    <span>Direct CDN Upload: Files up to 100MB+ upload via Cloudinary, or paste any direct PDF link (Archive.org, Google Drive, etc.).</span>
+                  </p>
                 </div>
               </div>
 

@@ -22,14 +22,10 @@ export async function GET(
       return NextResponse.json({ success: true, data: book });
     }
 
-    const book = INITIAL_DETAILED_BOOKS.find((b) => b.id === id);
-    if (!book) {
-      return NextResponse.json(
-        { success: false, message: 'Codex not found in local catalog' },
-        { status: 404 }
-      );
-    }
-    return NextResponse.json({ success: true, data: book });
+    return NextResponse.json(
+      { success: false, message: 'Codex not found or database not connected' },
+      { status: 404 }
+    );
   } catch (error: any) {
     return NextResponse.json(
       { success: false, message: error.message || 'Server error' },

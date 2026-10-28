@@ -23,6 +23,7 @@ export interface Book {
   pages: number;
   sizeMb: number;
   coverImage: string;
+  pdfUrl?: string;
   badge?: string;
   badgeColor?: string;
   formats: ('PDF' | 'EPUB' | 'Searchable OCR' | 'Critical PDF' | 'Isnād Index' | 'English Translation' | 'Notes' | 'Full Ayah Map' | 'Bilingual')[];

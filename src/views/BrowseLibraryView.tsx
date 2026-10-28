@@ -8,6 +8,8 @@ interface BrowseLibraryViewProps {
   onOpenReader: (book: Book) => void;
   onOpenDownload: (book: Book) => void;
   initialQuery?: string;
+  isLoading?: boolean;
+  onRefresh?: () => void;
 }
 
 export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
@@ -16,7 +18,9 @@ export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
   onSelectBook,
   onOpenReader,
   onOpenDownload,
-  initialQuery = ''
+  initialQuery = '',
+  isLoading = false,
+  onRefresh,
 }) => {
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [selectedDiscipline, setSelectedDiscipline] = useState<string>('all');
@@ -169,14 +173,96 @@ export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
 
       {/* Catalog Results Header */}
       <div className="flex items-center justify-between text-xs text-on-surface-variant px-1">
-        <span>Showing <strong>{filteredBooks.length}</strong> cataloged works</span>
+        <span>
+          Showing <strong>{filteredBooks.length}</strong> cataloged works
+          {books.length > 0 && filteredBooks.length !== books.length && (
+            <span className="text-outline ml-1">(filtered from {books.length} total)</span>
+          )}
+        </span>
         {searchQuery && (
-          <span className="truncate max-w-[180px] sm:max-w-none">Filtering by: <strong className="text-primary">"{searchQuery}"</strong></span>
+          <span className="truncate max-w-[180px] sm:max-w-none">
+            Filtering by: <strong className="text-primary">"{searchQuery}"</strong>
+          </span>
         )}
       </div>
 
-      {/* Catalog Content (Grid Mode) */}
-      {viewMode === 'grid' ? (
+      {/* Loading State */}
+      {isLoading && books.length === 0 ? (
+        <div className="py-16 text-center bg-surface-container-lowest rounded-2xl border border-surface-container shadow-xs space-y-4">
+          <div className="w-12 h-12 mx-auto rounded-full border-3 border-primary/20 border-t-primary animate-spin"></div>
+          <div className="space-y-1">
+            <h3 className="font-title-md font-bold text-primary">Connecting to Live Database...</h3>
+            <p className="text-xs text-on-surface-variant">Querying MongoDB and catalog indices for authentic codices.</p>
+          </div>
+        </div>
+      ) : books.length === 0 ? (
+        /* Empty State: No Books in Database */
+        <div className="py-14 px-6 sm:px-12 text-center bg-gradient-to-b from-surface-container-lowest via-surface-container-lowest to-surface-container-low/40 rounded-3xl border-2 border-dashed border-[#cba72f]/40 shadow-sm max-w-2xl mx-auto space-y-5">
+          <div className="relative w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-[#cba72f]/20 to-primary/10 border border-[#cba72f]/50 flex items-center justify-center text-tertiary shadow-sm">
+            <span className="material-symbols-outlined text-4xl text-[#967400] dark:text-[#f3cc51]">
+              library_books
+            </span>
+            <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 ring-2 ring-surface"></span>
+          </div>
+
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#cba72f]/15 text-[#967400] dark:text-[#f3cc51] text-xs font-bold border border-[#cba72f]/30">
+              <span className="material-symbols-outlined text-sm">database</span>
+              <span>Live Database Connected</span>
+            </div>
+            <h3 className="font-display text-2xl font-extrabold text-primary">
+              No Live Books in Database Yet
+            </h3>
+            <p className="font-arabic text-lg text-tertiary font-bold tracking-wide">
+              « لَمْ يَتِمَّ إِضَافَةُ أَيِّ كُتُبٍ أَوْ مَخْطُوطَاتٍ حَتَّى الْآنَ »
+            </p>
+            <p className="text-xs sm:text-sm text-on-surface-variant max-w-lg mx-auto leading-relaxed">
+              The public library is connected to your database, but no codices have been uploaded or published yet. As soon as an administrator adds books via the Admin Portal, they will appear here with full reading, isnād inspection, and download features.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <a
+              href="/admin"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-semibold text-xs sm:text-sm shadow-md hover:brightness-105 transition-all cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-base">admin_panel_settings</span>
+              <span>Open Admin Portal to Upload Books</span>
+            </a>
+            {onRefresh && (
+              <button
+                onClick={onRefresh}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-semibold text-xs sm:text-sm border border-surface-container-high transition-all cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-base">refresh</span>
+                <span>Refresh Live Data</span>
+              </button>
+            )}
+          </div>
+        </div>
+      ) : filteredBooks.length === 0 ? (
+        /* Filter Empty State */
+        <div className="py-12 px-6 text-center bg-surface-container-lowest rounded-2xl border border-surface-container max-w-lg mx-auto space-y-3 shadow-xs">
+          <span className="material-symbols-outlined text-4xl text-outline mb-1">search_off</span>
+          <h3 className="font-title-lg text-primary font-bold">No Treatises Match Your Filter</h3>
+          <p className="text-xs text-on-surface-variant max-w-sm mx-auto">
+            {searchQuery
+              ? `No works matched the search query "${searchQuery}".`
+              : 'No treatises found in the selected discipline or format.'}
+          </p>
+          <button
+            onClick={() => {
+              setSearchQuery('');
+              setSelectedDiscipline('all');
+              setSelectedFormat('all');
+            }}
+            className="mt-2 px-4 py-2 bg-primary-container text-on-primary rounded-xl text-xs font-semibold hover:bg-primary transition-all cursor-pointer"
+          >
+            Reset All Filters
+          </button>
+        </div>
+      ) : viewMode === 'grid' ? (
+        /* Catalog Content (Grid Mode) */
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-space-lg">
           {filteredBooks.map((book) => (
             <div
@@ -330,20 +416,6 @@ export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
               </tbody>
             </table>
           </div>
-        </div>
-      )}
-
-      {filteredBooks.length === 0 && (
-        <div className="p-12 text-center bg-surface-container-lowest rounded-xl border border-surface-container">
-          <span className="material-symbols-outlined text-4xl text-outline mb-2">auto_stories</span>
-          <h3 className="font-title-lg text-primary font-bold">No treatises matched your filters</h3>
-          <p className="text-xs text-on-surface-variant mt-1">Try resetting the discipline or search criteria.</p>
-          <button
-            onClick={() => { setSearchQuery(''); setSelectedDiscipline('all'); }}
-            className="mt-4 px-4 py-2 bg-primary-container text-on-primary rounded-lg text-xs font-semibold"
-          >
-            Reset Filters
-          </button>
         </div>
       )}
     </div>

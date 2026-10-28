@@ -20,7 +20,7 @@ import { AboutView } from './views/AboutView';
 import { AdminDashboardView } from './views/AdminDashboardView';
 import { BookReaderView } from './views/BookReaderView';
 import { DetailedBook } from './types/bookContent';
-import { getStoredBooks, getPublicLibraryBooks } from './data/bookStore';
+import { getStoredBooks, getPublicLibraryBooks, saveStoredBooks } from './data/bookStore';
 import { getStoredCategories } from './data/categoryStore';
 
 export default function App() {
@@ -45,25 +45,26 @@ export default function App() {
   });
   const [activeChapterId, setActiveChapterId] = useState<string | undefined>(undefined);
   const [searchFilterQuery, setSearchFilterQuery] = useState<string>('');
+  const [isFetchingDb, setIsFetchingDb] = useState<boolean>(false);
 
   // Sync stored books & categories with public library on mount & storage event
-  useEffect(() => {
-    const syncLibrary = () => {
-      setPublicBooks(getPublicLibraryBooks());
-      setCategories(getStoredCategories());
-    };
-    window.addEventListener('storage', syncLibrary);
-
+  const syncFromApi = () => {
+    setIsFetchingDb(true);
     // Fetch live from MongoDB backend
     fetch('/api/books')
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          localStorage.setItem('al_maktabah_detailed_books_v2', JSON.stringify(data));
+        const booksList: DetailedBook[] | null = Array.isArray(data)
+          ? data
+          : (Array.isArray(data?.data) ? data.data : null);
+
+        if (booksList !== null) {
+          saveStoredBooks(booksList);
           setPublicBooks(getPublicLibraryBooks());
         }
       })
-      .catch((err) => console.warn('Public site API books sync notice:', err));
+      .catch((err) => console.warn('Public site API books sync notice:', err))
+      .finally(() => setIsFetchingDb(false));
 
     fetch('/api/categories')
       .then((res) => (res.ok ? res.json() : null))
@@ -74,6 +75,15 @@ export default function App() {
         }
       })
       .catch((err) => console.warn('Public site API categories sync notice:', err));
+  };
+
+  useEffect(() => {
+    const syncLibrary = () => {
+      setPublicBooks(getPublicLibraryBooks());
+      setCategories(getStoredCategories());
+    };
+    window.addEventListener('storage', syncLibrary);
+    syncFromApi();
 
     return () => window.removeEventListener('storage', syncLibrary);
   }, []);
@@ -199,6 +209,8 @@ export default function App() {
               onOpenReader={handleOpenReader}
               onOpenDownload={(book) => setDownloadBook(book)}
               initialQuery={searchFilterQuery}
+              isLoading={isFetchingDb}
+              onRefresh={syncFromApi}
             />
           )}
 

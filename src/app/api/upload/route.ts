@@ -1,5 +1,44 @@
 import { NextResponse } from 'next/server';
 
+// Get upload signature parameters for direct browser-to-Cloudinary upload
+// This completely bypasses Vercel's 4.5 MB serverless function payload limit!
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const folder = searchParams.get('folder') || 'al-maktabah/books';
+
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+    const apiKey = process.env.CLOUDINARY_API_KEY;
+    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+    if (cloudName && apiKey && apiSecret) {
+      const timestamp = Math.round(new Date().getTime() / 1000);
+      const crypto = await import('crypto');
+      const signatureString = `folder=${folder}&timestamp=${timestamp}${apiSecret}`;
+      const signature = crypto.createHash('sha1').update(signatureString).digest('hex');
+
+      return NextResponse.json({
+        configured: true,
+        cloudName,
+        apiKey,
+        timestamp,
+        signature,
+        folder,
+      });
+    }
+
+    return NextResponse.json({
+      configured: false,
+      message: 'Cloudinary credentials are not set in environment variables.',
+    });
+  } catch (error: any) {
+    return NextResponse.json(
+      { configured: false, message: error.message || 'Signature generation error' },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();

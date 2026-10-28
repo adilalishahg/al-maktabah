@@ -136,7 +136,17 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
         body: uploadForm,
       });
 
-      const data = await res.json();
+      if (res.status === 413) {
+        throw new Error(`File is too large for server upload (${(file.size / (1024 * 1024)).toFixed(1)} MB). Vercel limits server payloads to 4.5 MB. Please use a direct image URL.`);
+      }
+
+      let data: any;
+      try {
+        data = await res.json();
+      } catch {
+        const text = await res.text();
+        throw new Error(`Upload server error (${res.status}): ${text.slice(0, 150)}`);
+      }
       if (data.success && data.url) {
         setFormData((prev) => ({
           ...prev,

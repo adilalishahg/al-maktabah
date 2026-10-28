@@ -260,7 +260,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
           <div className="relative w-full max-w-[340px] xs:max-w-[380px] sm:max-w-md h-[420px] sm:h-[480px] flex items-center justify-center scale-[0.92] xs:scale-95 sm:scale-100 origin-center">
             {/* Book 1: Al-Bidayah wan-Nihayah (Background, offset left) */}
             <div
-              onClick={() => onSelectBook(books.find(b => b.id === 'bidayah-wan-nihayah') || books[0])}
+              onClick={() => {
+                const target = books.find(b => b.id === 'bidayah-wan-nihayah') || books[0];
+                if (target) onSelectBook(target);
+                else onNavigate('browse-library');
+              }}
               className="absolute -left-2 sm:-left-4 top-4 sm:top-6 w-48 sm:w-56 h-72 sm:h-82 rounded-2xl bg-gradient-to-br from-[#0f3d2e] via-[#09291e] to-[#041610] text-[#f7eed4] shadow-2xl p-4 flex flex-col justify-between transform -rotate-12 hover:-rotate-4 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden border-2 border-[#cba72f]/40 group"
             >
               {/* Gold foil corner ornament */}
@@ -291,7 +295,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
             {/* Book 2: Ihya Ulum al-Din (Middle, offset right) */}
             <div
-              onClick={() => onSelectBook(books.find(b => b.id === 'ihya-ulum-al-din') || books[2])}
+              onClick={() => {
+                const target = books.find(b => b.id === 'ihya-ulum-al-din') || books[0];
+                if (target) onSelectBook(target);
+                else onNavigate('browse-library');
+              }}
               className="absolute -right-2 sm:-right-4 top-8 sm:top-12 w-52 sm:w-60 h-78 sm:h-86 rounded-2xl bg-gradient-to-br from-[#122e40] via-[#0b1c27] to-[#050e14] text-[#f7eed4] shadow-2xl p-4 flex flex-col justify-between transform rotate-12 hover:rotate-4 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden border-2 border-[#cba72f]/40 group"
             >
               <div className="absolute top-0 left-0 w-12 h-12 bg-gradient-to-br from-[#cba72f]/40 to-transparent pointer-events-none"></div>
@@ -321,7 +329,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
             {/* Book 3: Riyad as-Salihin (Front & Center) */}
             <div
-              onClick={() => onOpenReader(books.find(b => b.id === 'riyad-salihin'))}
+              onClick={() => {
+                const target = books.find(b => b.id === 'riyad-salihin') || books[0];
+                if (target) onOpenReader(target);
+                else onNavigate('browse-library');
+              }}
               className="relative z-20 w-60 sm:w-68 h-88 sm:h-[410px] rounded-2xl bg-gradient-to-b from-surface-container-lowest via-surface-container-low to-surface-container-lowest text-on-surface shadow-2xl p-5 flex flex-col justify-between transform hover:-translate-y-2 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35)] transition-all duration-300 cursor-pointer border-2 border-[#cba72f]/60 ring-2 ring-[#cba72f]/20"
             >
               {/* Ornate Inner Double Frame */}
@@ -494,99 +506,116 @@ export const HomeView: React.FC<HomeViewProps> = ({
         </div>
 
         {/* 4 Rich Book Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
-          {getFilteredBooks().map((book) => (
-            <div
-              key={book.id}
-              className="group bg-surface-container-lowest rounded-2xl shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden border border-surface-container hover:border-[#cba72f]/50"
+        {books.length === 0 ? (
+          <div className="py-12 px-6 text-center bg-surface-container-lowest rounded-2xl border-2 border-dashed border-[#cba72f]/40 max-w-xl mx-auto space-y-3">
+            <span className="material-symbols-outlined text-3xl text-tertiary">library_books</span>
+            <h3 className="font-title-md font-bold text-primary">No Codices in Database Yet</h3>
+            <p className="text-xs text-on-surface-variant">
+              When an administrator adds books via the Admin Portal, featured titles will appear here.
+            </p>
+            <a
+              href="/admin"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary-container text-on-primary rounded-xl text-xs font-semibold hover:bg-primary transition-all cursor-pointer"
             >
-              {/* Cover with Book Spine effect */}
-              <div 
-                className="relative h-60 bg-surface-container-high overflow-hidden cursor-pointer"
-                onClick={() => onSelectBook(book)}
+              <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
+              <span>Open Admin Portal</span>
+            </a>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+            {getFilteredBooks().map((book) => (
+              <div
+                key={book.id}
+                className="group bg-surface-container-lowest rounded-2xl shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden border border-surface-container hover:border-[#cba72f]/50"
               >
-                <img
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  src={book.coverImage}
-                  alt={book.title}
-                />
-                {/* Book Spine shadow overlay */}
-                <div className="absolute inset-y-0 left-0 w-3 bg-gradient-to-r from-black/40 via-black/15 to-transparent pointer-events-none"></div>
-                {/* Bottom dark gradient for text legibility */}
-                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none"></div>
+                {/* Cover with Book Spine effect */}
+                <div 
+                  className="relative h-60 bg-surface-container-high overflow-hidden cursor-pointer"
+                  onClick={() => onSelectBook(book)}
+                >
+                  <img
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    src={book.coverImage}
+                    alt={book.title}
+                  />
+                  {/* Book Spine shadow overlay */}
+                  <div className="absolute inset-y-0 left-0 w-3 bg-gradient-to-r from-black/40 via-black/15 to-transparent pointer-events-none"></div>
+                  {/* Bottom dark gradient for text legibility */}
+                  <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none"></div>
 
-                <div className="absolute top-2.5 left-3 flex gap-1.5">
-                  <span className={`px-2.5 py-0.5 rounded-full font-label-sm text-xs font-bold shadow-xs backdrop-blur-xs ${book.badgeColor || 'bg-primary-container text-on-primary'}`}>
-                    {book.badge || book.disciplineName}
-                  </span>
-                </div>
-                
-                {book.verified && (
-                  <div className="absolute top-2.5 right-3">
-                    <span className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-xs" title="Academic Council Verified">
-                      <span className="material-symbols-outlined text-sm">verified</span>
+                  <div className="absolute top-2.5 left-3 flex gap-1.5">
+                    <span className={`px-2.5 py-0.5 rounded-full font-label-sm text-xs font-bold shadow-xs backdrop-blur-xs ${book.badgeColor || 'bg-primary-container text-on-primary'}`}>
+                      {book.badge || book.disciplineName}
                     </span>
                   </div>
-                )}
-
-                <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-white text-xs font-medium">
-                  <span className="flex items-center gap-1 font-bold text-[#f3cc51]">
-                    ★ {book.rating || 4.9}
-                  </span>
-                  <span className="px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-sm text-[11px]">
-                    {book.pages} pgs • {book.sizeMb} MB
-                  </span>
-                </div>
-              </div>
-
-              <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
-                <div className="space-y-1.5">
-                  <div className="flex items-center justify-between gap-2 text-tertiary">
-                    <span className="font-arabic text-base sm:text-lg font-bold truncate">
-                      {book.arabicTitle}
-                    </span>
-                    <span className="text-[10px] font-mono text-outline font-semibold shrink-0 bg-surface-container px-2 py-0.5 rounded border border-surface-container-high">
-                      {book.authorHijriYear?.split('(')[0]?.trim() || '1445 AH'}
-                    </span>
-                  </div>
-                  <h3 
-                    onClick={() => onSelectBook(book)}
-                    className="font-display text-base font-bold text-primary group-hover:text-tertiary transition-colors line-clamp-1 cursor-pointer"
-                  >
-                    {book.title}
-                  </h3>
-                  <p className="font-body-sm text-xs text-on-surface-variant line-clamp-1">
-                    {book.author}
-                  </p>
-                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                    {book.formats.slice(0, 3).map((fmt, i) => (
-                      <span key={i} className="px-2 py-0.5 rounded-md bg-surface-container text-on-surface-variant font-label-sm text-[10px] font-semibold border border-surface-container-high">
-                        {fmt}
+                  
+                  {book.verified && (
+                    <div className="absolute top-2.5 right-3">
+                      <span className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-xs" title="Academic Council Verified">
+                        <span className="material-symbols-outlined text-sm">verified</span>
                       </span>
-                    ))}
+                    </div>
+                  )}
+
+                  <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-white text-xs font-medium">
+                    <span className="flex items-center gap-1 font-bold text-[#f3cc51]">
+                      ★ {book.rating || 4.9}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-sm text-[11px]">
+                      {book.pages} pgs • {book.sizeMb} MB
+                    </span>
                   </div>
                 </div>
 
-                <div className="pt-3 grid grid-cols-2 gap-2 border-t border-surface-container">
-                  <button
-                    onClick={() => onOpenReader(book)}
-                    className="py-2 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-title-md text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer border border-surface-container-high"
-                  >
-                    <span className="material-symbols-outlined text-base text-primary">chrome_reader_mode</span>
-                    <span>Read</span>
-                  </button>
-                  <button
-                    onClick={() => onOpenDownload(book)}
-                    className="py-2 px-3 rounded-xl bg-gradient-to-r from-primary to-primary-container hover:brightness-105 text-on-primary font-title-md text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
-                  >
-                    <span className="material-symbols-outlined text-base">download</span>
-                    <span>Get</span>
-                  </button>
+                <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between gap-2 text-tertiary">
+                      <span className="font-arabic text-base sm:text-lg font-bold truncate">
+                        {book.arabicTitle}
+                      </span>
+                      <span className="text-[10px] font-mono text-outline font-semibold shrink-0 bg-surface-container px-2 py-0.5 rounded border border-surface-container-high">
+                        {book.authorHijriYear?.split('(')[0]?.trim() || '1445 AH'}
+                      </span>
+                    </div>
+                    <h3 
+                      onClick={() => onSelectBook(book)}
+                      className="font-display text-base font-bold text-primary group-hover:text-tertiary transition-colors line-clamp-1 cursor-pointer"
+                    >
+                      {book.title}
+                    </h3>
+                    <p className="font-body-sm text-xs text-on-surface-variant line-clamp-1">
+                      {book.author}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                      {book.formats.slice(0, 3).map((fmt, i) => (
+                        <span key={i} className="px-2 py-0.5 rounded-md bg-surface-container text-on-surface-variant font-label-sm text-[10px] font-semibold border border-surface-container-high">
+                          {fmt}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-3 grid grid-cols-2 gap-2 border-t border-surface-container">
+                    <button
+                      onClick={() => onOpenReader(book)}
+                      className="py-2 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-title-md text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer border border-surface-container-high"
+                    >
+                      <span className="material-symbols-outlined text-base text-primary">chrome_reader_mode</span>
+                      <span>Read</span>
+                    </button>
+                    <button
+                      onClick={() => onOpenDownload(book)}
+                      className="py-2 px-3 rounded-xl bg-gradient-to-r from-primary to-primary-container hover:brightness-105 text-on-primary font-title-md text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
+                    >
+                      <span className="material-symbols-outlined text-base">download</span>
+                      <span>Get</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* In-Browser Desktop Reading Experience Preview */}

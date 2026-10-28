@@ -15,13 +15,57 @@ export const DownloadModal: React.FC<DownloadModalProps> = ({ book, onClose }) =
   const handleDownload = (format: string) => {
     setDownloadingFormat(format);
     setDownloadCompleted(false);
+
+    try {
+      if (book.pdfUrl) {
+        const link = document.createElement('a');
+        link.href = book.pdfUrl;
+        link.download = `${book.title.replace(/[^\w\s-]/g, '_')}.pdf`;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        // Generate open-access treatise manifest
+        const content = `========================================================
+AL-MAKTABAH DIGITAL ARCHIVES (المكتبة الرقمية)
+Autonomous Waqf Academic Repository
+========================================================
+
+Title: ${book.title}
+Arabic: ${book.arabicTitle}
+Author: ${book.author} (${book.authorHijriYear || 'Classical Era'})
+Discipline: ${book.disciplineName}
+Academic Edition: ${book.edition}
+Format Selected: ${format}
+Volumes: ${book.volumes} | Pages: ${book.pages}
+
+Summary & Abstract:
+${book.description}
+
+Preserved under Academic Waqf (Open Access).
+========================================================`;
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${book.title.replace(/[^\w\s-]/g, '_')}_Manifest.txt`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+    } catch (e) {
+      console.warn('Download handler notice:', e);
+    }
+
     setTimeout(() => {
       setDownloadingFormat(null);
       setDownloadCompleted(true);
       setTimeout(() => {
         setDownloadCompleted(false);
       }, 3500);
-    }, 1200);
+    }, 800);
   };
 
   return (

@@ -150,21 +150,21 @@ Abu Hurairah narrated that the Messenger of Allah (ﷺ) said: "Verily, Allah doe
   }
 ];
 
-const LOCAL_STORAGE_KEY = 'al_maktabah_detailed_books_v2';
+const LOCAL_STORAGE_KEY = 'al_maktabah_books_live_v1';
 
 export function getStoredBooks(): DetailedBook[] {
   if (typeof window === 'undefined') {
-    return INITIAL_DETAILED_BOOKS;
+    return [];
   }
   try {
     const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (!raw) {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(INITIAL_DETAILED_BOOKS));
-      return INITIAL_DETAILED_BOOKS;
+      return [];
     }
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
   } catch (err) {
-    return INITIAL_DETAILED_BOOKS;
+    return [];
   }
 }
 
@@ -212,6 +212,7 @@ export function getPublicLibraryBooks(): (import('../types/library').Book)[] {
     pages: b.pages || 100,
     sizeMb: b.sizeMb || 5.0,
     coverImage: b.coverImage,
+    pdfUrl: b.pdfUrl,
     badge: b.disciplineName || 'Critical Edition',
     badgeColor: 'bg-primary-container text-on-primary',
     formats: (b.formats as any) || ['PDF', 'EPUB', 'Searchable OCR'],
@@ -224,10 +225,7 @@ export function getPublicLibraryBooks(): (import('../types/library').Book)[] {
     canonicalStatus: 'Academic Council Verified Codex',
   }));
 
-  // Merge stored books first, then add books from BOOKS that don't share an id
-  const seenIds = new Set(mappedStored.map((b) => b.id));
-  const remainingBooks = BOOKS.filter((b) => !seenIds.has(b.id));
-
-  return [...mappedStored, ...remainingBooks];
+  // Only return real stored/live books — static mock library is hidden
+  return mappedStored;
 }
 
