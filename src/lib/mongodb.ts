@@ -1,6 +1,14 @@
 import mongoose from 'mongoose';
+import dns from 'dns';
 
-const MONGODB_URI = process.env.MONGODB_URI;
+// Ensure Node.js resolves MongoDB Atlas SRV records reliably across all Windows/ISP networks
+if (typeof dns.setServers === 'function') {
+  try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+  } catch {
+    // Ignore if running in a restricted sandbox
+  }
+}
 
 /**
  * Global cache for Mongoose connection in Next.js to prevent multiple
@@ -23,7 +31,8 @@ if (!global.mongooseCache) {
 }
 
 export async function connectToDatabase(): Promise<typeof mongoose | null> {
-  if (!MONGODB_URI) {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
     // Graceful fallback when MONGODB_URI is not yet provided in .env
     return null;
   }
@@ -39,7 +48,7 @@ export async function connectToDatabase(): Promise<typeof mongoose | null> {
       serverSelectionTimeoutMS: 5000,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongooseInstance) => {
+    cached.promise = mongoose.connect(uri, opts).then((mongooseInstance) => {
       console.log('✓ Successfully connected to MongoDB Atlas (Al-Maktabah Cluster)');
       return mongooseInstance;
     }).catch((err) => {
@@ -60,5 +69,5 @@ export async function connectToDatabase(): Promise<typeof mongoose | null> {
 }
 
 export function isDatabaseConfigured(): boolean {
-  return Boolean(MONGODB_URI && MONGODB_URI.trim().length > 0);
+  return Boolean(process.env.MONGODB_URI && process.env.MONGODB_URI.trim().length > 0);
 }

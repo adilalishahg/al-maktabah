@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { DetailedBook, BookChapter } from '../types/bookContent';
 import { ReaderTheme } from '../types/library';
+import { CodexPdfReader } from '@/components/CodexPdfReader';
 
 interface BookReaderViewProps {
   book: DetailedBook;
@@ -30,6 +31,7 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
     return 0;
   });
 
+  const [readingFormat, setReadingFormat] = useState<'facsimile' | 'matn'>('facsimile');
   const [fontSize, setFontSize] = useState<number>(22);
   const [showTranslation, setShowTranslation] = useState<boolean>(true);
   const [showNotes, setShowNotes] = useState<boolean>(true);
@@ -145,40 +147,72 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
           </button>
         </form>
 
-        {/* Right: Typography Controls & Theme Selector */}
+        {/* Right: Mode Switcher, Typography Controls & Theme Selector */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/* Font Size Scaling */}
+          {/* Format Mode Switcher */}
           <div className="flex items-center bg-surface-container-low rounded-lg p-0.5 border border-surface-container">
             <button
-              onClick={() => setFontSize(Math.max(16, fontSize - 2))}
-              className="p-1 rounded text-on-surface hover:bg-surface-container text-xs font-bold"
-              title="Decrease Font Size"
+              onClick={() => setReadingFormat('facsimile')}
+              className={`px-2.5 py-1 rounded text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                readingFormat === 'facsimile'
+                  ? 'bg-primary text-on-primary shadow-xs'
+                  : 'text-on-surface-variant hover:text-on-surface'
+              }`}
+              title="Continuous Facsimile Codex"
             >
-              A-
+              <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
+              <span className="hidden sm:inline">Codex ({book.pages || 631} Pgs)</span>
             </button>
-            <span className="px-1.5 text-[11px] font-mono text-on-surface-variant">{fontSize}px</span>
             <button
-              onClick={() => setFontSize(Math.min(36, fontSize + 2))}
-              className="p-1 rounded text-on-surface hover:bg-surface-container text-xs font-bold"
-              title="Increase Font Size"
+              onClick={() => setReadingFormat('matn')}
+              className={`px-2.5 py-1 rounded text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                readingFormat === 'matn'
+                  ? 'bg-primary text-on-primary shadow-xs'
+                  : 'text-on-surface-variant hover:text-on-surface'
+              }`}
+              title="Digitized Arabic Matn & Translation"
             >
-              A+
+              <span className="material-symbols-outlined text-sm">auto_stories</span>
+              <span className="hidden sm:inline">Matn &amp; Trans</span>
             </button>
           </div>
 
+          {/* Font Size Scaling (when in Matn mode) */}
+          {readingFormat === 'matn' && (
+            <div className="flex items-center bg-surface-container-low rounded-lg p-0.5 border border-surface-container">
+              <button
+                onClick={() => setFontSize(Math.max(16, fontSize - 2))}
+                className="p-1 rounded text-on-surface hover:bg-surface-container text-xs font-bold"
+                title="Decrease Font Size"
+              >
+                A-
+              </button>
+              <span className="px-1.5 text-[11px] font-mono text-on-surface-variant">{fontSize}px</span>
+              <button
+                onClick={() => setFontSize(Math.min(36, fontSize + 2))}
+                className="p-1 rounded text-on-surface hover:bg-surface-container text-xs font-bold"
+                title="Increase Font Size"
+              >
+                A+
+              </button>
+            </div>
+          )}
+
           {/* Translation Toggle */}
-          <button
-            onClick={() => setShowTranslation(!showTranslation)}
-            className={`px-2 py-1 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1 ${
-              showTranslation
-                ? 'bg-secondary-container text-on-secondary-container'
-                : 'bg-surface-container text-on-surface-variant'
-            }`}
-            title="Toggle English Translation"
-          >
-            <span className="material-symbols-outlined text-sm">translate</span>
-            <span className="hidden md:inline">English</span>
-          </button>
+          {readingFormat === 'matn' && (
+            <button
+              onClick={() => setShowTranslation(!showTranslation)}
+              className={`px-2 py-1 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1 ${
+                showTranslation
+                  ? 'bg-secondary-container text-on-secondary-container'
+                  : 'bg-surface-container text-on-surface-variant'
+              }`}
+              title="Toggle English Translation"
+            >
+              <span className="material-symbols-outlined text-sm">translate</span>
+              <span className="hidden md:inline">English</span>
+            </button>
+          )}
 
           {/* Theme Palette */}
           <div className="flex items-center bg-surface-container-low rounded-lg p-0.5 border border-surface-container">
@@ -218,8 +252,18 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
         </div>
       </div>
 
-      {/* Main Split Layout: Table of Contents Drawer + Book Reading Canvas */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      {/* Reading Format Content: Continuous Facsimile PDF Reader OR Digital Matn View */}
+      {readingFormat === 'facsimile' ? (
+        <div className="w-full">
+          <CodexPdfReader
+            book={book}
+            pdfUrl={book.pdfUrl}
+            initialPage={activeChapter?.startPage || 1}
+          />
+        </div>
+      ) : (
+        /* Main Split Layout: Table of Contents Drawer + Book Reading Canvas */
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Chapters / Table of Contents Sidebar */}
         <aside
           className={`lg:col-span-4 bg-surface-container-lowest border border-surface-container rounded-2xl p-4 shadow-sm space-y-3 transition-all ${
@@ -389,6 +433,7 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
           </div>
         </main>
       </div>
+      )}
     </div>
   );
 };

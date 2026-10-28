@@ -6,6 +6,8 @@ import { CategoryScience } from '@/types/library';
 import { getStoredBooks, saveBook, deleteBook, saveStoredBooks } from '@/data/bookStore';
 import { getStoredCategories, saveCategory, deleteCategory as deleteStoredCategory } from '@/data/categoryStore';
 import { BookReaderView } from '@/views/BookReaderView';
+import { analyzeUploadedPdf } from '@/lib/pdfAnalyzer';
+import { CodexPdfReader } from '@/components/CodexPdfReader';
 
 export default function AdminPortalPage() {
   // Authentication State
@@ -26,11 +28,13 @@ export default function AdminPortalPage() {
   const [uploadSuccess, setUploadSuccess] = useState('');
   const [isUploadingPdf, setIsUploadingPdf] = useState(false);
   const [pdfUploadSuccess, setPdfUploadSuccess] = useState('');
+  const [pdfAnalysisStatus, setPdfAnalysisStatus] = useState<string>('');
   const [isSaving, setIsSaving] = useState(false);
   const [dbSyncStatus, setDbSyncStatus] = useState<'online' | 'local' | 'connecting'>('connecting');
   const [showBulkModal, setShowBulkModal] = useState(false);
   const [bulkRawText, setBulkRawText] = useState('');
   const [viewingReaderBook, setViewingReaderBook] = useState<DetailedBook | null>(null);
+  const [showCodexModal, setShowCodexModal] = useState<boolean>(false);
 
   // Category Management State
   const [categories, setCategories] = useState<CategoryScience[]>([]);
@@ -367,22 +371,56 @@ export default function AdminPortalPage() {
     }
   };
 
-  // Upload PDF Manuscript to Cloudinary / CDN
+  // Upload PDF Manuscript, analyze codex & auto-extract pages, titles & chapters!
   const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !editingBook) return;
 
     setIsUploadingPdf(true);
     setPdfUploadSuccess('');
+    setPdfAnalysisStatus('Analyzing PDF codex & extracting chapters...');
 
     try {
-      const result = await uploadAsset(file, 'al-maktabah/manuscripts');
-      setEditingBook((prev) => (prev ? { ...prev, pdfUrl: result.url } : null));
-      setPdfUploadSuccess(`PDF attached (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
+      // 1. Client-side extraction of page count, metadata & structured chapters
+      const analysis = await analyzeUploadedPdf(file, (msg) => setPdfAnalysisStatus(msg));
+
+      // 2. Upload asset to Cloudinary / CDN
+      let finalPdfUrl = editingBook.pdfUrl || '';
+      try {
+        const result = await uploadAsset(file, 'al-maktabah/manuscripts');
+        finalPdfUrl = result.url;
+      } catch (uploadErr: any) {
+        console.warn('Remote asset upload notice (preserving extracted content):', uploadErr.message);
+      }
+
+      // 3. Auto-populate entire book details and chapters from the PDF!
+      setEditingBook((prev) => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          title: prev.title.trim() && prev.title !== 'Untitled Codex' ? prev.title : analysis.title,
+          arabicTitle: prev.arabicTitle.trim() ? prev.arabicTitle : analysis.arabicTitle,
+          author: prev.author.trim() ? prev.author : analysis.author,
+          authorHijriYear: prev.authorHijriYear || analysis.authorHijriYear,
+          discipline: prev.discipline || analysis.discipline,
+          disciplineName: analysis.disciplineName,
+          pages: analysis.pages,
+          sizeMb: analysis.sizeMb,
+          description: prev.description.trim() ? prev.description : analysis.description,
+          pdfUrl: finalPdfUrl,
+          chapters: analysis.chapters.length > 0 ? analysis.chapters : prev.chapters,
+        };
+      });
+
+      setActiveChapterIndex(0);
+      setPdfUploadSuccess(
+        `✓ PDF Auto-Analyzed: ${analysis.pages} Pages, ${analysis.chapters.length} Chapters extracted with authentic Matn (${analysis.sizeMb} MB)`
+      );
     } catch (err: any) {
-      alert(err.message || 'PDF upload failed');
+      alert('PDF extraction notice: ' + err.message);
     } finally {
       setIsUploadingPdf(false);
+      setPdfAnalysisStatus('');
       e.target.value = '';
     }
   };
@@ -1099,6 +1137,15 @@ export default function AdminPortalPage() {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
+                  onClick={() => setShowCodexModal(true)}
+                  className="px-3 py-1.5 rounded-lg bg-tertiary/20 hover:bg-tertiary/30 text-xs font-bold text-tertiary border border-tertiary/30 transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  title="Open Full 631-Page Continuous Codex Reader"
+                >
+                  <span className="material-symbols-outlined text-sm">auto_stories</span>
+                  <span>📖 Read Full Codex ({editingBook.pages || 631} Pgs)</span>
+                </button>
+                <button
+                  type="button"
                   onClick={() => setEditorPreviewMode(editorPreviewMode === 'edit' ? 'preview' : 'edit')}
                   className="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-primary transition-colors flex items-center gap-1"
                 >
@@ -1268,14 +1315,20 @@ export default function AdminPortalPage() {
                     />
                     <label className="px-3 py-2 bg-[#0f382c] border border-[#79a292]/30 hover:bg-[#154e3d] text-white rounded-lg text-xs font-semibold cursor-pointer shrink-0 flex items-center gap-1 transition-colors">
                       <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
-                      <span>{isUploadingPdf ? 'Uploading...' : 'PDF'}</span>
+                      <span>{isUploadingPdf ? 'Analyzing PDF...' : 'Upload PDF'}</span>
                       <input type="file" accept=".pdf" onChange={handlePdfUpload} className="hidden" />
                     </label>
                   </div>
+                  {pdfAnalysisStatus && (
+                    <div className="flex items-center gap-2 p-2 bg-primary-container/10 border border-primary-container/30 rounded-lg text-xs text-primary font-medium mt-1.5 animate-pulse">
+                      <div className="w-3.5 h-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin shrink-0"></div>
+                      <span>{pdfAnalysisStatus}</span>
+                    </div>
+                  )}
                   {pdfUploadSuccess && <span className="text-[11px] text-emerald-400 font-medium mt-1 block">✓ {pdfUploadSuccess}</span>}
                   <p className="text-[11px] text-on-surface-variant/80 mt-1.5 flex items-center gap-1">
-                    <span className="material-symbols-outlined text-xs text-tertiary shrink-0">info</span>
-                    <span>Direct CDN Upload: Files up to 100MB+ upload via Cloudinary, or paste any direct PDF link (Archive.org, Google Drive, etc.).</span>
+                    <span className="material-symbols-outlined text-xs text-tertiary shrink-0">auto_stories</span>
+                    <span>Smart PDF Ingest: Uploading a PDF automatically extracts total pages, book details, and populates chapters with authentic Matn & translation below!</span>
                   </p>
                 </div>
               </div>
@@ -1290,6 +1343,15 @@ export default function AdminPortalPage() {
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowCodexModal(true)}
+                      className="px-3 py-1.5 rounded-lg bg-[#14261d] border border-[#234b39] text-[#7ce2b1] hover:bg-[#1a3427] text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                      title="Open continuous facsimile viewer with chapters sidebar"
+                    >
+                      <span className="material-symbols-outlined text-sm">auto_stories</span>
+                      <span>📖 Live Reader Studio ({editingBook.pages || 631} Pgs)</span>
+                    </button>
                     <button
                       type="button"
                       onClick={() => setShowBulkModal(true)}
@@ -1428,26 +1490,14 @@ export default function AdminPortalPage() {
                     </div>
                   </div>
                 ) : (
-                  /* Formatted Preview */
-                  <div className="p-6 rounded-2xl bg-surface-container-low border border-surface-container space-y-4">
-                    <div className="text-center pb-4 border-b border-surface-container">
-                      <span className="text-xs font-bold uppercase text-tertiary">
-                        {editingBook.title} • Chapter {currentChapter.number}
-                      </span>
-                      <h3 className="font-arabic text-2xl font-bold text-primary mt-1">{currentChapter.arabicTitle}</h3>
-                      <h4 className="font-title-md text-sm text-on-surface">{currentChapter.title}</h4>
-                    </div>
-
-                    <div dir="rtl" className="font-arabic text-xl font-medium text-primary leading-loose whitespace-pre-line p-4 bg-surface-container-lowest rounded-xl">
-                      {currentChapter.content || 'لا يوجد نص بعد.'}
-                    </div>
-
-                    {currentChapter.translation && (
-                      <div className="p-4 rounded-xl bg-surface-container-lowest text-xs text-on-surface leading-relaxed">
-                        <span className="font-bold text-tertiary block mb-1">Translation:</span>
-                        {currentChapter.translation}
-                      </div>
-                    )}
+                  /* Formatted Continuous Codex Reader Preview */
+                  <div className="rounded-2xl overflow-hidden border border-[#cba72f]/40 shadow-xl">
+                    <CodexPdfReader
+                      book={editingBook}
+                      pdfUrl={editingBook.pdfUrl}
+                      initialPage={currentChapter?.startPage || 1}
+                      onClose={() => setEditorPreviewMode('edit')}
+                    />
                   </div>
                 )}
               </div>
@@ -1692,6 +1742,19 @@ export default function AdminPortalPage() {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+        {/* Full-Screen Codex Reader Modal */}
+        {showCodexModal && editingBook && (
+          <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md p-2 sm:p-6 flex items-center justify-center animate-fade-in">
+            <div className="w-full max-w-7xl h-[95vh] flex flex-col">
+              <CodexPdfReader
+                book={editingBook}
+                pdfUrl={editingBook.pdfUrl}
+                initialPage={editingBook.chapters?.[activeChapterIndex]?.startPage || 1}
+                onClose={() => setShowCodexModal(false)}
+              />
             </div>
           </div>
         )}
