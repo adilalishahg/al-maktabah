@@ -25,10 +25,10 @@ export const Header: React.FC<HeaderProps> = ({
   const navLinks = [
     { id: 'home', label: 'Home' },
     { id: 'browse-library', label: 'Browse Library' },
-    { id: 'categories', label: 'Categories' },
-    { id: 'manuscripts', label: 'Manuscripts' },
-    { id: 'reader-studio', label: 'Reader Studio' },
-    { id: 'latest-releases', label: 'Latest Releases' },
+    // { id: 'categories', label: 'Categories' },
+    // { id: 'manuscripts', label: 'Manuscripts' },
+    // { id: 'reader-studio', label: 'Reader Studio' },
+    // { id: 'latest-releases', label: 'Latest Releases' },
     { id: 'about', label: 'About' },
   ];
 
@@ -98,8 +98,8 @@ export const Header: React.FC<HeaderProps> = ({
                 key={link.id}
                 onClick={() => onNavigate(link.id)}
                 className={`px-2.5 2xl:px-3 py-1.5 2xl:py-2 rounded-lg font-title-md text-xs 2xl:text-sm transition-all duration-200 cursor-pointer ${isActive
-                    ? 'bg-primary-container text-on-primary font-semibold shadow-xs'
-                    : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high'
+                  ? 'bg-primary-container text-on-primary font-semibold shadow-xs'
+                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high'
                   }`}
               >
                 {link.label}
@@ -111,7 +111,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Right Action Tools */}
         <div className="flex items-center gap-1.5 sm:gap-2 xl:gap-2.5 2xl:gap-3 shrink-0">
           {/* Quick Search Pill (lg+) */}
-          <div
+          {/* <div
             onClick={onOpenSearch}
             className="relative hidden lg:flex items-center bg-surface-container-lowest rounded-lg px-2.5 2xl:px-3 py-1.5 shadow-[0_1px_4px_rgba(0,0,0,0.03)] border border-surface-container-high cursor-pointer hover:border-tertiary-container transition-colors w-36 lg:w-40 2xl:w-56 shrink-0"
           >
@@ -123,8 +123,7 @@ export const Header: React.FC<HeaderProps> = ({
               ⌘K
             </kbd>
           </div>
-
-          {/* Search Icon button (mobile & md) */}
+ 
           <button
             onClick={onOpenSearch}
             className="lg:hidden p-1.5 sm:p-2 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors shrink-0"
@@ -132,39 +131,36 @@ export const Header: React.FC<HeaderProps> = ({
             aria-label="Search"
           >
             <span className="material-symbols-outlined text-xl">search</span>
-          </button>
+          </button> */}
 
           {/* Theme Switcher Trio (sm+) */}
           <div className="hidden sm:flex items-center bg-surface-container-low rounded-lg p-0.5 gap-0.5 border border-surface-container shrink-0">
             <button
               onClick={() => onThemeChange('parchment')}
-              className={`p-1.5 rounded text-xs flex items-center transition-all ${
-                currentTheme === 'parchment'
-                  ? 'bg-surface-container-lowest text-on-surface shadow-xs'
-                  : 'text-on-surface-variant hover:text-on-surface'
-              }`}
+              className={`p-1.5 rounded text-xs flex items-center transition-all ${currentTheme === 'parchment'
+                ? 'bg-surface-container-lowest text-on-surface shadow-xs'
+                : 'text-on-surface-variant hover:text-on-surface'
+                }`}
               title="Light Parchment Theme"
             >
               <span className="material-symbols-outlined text-sm text-tertiary-container">light_mode</span>
             </button>
             <button
               onClick={() => onThemeChange('sepia')}
-              className={`p-1.5 rounded text-xs flex items-center transition-all ${
-                currentTheme === 'sepia'
-                  ? 'bg-surface-container-lowest text-on-surface shadow-xs'
-                  : 'text-on-surface-variant hover:text-on-surface'
-              }`}
+              className={`p-1.5 rounded text-xs flex items-center transition-all ${currentTheme === 'sepia'
+                ? 'bg-surface-container-lowest text-on-surface shadow-xs'
+                : 'text-on-surface-variant hover:text-on-surface'
+                }`}
               title="Warm Sepia Parchment"
             >
               <span className="material-symbols-outlined text-sm text-tertiary">auto_stories</span>
             </button>
             <button
               onClick={() => onThemeChange('night')}
-              className={`p-1.5 rounded text-xs flex items-center transition-all ${
-                currentTheme === 'night'
-                  ? 'bg-surface-container-lowest text-on-surface shadow-xs'
-                  : 'text-on-surface-variant hover:text-on-surface'
-              }`}
+              className={`p-1.5 rounded text-xs flex items-center transition-all ${currentTheme === 'night'
+                ? 'bg-surface-container-lowest text-on-surface shadow-xs'
+                : 'text-on-surface-variant hover:text-on-surface'
+                }`}
               title="Night Emerald Theme"
             >
               <span className="material-symbols-outlined text-sm text-primary-container">dark_mode</span>
@@ -175,21 +171,19 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="hidden md:flex items-center bg-surface-container-high rounded-lg p-0.5 border border-surface-container shrink-0">
             <button
               onClick={() => onLangChange('EN')}
-              className={`px-2 py-1 rounded font-label-sm text-xs font-semibold transition-colors ${
-                currentLang === 'EN'
-                  ? 'bg-surface-container-lowest text-on-surface shadow-xs'
-                  : 'text-on-surface-variant hover:text-on-surface'
-              }`}
+              className={`px-2 py-1 rounded font-label-sm text-xs font-semibold transition-colors ${currentLang === 'EN'
+                ? 'bg-surface-container-lowest text-on-surface shadow-xs'
+                : 'text-on-surface-variant hover:text-on-surface'
+                }`}
             >
               EN
             </button>
             <button
               onClick={() => onLangChange('AR')}
-              className={`px-2 py-1 rounded font-label-sm text-xs font-semibold transition-colors ${
-                currentLang === 'AR'
-                  ? 'bg-surface-container-lowest text-on-surface shadow-xs'
-                  : 'text-on-surface-variant hover:text-on-surface'
-              }`}
+              className={`px-2 py-1 rounded font-label-sm text-xs font-semibold transition-colors ${currentLang === 'AR'
+                ? 'bg-surface-container-lowest text-on-surface shadow-xs'
+                : 'text-on-surface-variant hover:text-on-surface'
+                }`}
             >
               عربي
             </button>
@@ -204,7 +198,6 @@ export const Header: React.FC<HeaderProps> = ({
             />
           </div>
 
-          {/* Mobile / Tablet Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="xl:hidden p-1.5 sm:p-2 rounded-lg text-on-surface hover:bg-surface-container transition-colors"
@@ -245,8 +238,8 @@ export const Header: React.FC<HeaderProps> = ({
                     setMobileMenuOpen(false);
                   }}
                   className={`p-3 rounded-xl text-left text-sm font-semibold flex items-center justify-between transition-colors ${isActive
-                      ? 'bg-primary-container text-on-primary shadow-xs'
-                      : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
+                    ? 'bg-primary-container text-on-primary shadow-xs'
+                    : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
                     }`}
                 >
                   <span className="flex items-center gap-2">
