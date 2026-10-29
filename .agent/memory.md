@@ -9,39 +9,22 @@
 
 ## 1. Active Session State & Context
 
-- **Current Status:** **All 5 Architecture & Optimization Phases Successfully Completed, Tested & Hardened**.
-- **Delivered Milestones Summary:**
-  1. **Phase 5: Automated Testing & CI/CD Hardening:**
-     - Created `src/app/api/health/route.ts`: System healthcheck probe returning real-time status, MongoDB connection mode, process uptime, and memory metrics with `Cache-Control: no-store`.
-     - Built `src/tests/runAllTests.ts`: Comprehensive quality gate runner testing Security, Performance, Database, and SEO. Added `"test": "tsx src/tests/runAllTests.ts"` to `package.json` (21/21 assertions passed).
-     - Multi-stage production `Dockerfile`: Cloud-native 12-factor Node 22 Alpine build (`deps`, `builder`, `runner`) with non-root security user `nextjs` and built-in container healthcheck.
-     - Production `docker-compose.yml`: Automated local/cloud orchestration for Next.js app and persistent MongoDB service.
-     - GitHub Actions Workflow (`.github/workflows/ci.yml`): Continuous Integration pipeline running Static Typecheck (`npm run lint`), Quality Gate Tests (`npm test`), and Next.js Production Build (`npm run build`).
-     - Configuration template: Sanitized, documented `.env.example`.
-  2. **Phase 4: SEO, Scholarly Metadata & Semantic Web:**
-     - Next.js 16 dynamic `src/app/sitemap.ts` and `src/app/robots.ts`.
-     - `src/components/seo/ScholarlyJsonLd.tsx` injecting `Schema.org/Book` & `Schema.org/Organization` structured metadata.
-     - Document head OpenGraph 1200x630 cards, Twitter summary cards, and canonical alternate language tagging.
-  3. **Phase 3: Database & State Architecture Optimization:**
-     - Mongoose compound indexes on `BookModel` and text search indexes on `CategoryModel`.
-     - Lean Query Projections on `GET /api/books` reducing public catalog payloads by >90%.
-     - Connection pool parameters (`minPoolSize: 2`, `maxPoolSize: 10`, `socketTimeoutMS: 45000`) and DNS resilience.
-  4. **Phase 2: Performance Optimization & Dynamic Code Splitting:**
-     - Dynamic chunking of 7 views & 5 dialogs with `React.lazy()` / `Suspense`.
-     - Lazy-loaded `CodexPdfReader` (770+ lines of PDF canvas engine).
-     - Edge SWR headers on all GET endpoints.
-     - Component memoization (`useMemo`) and image optimization (`loading="lazy"`, `decoding="async"`).
-  5. **Phase 1: Security Hardening & Input Sanitization:**
-     - Cryptographic HMAC-SHA256 authentication tokens, timing-safe checks, ReDoS query escaping, binary magic-byte inspection (`src/lib/fileSecurity.ts`), and referential integrity.
-  6. **Dynamic Homepage & Featured Scholarly Codex Reader Controls:**
-     - Complete admin control over all 7 homepage sections and live reader preview.
+- **Current Status:** **Active Refactoring & Codebase Modularization Phase Initiated**.
+  - All 5 prior architecture & optimization phases completed, tested, and passing (21/21 assertions).
+  - Reader toolbar sticky clearance stabilized at exact 2px.
+  - New Architectural Governance Standards ratified across `.agent/rules/`:
+    1. **Strict File & Function Length:** Hard ceiling of 200–500 lines maximum for all components, hooks, and utilities.
+    2. **Strict Separation of Concerns (SoC):** Isolated UI views, dedicated `types/` declarations, decoupled custom hooks (`use*.ts`), and pure utilities (`lib/`/`utils/`).
+    3. **Centralized Design Tokens (Zero Hardcoding):** Absolute ban on raw hex codes (`#...`) and arbitrary pixel dimensions (`w-[...px]`, `text-[...px]`) in JSX. Single source of truth in `@theme`.
+- **Active Task:** Codebase Audit & Migration Execution (`.agent/refactor-plan.md`).
 
 ---
 
-## 2. Completed Milestones & Architectural Decisions
+## 2. Completed Milestones & Architectural Decisions (ADRs)
 
 | Date | Milestone / Component | Architectural Decision & Impact |
 |------|------------------------|---------------------------------|
+| 2026-10 | Standards: SoC, File Limits & Zero-Hardcoded Tokens | Ratified strict architectural governance: 200–500 line limits, UI/Hook/Type separation of concerns, and centralized design tokens (zero raw hex/arbitrary pixels). |
 | 2026-10 | Reader Toolbar Gap Optimization (1-2px) | Synchronized dynamic header measurement via `--app-header-height` CSS custom property, eliminated extraneous top margin and `space-y` selector bleeding, maintaining exact 2px sticky separation between header border and reader toolbar. |
 | 2026-10 | Phase 5 CI/CD & Testing Hardening | Implemented `/api/health`, consolidated `npm test` runner, multi-stage Alpine Dockerfile, docker-compose, and GitHub Actions CI workflow. |
 | 2026-10 | Phase 4 SEO & Semantic Metadata | Implemented Next.js 16 dynamic `sitemap.ts`, `robots.ts`, OpenGraph/Twitter cards, and Schema.org/Book JSON-LD scholarly metadata. |
@@ -63,6 +46,7 @@
 - [x] **Phase 3: Database & State Architecture Optimization** (Mongoose query lean projections, compound index optimization on codex metadata, connection pool resilience).
 - [x] **Phase 4: SEO, Scholarly Metadata & Semantic Web** (JSON-LD Schema.org/Book, OpenGraph tags, Arabic typography font optimization, sitemap & robots).
 - [x] **Phase 5: Automated Testing & CI/CD Hardening** (Healthcheck probe, consolidated test runner, multi-stage Dockerfile, docker-compose, GitHub Actions).
+- [ ] **Phase 6: Codebase Refactoring & Modularity** (Centralizing tokens, segregating types, custom hooks decoupling, decomposing oversized views <500 lines).
 
 ---
 
@@ -79,7 +63,3 @@
   - `POST /api/auth/login`: Admin authentication handshake returning signed token and cookie.
   - `GET /api/auth/verify`: Token validity probe.
   - `GET / POST /api/books`: Book collection management (POST protected, GET edge cached with lean projection).
-  - `GET / POST / PUT / DELETE /api/books/[id]`: Individual codex CRUD (PUT & DELETE protected, GET edge cached with full chapter tree).
-  - `GET / POST / DELETE /api/categories`: Discipline classifications (POST & DELETE protected, GET edge cached).
-  - `GET / POST /api/settings`: Homepage sections & reader configuration (POST protected, GET edge cached).
-  - `GET / POST /api/upload`: PDF & text manuscript analysis and signed CDN uploads (Protected with magic-byte validation).
