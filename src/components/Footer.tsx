@@ -31,6 +31,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <img
                 alt="Al-Maktabah Brand Logo"
                 className="h-7 w-auto object-contain"
+                loading="lazy"
+                decoding="async"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkk5vdhfETWDMXgUobuz8b7OFIRxT1RnZyf7NS9WywvGhN2DjXfBC38oWKpOPBa1Qs_m1ca4JDUU4MPkxVPn_Sc46Y9KuVauZl1My3j3Je5ikE7fJ0utasVbauXGLar-TbkdJmDkpxhfmPHXPvXvl3Bffa8uNNmdDFvmiUQbiT0GyDAuAJEGh7OHztOzMPqH7Ugw6p3FwSAO-cR9R2gvZLOgmsldiGILWTav5h_tWWlYQ6vJe9X8xI"
               />
               <span className="font-display font-title-lg text-title-lg text-primary font-bold">

@@ -1,27 +1,45 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Book, CategoryScience, IsnadNode, ReaderTheme, WordAnalysis } from './types/library';
 import { BOOKS, MANUSCRIPTS, PRIMARY_READING_SECTION } from './data/mockLibrary';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
-import { CommandPalette } from './components/CommandPalette';
-import { BookDetailModal } from './components/BookDetailModal';
-import { DownloadModal } from './components/DownloadModal';
-import { NarratorBiographyModal } from './components/NarratorBiographyModal';
-import { MorphologyModal } from './components/MorphologyModal';
 import { HomeView } from './views/HomeView';
-import { BrowseLibraryView } from './views/BrowseLibraryView';
-import { CategoriesView } from './views/CategoriesView';
-import { ReaderStudioView } from './views/ReaderStudioView';
-import { ManuscriptsView } from './views/ManuscriptsView';
-import { LatestReleasesView } from './views/LatestReleasesView';
-import { AboutView } from './views/AboutView';
-import { AdminDashboardView } from './views/AdminDashboardView';
-import { BookReaderView } from './views/BookReaderView';
 import { DetailedBook } from './types/bookContent';
+import { HomeSettings } from './types/homeSettings';
 import { getStoredBooks, getPublicLibraryBooks, saveStoredBooks } from './data/bookStore';
 import { getStoredCategories } from './data/categoryStore';
+import { getHomeSettings, saveHomeSettings } from './data/homeSettingsStore';
+
+// Lazy-loaded secondary views (Dynamic Code Splitting for ultra-fast LCP)
+const BrowseLibraryView = lazy(() => import('./views/BrowseLibraryView').then((m) => ({ default: m.BrowseLibraryView })));
+const CategoriesView = lazy(() => import('./views/CategoriesView').then((m) => ({ default: m.CategoriesView })));
+const ReaderStudioView = lazy(() => import('./views/ReaderStudioView').then((m) => ({ default: m.ReaderStudioView })));
+const ManuscriptsView = lazy(() => import('./views/ManuscriptsView').then((m) => ({ default: m.ManuscriptsView })));
+const LatestReleasesView = lazy(() => import('./views/LatestReleasesView').then((m) => ({ default: m.LatestReleasesView })));
+const AboutView = lazy(() => import('./views/AboutView').then((m) => ({ default: m.AboutView })));
+const BookReaderView = lazy(() => import('./views/BookReaderView').then((m) => ({ default: m.BookReaderView })));
+
+// Lazy-loaded interactive modals (Only fetched on demand)
+const CommandPalette = lazy(() => import('./components/CommandPalette').then((m) => ({ default: m.CommandPalette })));
+const BookDetailModal = lazy(() => import('./components/BookDetailModal').then((m) => ({ default: m.BookDetailModal })));
+const DownloadModal = lazy(() => import('./components/DownloadModal').then((m) => ({ default: m.DownloadModal })));
+const NarratorBiographyModal = lazy(() => import('./components/NarratorBiographyModal').then((m) => ({ default: m.NarratorBiographyModal })));
+const MorphologyModal = lazy(() => import('./components/MorphologyModal').then((m) => ({ default: m.MorphologyModal })));
+
+// Loading spinner for async views
+const ViewLoadingFallback = () => (
+  <div className="min-h-[55vh] flex flex-col items-center justify-center p-8 text-center animate-pulse">
+    <div className="w-14 h-14 rounded-2xl bg-[#0f382c]/10 dark:bg-[#0f382c]/30 flex items-center justify-center mb-3 text-[#0f382c] dark:text-[#a2b7ad]">
+      <span className="material-symbols-outlined text-3xl animate-spin">menu_book</span>
+    </div>
+    <div className="text-sm font-semibold tracking-wide text-gray-700 dark:text-gray-300 font-serif">
+      Loading Scholarly Codex &amp; Digital Waqf Repository...
+    </div>
+    <div className="text-xs text-gray-400 mt-1">جاري تحميل المخطوطة والبيانات العلمية</div>
+  </div>
+);
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState<string>('home');
@@ -29,6 +47,7 @@ export default function App() {
   const [currentLang, setCurrentLang] = useState<'EN' | 'AR'>('EN');
   const [publicBooks, setPublicBooks] = useState<Book[]>(() => getPublicLibraryBooks());
   const [categories, setCategories] = useState<CategoryScience[]>(() => getStoredCategories());
+  const [homeSettings, setHomeSettings] = useState<HomeSettings>(() => getHomeSettings());
 
   // Modals state
   const [commandPaletteOpen, setCommandPaletteOpen] = useState<boolean>(false);
@@ -75,17 +94,32 @@ export default function App() {
         }
       })
       .catch((err) => console.warn('Public site API categories sync notice:', err));
+
+    fetch('/api/settings')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.data) {
+          saveHomeSettings(data.data);
+          setHomeSettings(data.data);
+        }
+      })
+      .catch((err) => console.warn('Public site API settings sync notice:', err));
   };
 
   useEffect(() => {
     const syncLibrary = () => {
       setPublicBooks(getPublicLibraryBooks());
       setCategories(getStoredCategories());
+      setHomeSettings(getHomeSettings());
     };
     window.addEventListener('storage', syncLibrary);
+    window.addEventListener('al_maktabah_settings_updated', syncLibrary);
     syncFromApi();
 
-    return () => window.removeEventListener('storage', syncLibrary);
+    return () => {
+      window.removeEventListener('storage', syncLibrary);
+      window.removeEventListener('al_maktabah_settings_updated', syncLibrary);
+    };
   }, []);
 
   // Apply theme to document body
@@ -100,6 +134,10 @@ export default function App() {
 
   // Scroll to top on navigation change and refresh books
   const navigateTo = (path: string) => {
+    if (path === 'admin') {
+      window.location.href = '/admin';
+      return;
+    }
     setPublicBooks(getPublicLibraryBooks());
     setCurrentPath(path);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -116,6 +154,16 @@ export default function App() {
         setDetailedReaderBook(detailed);
         setActiveChapterId(undefined);
         navigateTo('book-viewer');
+
+        // Stale-While-Revalidate: fetch complete full-text chapters from database in background
+        fetch(`/api/books/${book.id}`)
+          .then((res) => (res.ok ? res.json() : null))
+          .then((json) => {
+            if (json?.data?.chapters?.length) {
+              setDetailedReaderBook(json.data);
+            }
+          })
+          .catch(() => {});
         return;
       }
 
@@ -155,6 +203,16 @@ export default function App() {
       setDetailedReaderBook(runtimeDetailed);
       setActiveChapterId(undefined);
       navigateTo('book-viewer');
+
+      // Fetch full codex from API if available
+      fetch(`/api/books/${book.id}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((json) => {
+          if (json?.data?.chapters?.length) {
+            setDetailedReaderBook(json.data);
+          }
+        })
+        .catch(() => {});
       return;
     }
     navigateTo('reader-studio');
@@ -190,7 +248,8 @@ export default function App() {
             <HomeView
               books={publicBooks}
               categories={categories}
-              readingSection={PRIMARY_READING_SECTION}
+              readingSection={homeSettings.readerSection || PRIMARY_READING_SECTION}
+              homeSettings={homeSettings}
               onSelectBook={(book) => setSelectedBookForModal(book)}
               onOpenReader={handleOpenReader}
               onOpenDownload={(book) => setDownloadBook(book)}
@@ -201,109 +260,123 @@ export default function App() {
             />
           )}
 
-          {currentPath === 'browse-library' && (
-            <BrowseLibraryView
-              books={publicBooks}
-              categories={categories}
-              onSelectBook={(book) => setSelectedBookForModal(book)}
-              onOpenReader={handleOpenReader}
-              onOpenDownload={(book) => setDownloadBook(book)}
-              initialQuery={searchFilterQuery}
-              isLoading={isFetchingDb}
-              onRefresh={syncFromApi}
-            />
-          )}
+          <Suspense fallback={<ViewLoadingFallback />}>
+            {currentPath === 'browse-library' && (
+              <BrowseLibraryView
+                books={publicBooks}
+                categories={categories}
+                onSelectBook={(book) => setSelectedBookForModal(book)}
+                onOpenReader={handleOpenReader}
+                onOpenDownload={(book) => setDownloadBook(book)}
+                initialQuery={searchFilterQuery}
+                isLoading={isFetchingDb}
+                onRefresh={syncFromApi}
+              />
+            )}
 
-          {currentPath === 'categories' && (
-            <CategoriesView
-              categories={categories}
-              books={publicBooks}
-              onSelectCategory={(catId) => {
-                setSearchFilterQuery(catId);
-                navigateTo('browse-library');
-              }}
-              onNavigate={navigateTo}
-            />
-          )}
+            {currentPath === 'categories' && (
+              <CategoriesView
+                categories={categories}
+                books={publicBooks}
+                onSelectCategory={(catId) => {
+                  setSearchFilterQuery(catId);
+                  navigateTo('browse-library');
+                }}
+                onNavigate={navigateTo}
+              />
+            )}
 
-          {currentPath === 'reader-studio' && (
-            <ReaderStudioView
-              initialBook={readerBook}
-              allBooks={publicBooks}
-              readingSection={PRIMARY_READING_SECTION}
-              onOpenNarrator={(narrator) => setSelectedNarrator(narrator)}
-              onOpenWordAnalysis={(word) => setSelectedWord(word)}
-              onNavigateHome={() => navigateTo('home')}
-            />
-          )}
+            {currentPath === 'reader-studio' && (
+              <ReaderStudioView
+                initialBook={readerBook}
+                allBooks={publicBooks}
+                readingSection={homeSettings.readerSection || PRIMARY_READING_SECTION}
+                onOpenNarrator={(narrator) => setSelectedNarrator(narrator)}
+                onOpenWordAnalysis={(word) => setSelectedWord(word)}
+                onNavigateHome={() => navigateTo('home')}
+              />
+            )}
 
-          {currentPath === 'manuscripts' && (
-            <ManuscriptsView manuscripts={MANUSCRIPTS} />
-          )}
+            {currentPath === 'manuscripts' && (
+              <ManuscriptsView manuscripts={MANUSCRIPTS} />
+            )}
 
-          {currentPath === 'latest-releases' && (
-            <LatestReleasesView
-              books={publicBooks}
-              onSelectBook={(book) => setSelectedBookForModal(book)}
-              onOpenReader={handleOpenReader}
-              onOpenDownload={(book) => setDownloadBook(book)}
-            />
-          )}
+            {currentPath === 'latest-releases' && (
+              <LatestReleasesView
+                books={publicBooks}
+                onSelectBook={(book) => setSelectedBookForModal(book)}
+                onOpenReader={handleOpenReader}
+                onOpenDownload={(book) => setDownloadBook(book)}
+              />
+            )}
 
-          {currentPath === 'about' && <AboutView />}
+            {currentPath === 'about' && <AboutView />}
 
-          {currentPath === 'book-viewer' && detailedReaderBook && (
-            <BookReaderView
-              book={detailedReaderBook}
-              initialChapterId={activeChapterId}
-              onNavigate={navigateTo}
-              onOpenAdminEdit={(b) => {
-                navigateTo('admin');
-              }}
-              theme={currentTheme}
-              onThemeChange={setCurrentTheme}
-            />
-          )}
+            {currentPath === 'book-viewer' && detailedReaderBook && (
+              <BookReaderView
+                book={detailedReaderBook}
+                initialChapterId={activeChapterId}
+                onNavigate={navigateTo}
+                onOpenAdminEdit={(b) => {
+                  navigateTo('admin');
+                }}
+                theme={currentTheme}
+                onThemeChange={setCurrentTheme}
+              />
+            )}
+          </Suspense>
         </div>
       </main>
 
       {/* Footer */}
       <Footer onNavigate={navigateTo} />
 
-      {/* Modals & Dialogs */}
-      <CommandPalette
-        isOpen={commandPaletteOpen}
-        onClose={() => setCommandPaletteOpen(false)}
-        books={publicBooks}
-        categories={categories}
-        onSelectBook={(book) => setSelectedBookForModal(book)}
-        onNavigate={navigateTo}
-      />
+      {/* Modals & Dialogs (Lazily loaded only when activated) */}
+      <Suspense fallback={null}>
+        {commandPaletteOpen && (
+          <CommandPalette
+            isOpen={commandPaletteOpen}
+            onClose={() => setCommandPaletteOpen(false)}
+            books={publicBooks}
+            categories={categories}
+            onSelectBook={(book) => setSelectedBookForModal(book)}
+            onNavigate={navigateTo}
+          />
+        )}
 
-      <BookDetailModal
-        book={selectedBookForModal}
-        onClose={() => setSelectedBookForModal(null)}
-        onOpenReader={handleOpenReader}
-        onDownload={(book) => {
-          setSelectedBookForModal(null);
-          setDownloadBook(book);
-        }}
-      />
+        {selectedBookForModal && (
+          <BookDetailModal
+            book={selectedBookForModal}
+            onClose={() => setSelectedBookForModal(null)}
+            onOpenReader={handleOpenReader}
+            onDownload={(book) => {
+              setSelectedBookForModal(null);
+              setDownloadBook(book);
+            }}
+          />
+        )}
 
-      <DownloadModal
-        book={downloadBook}
-        onClose={() => setDownloadBook(null)}
-      />
+        {downloadBook && (
+          <DownloadModal
+            book={downloadBook}
+            onClose={() => setDownloadBook(null)}
+          />
+        )}
 
-      <NarratorBiographyModal
-        narrator={selectedNarrator}
-        onClose={() => setSelectedNarrator(null)}
-      />
+        {selectedNarrator && (
+          <NarratorBiographyModal
+            narrator={selectedNarrator}
+            onClose={() => setSelectedNarrator(null)}
+          />
+        )}
 
-      <MorphologyModal
-        word={selectedWord}
-        onClose={() => setSelectedWord(null)}
-      />
+        {selectedWord && (
+          <MorphologyModal
+            word={selectedWord}
+            onClose={() => setSelectedWord(null)}
+          />
+        )}
+      </Suspense>
     </div>
   );
 }

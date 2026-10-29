@@ -46,6 +46,9 @@ const CategorySchema = new Schema<ICategoryDocument>(
   }
 );
 
+// Fast text search across classification names and descriptions
+CategorySchema.index({ name: 'text', arabicName: 'text', description: 'text' });
+
 export const CategoryModel: Model<ICategoryDocument> =
   (mongoose.models?.Category as Model<ICategoryDocument>) ||
   mongoose.model<ICategoryDocument>('Category', CategorySchema);

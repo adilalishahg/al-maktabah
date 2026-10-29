@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import { BookModel } from '@/models/BookModel';
 import { INITIAL_DETAILED_BOOKS } from '@/data/bookStore';
+import { verifyAdminRequest } from '@/lib/authGuard';
 
 export async function GET(
   request: Request,
@@ -19,7 +20,14 @@ export async function GET(
           { status: 404 }
         );
       }
-      return NextResponse.json({ success: true, data: book });
+      return NextResponse.json(
+        { success: true, data: book },
+        {
+          headers: {
+            'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=1200',
+          },
+        }
+      );
     }
 
     return NextResponse.json(
@@ -39,6 +47,14 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = verifyAdminRequest(request);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || 'Unauthorized: Admin authentication required.' },
+        { status: 401 }
+      );
+    }
+
     const { id } = await params;
     const body = await request.json();
     const db = await connectToDatabase();
@@ -82,6 +98,14 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const auth = verifyAdminRequest(request);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || 'Unauthorized: Admin authentication required.' },
+        { status: 401 }
+      );
+    }
+
     const { id } = await params;
     const db = await connectToDatabase();
 

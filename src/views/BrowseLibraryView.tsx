@@ -277,6 +277,8 @@ export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   src={book.coverImage}
                   alt={book.title}
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="absolute top-2 left-2 flex gap-1">
                   <span className={`px-2 py-0.5 rounded font-label-sm text-[11px] font-semibold shadow-sm ${book.badgeColor || 'bg-primary-container text-on-primary'}`}>
@@ -361,7 +363,13 @@ export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
                   <tr key={book.id} className="hover:bg-surface-container-low/40 transition-colors">
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-3">
-                        <img src={book.coverImage} alt={book.title} className="w-8 h-10 object-cover rounded shadow-2xs" />
+                        <img
+                          src={book.coverImage}
+                          alt={book.title}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-8 h-10 object-cover rounded shadow-2xs"
+                        />
                         <div>
                           <div
                             onClick={() => onSelectBook(book)}

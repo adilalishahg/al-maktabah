@@ -1,13 +1,18 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { DetailedBook, BookChapter } from '@/types/bookContent';
 import { CategoryScience } from '@/types/library';
 import { getStoredBooks, saveBook, deleteBook, saveStoredBooks } from '@/data/bookStore';
 import { getStoredCategories, saveCategory, deleteCategory as deleteStoredCategory } from '@/data/categoryStore';
-import { BookReaderView } from '@/views/BookReaderView';
 import { analyzeUploadedPdf } from '@/lib/pdfAnalyzer';
-import { CodexPdfReader } from '@/components/CodexPdfReader';
+import { HomeSettings } from '@/types/homeSettings';
+import { getHomeSettings, saveHomeSettings, buildReadingSectionFromBook } from '@/data/homeSettingsStore';
+
+// Dynamic lazy imports for heavy readers and controllers
+const BookReaderView = lazy(() => import('@/views/BookReaderView').then((m) => ({ default: m.BookReaderView })));
+const CodexPdfReader = lazy(() => import('@/components/CodexPdfReader').then((m) => ({ default: m.CodexPdfReader })));
+const AdminHomeSettingsView = lazy(() => import('@/components/admin/AdminHomeSettingsView').then((m) => ({ default: m.AdminHomeSettingsView })));
 
 export default function AdminPortalPage() {
   // Authentication State
@@ -17,7 +22,12 @@ export default function AdminPortalPage() {
   const [loginError, setLoginError] = useState('');
 
   // Admin Navigation Tab
-  const [activeTab, setActiveTab] = useState<'analytics' | 'books' | 'categories' | 'editor'>('analytics');
+  const [activeTab, setActiveTab] = useState<'analytics' | 'books' | 'categories' | 'editor' | 'homepage'>('analytics');
+
+  // Homepage & Reader Configuration State
+  const [homeSettings, setHomeSettings] = useState<HomeSettings>(() => getHomeSettings());
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
+  const [settingsSavedSuccess, setSettingsSavedSuccess] = useState('');
 
   // Book Management & Editor State
   const [books, setBooks] = useState<DetailedBook[]>([]);
@@ -86,35 +96,161 @@ export default function AdminPortalPage() {
     setCategories(getStoredCategories());
   };
 
+  // Load home & reader settings from MongoDB Backend API with fallback to localStorage
+  const loadSettings = async () => {
+    try {
+      const res = await fetch('/api/settings');
+      if (res.ok) {
+        const json = await res.json();
+        if (json?.data) {
+          setHomeSettings(json.data);
+          saveHomeSettings(json.data);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('Backend API fetch settings fallback:', err);
+    }
+    setHomeSettings(getHomeSettings());
+  };
+
+  // Helper to attach HMAC Authorization & x-admin-token headers
+  const getAuthHeaders = (extraHeaders?: Record<string, string>): Record<string, string> => {
+    const headers: Record<string, string> = { ...extraHeaders };
+    const token = typeof window !== 'undefined' ? sessionStorage.getItem('al_maktabah_admin_token') : null;
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+      headers['x-admin-token'] = token;
+    }
+    return headers;
+  };
+
+  const handleSaveHomeSettings = async (updated: HomeSettings) => {
+    setIsSavingSettings(true);
+    setSettingsSavedSuccess('');
+
+    // 1. Instant local persistence and broadcast
+    saveHomeSettings(updated);
+    setHomeSettings(updated);
+
+    // 2. MongoDB Backend API persistence
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify(updated),
+      });
+      if (res.ok) {
+        setSettingsSavedSuccess('✓ Saved & Published live to Homepage!');
+      } else {
+        setSettingsSavedSuccess('✓ Saved locally in browser cache.');
+      }
+    } catch (err) {
+      setSettingsSavedSuccess('✓ Saved locally in browser cache.');
+    } finally {
+      setIsSavingSettings(false);
+      setTimeout(() => setSettingsSavedSuccess(''), 4500);
+    }
+  };
+
+  const handleSetBookAsHomeReader = (book: DetailedBook, chapterId?: string) => {
+    const generatedSection = buildReadingSectionFromBook(book, chapterId);
+    const updated: HomeSettings = {
+      ...homeSettings,
+      sections: {
+        ...homeSettings.sections,
+        readerPreview: {
+          ...homeSettings.sections.readerPreview,
+          enabled: true,
+          sourceMode: 'book',
+          selectedBookId: book.id,
+          selectedChapterId: chapterId || book.chapters?.[0]?.id || 'ch-1',
+        },
+      },
+      readerSection: generatedSection,
+    };
+    handleSaveHomeSettings(updated);
+    alert(`"${book.title}" is now set as the active live reader on the home page!`);
+  };
+
   // Check auth on mount & sync data
   useEffect(() => {
+    const token = sessionStorage.getItem('al_maktabah_admin_token');
     const authSession = sessionStorage.getItem('al_maktabah_admin_session');
-    if (authSession === 'authenticated_admin') {
+
+    if (token) {
+      fetch('/api/auth/verify', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'x-admin-token': token,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.authenticated) {
+            setIsAuthenticated(true);
+          } else {
+            sessionStorage.removeItem('al_maktabah_admin_session');
+            sessionStorage.removeItem('al_maktabah_admin_token');
+            setIsAuthenticated(false);
+          }
+        })
+        .catch(() => {
+          if (authSession === 'authenticated_admin') {
+            setIsAuthenticated(true);
+          }
+        });
+    } else if (authSession === 'authenticated_admin') {
       setIsAuthenticated(true);
     }
+
     loadBooks();
     loadCategories();
+    loadSettings();
   }, []);
 
-  // Handle Login
-  const handleLogin = (e: React.FormEvent) => {
+  // Handle Login via /api/auth/login endpoint
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError('');
 
-    // Default admin credentials
-    if (
-      (loginEmail.trim().toLowerCase() === 'admin@almaktabah.org' || loginEmail.trim().toLowerCase() === 'admin') &&
-      loginPassword === 'maktabah1445'
-    ) {
-      sessionStorage.setItem('al_maktabah_admin_session', 'authenticated_admin');
-      setIsAuthenticated(true);
-    } else {
-      setLoginError('Invalid Administrator credentials. Use admin@almaktabah.org and maktabah1445');
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: loginEmail, password: loginPassword }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success && data.token) {
+        sessionStorage.setItem('al_maktabah_admin_session', 'authenticated_admin');
+        sessionStorage.setItem('al_maktabah_admin_token', data.token);
+        setIsAuthenticated(true);
+        loadBooks();
+        loadCategories();
+        loadSettings();
+      } else {
+        setLoginError(data.message || 'Invalid Administrator credentials. Use admin@almaktabah.org and maktabah1445');
+      }
+    } catch {
+      // Local fallback for offline mode
+      if (
+        (loginEmail.trim().toLowerCase() === 'admin@almaktabah.org' || loginEmail.trim().toLowerCase() === 'admin') &&
+        loginPassword === 'maktabah1445'
+      ) {
+        sessionStorage.setItem('al_maktabah_admin_session', 'authenticated_admin');
+        setIsAuthenticated(true);
+      } else {
+        setLoginError('Invalid Administrator credentials.');
+      }
     }
   };
 
   const handleLogout = () => {
     sessionStorage.removeItem('al_maktabah_admin_session');
+    sessionStorage.removeItem('al_maktabah_admin_token');
+    if (typeof document !== 'undefined') {
+      document.cookie = 'al_maktabah_admin_token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    }
     setIsAuthenticated(false);
     setLoginEmail('');
     setLoginPassword('');
@@ -170,7 +306,10 @@ export default function AdminPortalPage() {
       const updated = deleteBook(id);
       setBooks(updated);
       try {
-        await fetch(`/api/books/${id}`, { method: 'DELETE' });
+        await fetch(`/api/books/${id}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders(),
+        });
       } catch (err) {
         console.warn('MongoDB delete sync notice:', err);
       }
@@ -188,7 +327,7 @@ export default function AdminPortalPage() {
     try {
       await fetch('/api/books', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(updated),
       });
     } catch (err) {
@@ -229,7 +368,10 @@ export default function AdminPortalPage() {
       const updated = deleteStoredCategory(catId);
       setCategories(updated);
       try {
-        await fetch(`/api/categories/${catId}`, { method: 'DELETE' });
+        await fetch(`/api/categories/${catId}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders(),
+        });
       } catch (err) {
         console.warn('MongoDB category delete notice:', err);
       }
@@ -252,7 +394,7 @@ export default function AdminPortalPage() {
     try {
       await fetch('/api/categories', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(editingCategory),
       });
     } catch (err) {
@@ -268,7 +410,9 @@ export default function AdminPortalPage() {
   const uploadAsset = async (file: File, folder: string): Promise<{ url: string; provider: string }> => {
     // 1. Try direct upload to Cloudinary (bypassing Vercel 4.5MB server payload limit)
     try {
-      const paramRes = await fetch(`/api/upload?folder=${encodeURIComponent(folder)}`);
+      const paramRes = await fetch(`/api/upload?folder=${encodeURIComponent(folder)}`, {
+        headers: getAuthHeaders(),
+      });
       if (paramRes.ok) {
         const config = await paramRes.json();
         if (config.configured && config.cloudName && config.apiKey && config.signature) {
@@ -324,6 +468,7 @@ export default function AdminPortalPage() {
 
     const res = await fetch('/api/upload', {
       method: 'POST',
+      headers: getAuthHeaders(),
       body: uploadForm,
     });
 
@@ -541,7 +686,7 @@ export default function AdminPortalPage() {
     try {
       const res = await fetch('/api/books', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(editingBook),
       });
       const data = await res.json();
@@ -563,16 +708,27 @@ export default function AdminPortalPage() {
     return (
       <div className="min-h-screen bg-[#fbf9f5] p-4 sm:p-8">
         <div className="max-w-[1560px] mx-auto">
-          <BookReaderView
-            book={viewingReaderBook}
-            onNavigate={() => setViewingReaderBook(null)}
-            onOpenAdminEdit={(b) => {
-              setViewingReaderBook(null);
-              handleEditBook(b);
-            }}
-            theme="parchment"
-            onThemeChange={() => {}}
-          />
+          <Suspense
+            fallback={
+              <div className="h-[80vh] flex flex-col items-center justify-center gap-3 text-[#0f382c] animate-pulse">
+                <span className="material-symbols-outlined text-4xl animate-spin">menu_book</span>
+                <span className="font-serif text-sm uppercase tracking-widest font-semibold">
+                  Loading Scholarly Codex Reader Preview...
+                </span>
+              </div>
+            }
+          >
+            <BookReaderView
+              book={viewingReaderBook}
+              onNavigate={() => setViewingReaderBook(null)}
+              onOpenAdminEdit={(b) => {
+                setViewingReaderBook(null);
+                handleEditBook(b);
+              }}
+              theme="parchment"
+              onThemeChange={() => {}}
+            />
+          </Suspense>
         </div>
       </div>
     );
@@ -717,6 +873,18 @@ export default function AdminPortalPage() {
               <span className="bg-[#192e25] px-1.5 py-0.2 rounded-full text-[10px] text-white">
                 {categories.length}
               </span>
+            </button>
+            <button
+              onClick={() => setActiveTab('homepage')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
+                activeTab === 'homepage' ? 'bg-[#0f382c] text-white shadow-xs' : 'text-[#a2b7ad] hover:text-white'
+              }`}
+            >
+              <span className="material-symbols-outlined text-sm">tune</span>
+              <span className="hidden sm:inline">Sections &amp; Reader</span>
+              {homeSettings.sections.readerPreview.enabled && (
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              )}
             </button>
             <button
               onClick={handleStartNewBook}
@@ -997,14 +1165,31 @@ export default function AdminPortalPage() {
                     </div>
                   </div>
 
-                  <div className="pt-3 mt-3 border-t border-surface-container flex items-center justify-between gap-2">
-                    <button
-                      onClick={() => setViewingReaderBook(book)}
-                      className="px-3 py-1.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary text-xs font-semibold flex items-center gap-1 transition-colors"
-                    >
-                      <span className="material-symbols-outlined text-sm">menu_book</span>
-                      <span>Read in Viewer</span>
-                    </button>
+                  <div className="pt-3 mt-3 border-t border-surface-container flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <button
+                        onClick={() => setViewingReaderBook(book)}
+                        className="px-2.5 py-1.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                      >
+                        <span className="material-symbols-outlined text-sm">menu_book</span>
+                        <span>View</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleSetBookAsHomeReader(book)}
+                        className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all border cursor-pointer ${
+                          homeSettings.readerSection?.bookId === book.id
+                            ? 'bg-emerald-600 text-white border-emerald-500 shadow-xs'
+                            : 'bg-[#cba72f]/10 text-tertiary border-[#cba72f]/40 hover:bg-[#cba72f]/25'
+                        }`}
+                        title="Set this uploaded book as the live Featured Reader on the Homepage"
+                      >
+                        <span className="material-symbols-outlined text-sm">
+                          {homeSettings.readerSection?.bookId === book.id ? 'check_circle' : 'auto_stories'}
+                        </span>
+                        <span>{homeSettings.readerSection?.bookId === book.id ? 'Live in Reader' : 'Set as Home Reader'}</span>
+                      </button>
+                    </div>
 
                     <div className="flex items-center gap-1">
                       <button
@@ -1120,6 +1305,29 @@ export default function AdminPortalPage() {
                 );
               })}
             </div>
+          </div>
+        )}
+
+        {/* TAB 3.5: HOMEPAGE SECTIONS & CODEX READER CONTROL */}
+        {activeTab === 'homepage' && (
+          <div className="animate-fade-in">
+            <Suspense
+              fallback={
+                <div className="py-20 flex flex-col items-center justify-center gap-2 text-[#79a292] animate-pulse">
+                  <span className="material-symbols-outlined text-3xl animate-spin">tune</span>
+                  <span className="text-xs uppercase tracking-wider font-semibold">Loading Homepage Configuration Panel...</span>
+                </div>
+              }
+            >
+              <AdminHomeSettingsView
+                settings={homeSettings}
+                onSaveSettings={handleSaveHomeSettings}
+                isSaving={isSavingSettings}
+                successMessage={settingsSavedSuccess}
+                books={books}
+                categories={categories}
+              />
+            </Suspense>
           </div>
         )}
 
@@ -1492,12 +1700,21 @@ export default function AdminPortalPage() {
                 ) : (
                   /* Formatted Continuous Codex Reader Preview */
                   <div className="rounded-2xl overflow-hidden border border-[#cba72f]/40 shadow-xl">
-                    <CodexPdfReader
-                      book={editingBook}
-                      pdfUrl={editingBook.pdfUrl}
-                      initialPage={currentChapter?.startPage || 1}
-                      onClose={() => setEditorPreviewMode('edit')}
-                    />
+                    <Suspense
+                      fallback={
+                        <div className="h-96 flex flex-col items-center justify-center gap-2 text-emerald-800 bg-[#fbf9f5] animate-pulse">
+                          <span className="material-symbols-outlined text-3xl animate-spin">menu_book</span>
+                          <span className="text-xs uppercase tracking-wider font-semibold">Loading Codex Facsimile Engine...</span>
+                        </div>
+                      }
+                    >
+                      <CodexPdfReader
+                        book={editingBook}
+                        pdfUrl={editingBook.pdfUrl}
+                        initialPage={currentChapter?.startPage || 1}
+                        onClose={() => setEditorPreviewMode('edit')}
+                      />
+                    </Suspense>
                   </div>
                 )}
               </div>
@@ -1749,12 +1966,21 @@ export default function AdminPortalPage() {
         {showCodexModal && editingBook && (
           <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md p-2 sm:p-6 flex items-center justify-center animate-fade-in">
             <div className="w-full max-w-7xl h-[95vh] flex flex-col">
-              <CodexPdfReader
-                book={editingBook}
-                pdfUrl={editingBook.pdfUrl}
-                initialPage={editingBook.chapters?.[activeChapterIndex]?.startPage || 1}
-                onClose={() => setShowCodexModal(false)}
-              />
+              <Suspense
+                fallback={
+                  <div className="h-full flex flex-col items-center justify-center gap-2 text-white animate-pulse">
+                    <span className="material-symbols-outlined text-4xl animate-spin">menu_book</span>
+                    <span className="text-xs uppercase tracking-wider font-semibold">Loading Codex Reader...</span>
+                  </div>
+                }
+              >
+                <CodexPdfReader
+                  book={editingBook}
+                  pdfUrl={editingBook.pdfUrl}
+                  initialPage={editingBook.chapters?.[activeChapterIndex]?.startPage || 1}
+                  onClose={() => setShowCodexModal(false)}
+                />
+              </Suspense>
             </div>
           </div>
         )}

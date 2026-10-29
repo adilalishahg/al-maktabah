@@ -82,6 +82,8 @@ export const ManuscriptsView: React.FC<ManuscriptsViewProps> = ({ manuscripts })
               <img
                 src={selectedCodex.image}
                 alt={selectedCodex.title}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-auto object-cover max-h-[520px]"
               />
             </div>
@@ -162,7 +164,13 @@ export const ManuscriptsView: React.FC<ManuscriptsViewProps> = ({ manuscripts })
                   : 'border-surface-container hover:border-outline-variant shadow-xs'
               }`}
             >
-              <img src={ms.image} alt={ms.title} className="w-14 h-16 object-cover rounded shadow-2xs shrink-0" />
+              <img
+                src={ms.image}
+                alt={ms.title}
+                loading="lazy"
+                decoding="async"
+                className="w-14 h-16 object-cover rounded shadow-2xs shrink-0"
+              />
               <div className="min-w-0">
                 <h4 className="font-semibold text-xs text-primary truncate">{ms.title}</h4>
                 <p className="text-[11px] text-tertiary font-medium">{ms.eraHijri}</p>

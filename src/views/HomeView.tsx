@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Book, CategoryScience, IsnadNode, ReaderTheme, ReadingSection, WordAnalysis } from '../types/library';
+import { HomeSettings } from '../types/homeSettings';
+import { DEFAULT_HOME_SETTINGS } from '../data/homeSettingsStore';
 
 interface HomeViewProps {
   books: Book[];
   categories: CategoryScience[];
   readingSection: ReadingSection;
+  homeSettings?: HomeSettings;
   onSelectBook: (book: Book) => void;
   onOpenReader: (book?: Book) => void;
   onOpenDownload: (book: Book) => void;
@@ -18,6 +21,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
   books,
   categories,
   readingSection,
+  homeSettings,
   onSelectBook,
   onOpenReader,
   onOpenDownload,
@@ -26,6 +30,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
   onNavigate,
   onSearchQuery
 }) => {
+  const sections = homeSettings?.sections || DEFAULT_HOME_SETTINGS.sections;
+  const activeReader = homeSettings?.readerSection || readingSection;
+
   const [heroSearchInput, setHeroSearchInput] = useState('');
   const [activeFeaturedTab, setActiveFeaturedTab] = useState('All Works');
   
@@ -43,20 +50,31 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
   const filterTabs = ['All Works', 'Most Read', 'Recently Digitized', 'Rare Manuscripts', 'Bilingual (Ar/En)'];
 
-  const getFilteredBooks = () => {
+  const filteredBooks = useMemo(() => {
+    let source = books;
+    if (sections.featuredShelf.selectionMode === 'custom' && sections.featuredShelf.selectedBookIds.length > 0) {
+      const customMatches = books.filter((b) => sections.featuredShelf.selectedBookIds.includes(b.id));
+      if (customMatches.length > 0) source = customMatches;
+    }
+
     switch (activeFeaturedTab) {
       case 'Most Read':
-        return books.filter(b => b.rating >= 4.9);
+        return source.filter((b) => b.rating >= 4.9);
       case 'Recently Digitized':
-        return books.filter(b => b.pages > 500);
+        return source.filter((b) => b.pages > 500);
       case 'Rare Manuscripts':
-        return books.filter(b => b.formats.includes('Critical PDF'));
+        return source.filter((b) => b.formats.includes('Critical PDF'));
       case 'Bilingual (Ar/En)':
-        return books.filter(b => b.badge?.includes('English') || b.badge?.includes('Bilingual') || b.formats.includes('English Translation'));
+        return source.filter(
+          (b) =>
+            b.badge?.includes('English') ||
+            b.badge?.includes('Bilingual') ||
+            b.formats.includes('English Translation')
+        );
       default:
-        return books.slice(0, 4);
+        return source.slice(0, 4);
     }
-  };
+  }, [books, sections.featuredShelf, activeFeaturedTab]);
 
   const handleHeroSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,41 +110,38 @@ export const HomeView: React.FC<HomeViewProps> = ({
   return (
     <div className="w-full">
       {/* Top Daily Ayah / Hadith Calligraphic Banner */}
-      <div className="relative w-full overflow-hidden rounded-2xl p-3 sm:p-4 mb-6 sm:mb-8 border border-[#cba72f]/40 bg-gradient-to-r from-surface-container-high/90 via-surface-container-lowest to-surface-container-high/90 shadow-md">
-        <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-3 min-w-0">
-            <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-[#cba72f]/25 to-tertiary-container/30 text-[#967400] dark:text-[#f3cc51] border border-[#cba72f]/40 shadow-xs shrink-0">
-              <span className="material-symbols-outlined text-lg">auto_stories</span>
-            </span>
-            <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3 min-w-0">
-              <span className="font-arabic text-xl sm:text-2xl text-tertiary font-bold tracking-wide leading-none">
-                « رَبِّ زِدْنِي عِلْمًا »
+      {sections.dailyBanner.enabled && (
+        <div className="relative w-full overflow-hidden rounded-2xl p-3 sm:p-4 mb-6 sm:mb-8 border border-[#cba72f]/40 bg-gradient-to-r from-surface-container-high/90 via-surface-container-lowest to-surface-container-high/90 shadow-md">
+          <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-[#cba72f]/25 to-tertiary-container/30 text-[#967400] dark:text-[#f3cc51] border border-[#cba72f]/40 shadow-xs shrink-0">
+                <span className="material-symbols-outlined text-lg">auto_stories</span>
               </span>
-              <span className="font-body-sm text-xs sm:text-sm text-on-surface-variant font-medium">
-                “My Lord, increase me in knowledge.”{' '}
-                <span className="text-tertiary font-label-sm text-[11px] sm:text-xs font-bold tracking-wider ml-1 bg-tertiary-container/15 px-2 py-0.5 rounded-full border border-tertiary/20">
-                  Surah Ṭā-Hā 20:114
+              <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3 min-w-0">
+                <span className="font-arabic text-xl sm:text-2xl text-tertiary font-bold tracking-wide leading-none">
+                  {sections.dailyBanner.arabicText || '« رَبِّ زِدْنِي عِلْمًا »'}
                 </span>
-              </span>
+                <span className="font-body-sm text-xs sm:text-sm text-on-surface-variant font-medium">
+                  {sections.dailyBanner.translation || '“My Lord, increase me in knowledge.”'}{' '}
+                  <span className="text-tertiary font-label-sm text-[11px] sm:text-xs font-bold tracking-wider ml-1 bg-tertiary-container/15 px-2 py-0.5 rounded-full border border-tertiary/20">
+                    {sections.dailyBanner.reference || 'Surah Ṭā-Hā 20:114'}
+                  </span>
+                </span>
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-on-surface-variant font-label-md text-xs shrink-0 self-end sm:self-auto">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest shadow-xs text-primary font-bold border border-[#cba72f]/30 text-xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Canonical Matn • 1445 AH Critical Recension
-            </span>
+          {/* Ambient subtle geometric watermark */}
+          <div className="absolute -right-6 -bottom-6 w-36 h-36 opacity-10 pointer-events-none text-tertiary">
+            <svg fill="currentColor" viewBox="0 0 100 100">
+              <polygon points="50,0 62,38 100,38 69,62 81,100 50,75 19,100 31,62 0,38 38,38"></polygon>
+            </svg>
           </div>
         </div>
-        {/* Ambient subtle geometric watermark */}
-        <div className="absolute -right-6 -bottom-6 w-36 h-36 opacity-10 pointer-events-none text-tertiary">
-          <svg fill="currentColor" viewBox="0 0 100 100">
-            <polygon points="50,0 62,38 100,38 69,62 81,100 50,75 19,100 31,62 0,38 38,38"></polygon>
-          </svg>
-        </div>
-      </div>
+      )}
 
       {/* Hero Section */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center pb-8 sm:pb-12">
+      {sections.heroSection.enabled && (
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center pb-8 sm:pb-12">
         {/* Left Hero Column */}
         <div className="lg:col-span-7 flex flex-col gap-5 sm:gap-6">
           <div className="inline-flex items-center gap-2.5 self-start px-3.5 py-1.5 rounded-full bg-surface-container-lowest shadow-xs border border-[#cba72f]/30">
@@ -152,7 +167,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           </div>
 
           {/* Interactive Search Pill */}
-          <div className="relative w-full max-w-2xl bg-surface-container-lowest rounded-2xl p-2 shadow-lg border border-surface-container-high focus-within:border-primary/60 focus-within:ring-3 focus-within:ring-primary/20 transition-all duration-300">
+          {/* <div className="relative w-full max-w-2xl bg-surface-container-lowest rounded-2xl p-2 shadow-lg border border-surface-container-high focus-within:border-primary/60 focus-within:ring-3 focus-within:ring-primary/20 transition-all duration-300">
             <form onSubmit={handleHeroSearchSubmit} className="flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-1">
               <span className="material-symbols-outlined text-tertiary text-2xl shrink-0">menu_book</span>
               <input
@@ -191,10 +206,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 ))}
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
+          {/* <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
             <button
               onClick={() => onNavigate('browse-library')}
               className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-title-md text-sm font-bold shadow-md shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2 cursor-pointer"
@@ -209,7 +224,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <span className="material-symbols-outlined text-lg text-tertiary">chrome_reader_mode</span>
               <span>Launch Web Reader Studio</span>
             </button>
-          </div>
+          </div> */}
 
           {/* Metrics Strip with Luxury Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
@@ -218,8 +233,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <span className="material-symbols-outlined text-primary text-xl">menu_book</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors"></span>
               </div>
-              <div className="font-headline-sm text-xl sm:text-2xl font-extrabold text-primary">14,280+</div>
-              <div className="font-label-sm text-xs text-on-surface-variant font-medium mt-0.5">Verified Codices</div>
+              <div className="font-headline-sm text-xl sm:text-2xl font-extrabold text-primary">Verified+</div>
+              {/* <div className="font-label-sm text-xs text-on-surface-variant font-medium mt-0.5">Verified Codices</div> */}
             </div>
 
             <div className="p-3.5 bg-gradient-to-br from-surface-container-lowest to-surface-container-low rounded-xl shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all border border-[#cba72f]/30 group">
@@ -231,23 +246,23 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <div className="font-label-sm text-xs text-on-surface-variant font-medium mt-0.5">Waqf Endowment</div>
             </div>
 
-            <div className="p-3.5 bg-gradient-to-br from-surface-container-lowest to-surface-container-low rounded-xl shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all border border-surface-container group">
+            {/* <div className="p-3.5 bg-gradient-to-br from-surface-container-lowest to-surface-container-low rounded-xl shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all border border-surface-container group">
               <div className="flex items-center justify-between mb-1">
                 <span className="material-symbols-outlined text-primary text-xl">account_tree</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover:bg-primary transition-colors"></span>
               </div>
               <div className="font-headline-sm text-xl sm:text-2xl font-extrabold text-primary">48</div>
               <div className="font-label-sm text-xs text-on-surface-variant font-medium mt-0.5">Disciplines Catalogued</div>
-            </div>
+            </div> */}
 
-            <div className="p-3.5 bg-gradient-to-br from-surface-container-lowest to-surface-container-low rounded-xl shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all border border-surface-container group">
+            {/* <div className="p-3.5 bg-gradient-to-br from-surface-container-lowest to-surface-container-low rounded-xl shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all border border-surface-container group">
               <div className="flex items-center justify-between mb-1">
                 <span className="material-symbols-outlined text-secondary text-xl">public</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-secondary/40 group-hover:bg-secondary transition-colors"></span>
               </div>
               <div className="font-headline-sm text-xl sm:text-2xl font-extrabold text-secondary">1.2M+</div>
               <div className="font-label-sm text-xs text-on-surface-variant font-medium mt-0.5">Pages Digitized</div>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -327,151 +342,170 @@ export const HomeView: React.FC<HomeViewProps> = ({
               </div>
             </div>
 
-            {/* Book 3: Riyad as-Salihin (Front & Center) */}
-            <div
-              onClick={() => {
-                const target = books.find(b => b.id === 'riyad-salihin') || books[0];
-                if (target) onOpenReader(target);
-                else onNavigate('browse-library');
-              }}
-              className="relative z-20 w-60 sm:w-68 h-88 sm:h-[410px] rounded-2xl bg-gradient-to-b from-surface-container-lowest via-surface-container-low to-surface-container-lowest text-on-surface shadow-2xl p-5 flex flex-col justify-between transform hover:-translate-y-2 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35)] transition-all duration-300 cursor-pointer border-2 border-[#cba72f]/60 ring-2 ring-[#cba72f]/20"
-            >
-              {/* Ornate Inner Double Frame */}
-              <div className="absolute inset-2 rounded-xl border border-[#cba72f]/30 pointer-events-none"></div>
+            {/* Book 3: Center Pedestal Book */}
+            {(() => {
+              const centerBook = sections.heroSection.centerBookId
+                ? books.find(b => b.id === sections.heroSection.centerBookId) || books.find(b => b.id === 'riyad-salihin') || books[0]
+                : books.find(b => b.id === 'riyad-salihin') || books[0];
+              return (
+                <div
+                  onClick={() => {
+                    if (centerBook) onOpenReader(centerBook);
+                    else onNavigate('browse-library');
+                  }}
+                  className="relative z-20 w-60 sm:w-68 h-88 sm:h-[410px] rounded-2xl bg-gradient-to-b from-surface-container-lowest via-surface-container-low to-surface-container-lowest text-on-surface shadow-2xl p-5 flex flex-col justify-between transform hover:-translate-y-2 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35)] transition-all duration-300 cursor-pointer border-2 border-[#cba72f]/60 ring-2 ring-[#cba72f]/20"
+                >
+                  {/* Ornate Inner Double Frame */}
+                  <div className="absolute inset-2 rounded-xl border border-[#cba72f]/30 pointer-events-none"></div>
 
-              <div className="relative z-10 flex justify-between items-center">
-                <span className="inline-flex items-center gap-1.5 font-label-sm text-xs px-2.5 py-1 rounded-full bg-primary-container text-on-primary font-bold shadow-xs">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                  Canonical Hadīth
-                </span>
-                <span className="font-label-sm text-xs text-tertiary font-bold tracking-wider">1445 AH Codex</span>
-              </div>
+                  <div className="relative z-10 flex justify-between items-center">
+                    <span className="inline-flex items-center gap-1.5 font-label-sm text-xs px-2.5 py-1 rounded-full bg-primary-container text-on-primary font-bold shadow-xs">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                      {centerBook?.disciplineName || 'Featured Codex'}
+                    </span>
+                    <span className="font-label-sm text-xs text-tertiary font-bold tracking-wider">
+                      {centerBook?.authorHijriYear || '1445 AH Codex'}
+                    </span>
+                  </div>
 
-              <div className="relative z-10 my-auto text-center space-y-2">
-                <div className="w-12 h-12 mx-auto rounded-full bg-surface-container-high border border-[#cba72f]/40 flex items-center justify-center text-tertiary shadow-xs">
-                  <span className="material-symbols-outlined text-2xl text-[#967400] dark:text-[#f3cc51]">menu_book</span>
+                  <div className="relative z-10 my-auto text-center space-y-2">
+                    <div className="w-12 h-12 mx-auto rounded-full bg-surface-container-high border border-[#cba72f]/40 flex items-center justify-center text-tertiary shadow-xs">
+                      <span className="material-symbols-outlined text-2xl text-[#967400] dark:text-[#f3cc51]">menu_book</span>
+                    </div>
+                    <h2 className="font-arabic text-2xl sm:text-3xl text-primary font-bold leading-none">
+                      {centerBook?.arabicTitle || 'رياض الصالحين'}
+                    </h2>
+                    <p className="font-display text-base sm:text-lg font-bold text-on-surface truncate">
+                      {centerBook?.title || 'Riyāḍ aṣ-Ṣāliḥīn'}
+                    </p>
+                    <p className="font-body-sm text-xs text-on-surface-variant font-medium line-clamp-1">
+                      {centerBook?.description || 'The Gardens of the Righteous'}
+                    </p>
+                    <div className="h-0.5 w-16 bg-gradient-to-r from-transparent via-[#cba72f] to-transparent mx-auto rounded"></div>
+                    <p className="font-label-sm text-xs text-tertiary font-bold truncate">
+                      {centerBook?.author || 'Imām Yaḥyā ibn Sharaf an-Nawawī'}
+                    </p>
+                  </div>
+
+                  <div className="relative z-10 bg-surface-container-high/90 rounded-xl p-2.5 flex items-center justify-between text-on-surface-variant font-label-sm text-xs border border-[#cba72f]/30 shadow-xs">
+                    <div className="flex items-center gap-1.5 text-primary font-semibold">
+                      <span className="material-symbols-outlined text-base text-primary">auto_stories</span>
+                      <span>{centerBook?.pages || 720} Pages • Verified</span>
+                    </div>
+                    <span className="font-bold text-primary flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+                      Read Live →
+                    </span>
+                  </div>
                 </div>
-                <h2 className="font-arabic text-2xl sm:text-3xl text-primary font-bold leading-none">
-                  رياض الصالحين
-                </h2>
-                <p className="font-display text-base sm:text-lg font-bold text-on-surface">Riyāḍ aṣ-Ṣāliḥīn</p>
-                <p className="font-body-sm text-xs text-on-surface-variant font-medium">The Gardens of the Righteous</p>
-                <div className="h-0.5 w-16 bg-gradient-to-r from-transparent via-[#cba72f] to-transparent mx-auto rounded"></div>
-                <p className="font-label-sm text-xs text-tertiary font-bold">Imām Yaḥyā ibn Sharaf an-Nawawī (d. 676 AH)</p>
-              </div>
-
-              <div className="relative z-10 bg-surface-container-high/90 rounded-xl p-2.5 flex items-center justify-between text-on-surface-variant font-label-sm text-xs border border-[#cba72f]/30 shadow-xs">
-                <div className="flex items-center gap-1.5 text-primary font-semibold">
-                  <span className="material-symbols-outlined text-base text-primary">auto_stories</span>
-                  <span>1,896 Hadīth • Full Isnād</span>
-                </div>
-                <span className="font-bold text-primary flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
-                  Read Live →
-                </span>
-              </div>
-            </div>
+              );
+            })()}
           </div>
           
           {/* Physical Pedestal Shadow */}
           <div className="absolute bottom-2 w-72 sm:w-96 h-6 bg-black/15 blur-xl rounded-full pointer-events-none"></div>
         </div>
       </section>
+      )}
 
-      {/* Category Showcase Grid */}
-      <section className="py-8 sm:py-12">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8">
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-tertiary"></span>
-              <span className="font-label-sm text-xs uppercase tracking-wider text-tertiary font-bold">
-                Classification of Islamic Sciences (Tartīb al-‘Ulūm)
-              </span>
-            </div>
-            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-primary">Classified Sciences of Knowledge</h2>
-            <p className="font-body-md text-sm sm:text-base text-on-surface-variant max-w-xl">
-              Systematically organized primary sources across canonical jurisprudence, exegesis, transmitted prophetic traditions, and sacred theology.
-            </p>
-          </div>
-          <button
-            onClick={() => onNavigate('categories')}
-            className="mt-4 md:mt-0 inline-flex items-center gap-1.5 font-title-md text-sm font-bold text-primary hover:text-tertiary transition-colors cursor-pointer group"
-          >
-            <span>View All 28 Classifications</span>
-            <span className="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {categories.slice(0, 6).map((cat, idx) => {
-            const disciplineGradients = [
-              'hover:border-emerald-500/50 hover:shadow-emerald-950/10',
-              'hover:border-amber-500/50 hover:shadow-amber-950/10',
-              'hover:border-sky-500/50 hover:shadow-sky-950/10',
-              'hover:border-purple-500/50 hover:shadow-purple-950/10',
-              'hover:border-teal-500/50 hover:shadow-teal-950/10',
-              'hover:border-rose-500/50 hover:shadow-rose-950/10'
-            ];
-            const iconBg = [
-              'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
-              'bg-amber-500/10 text-amber-600 dark:text-amber-400',
-              'bg-sky-500/10 text-sky-600 dark:text-sky-400',
-              'bg-purple-500/10 text-purple-600 dark:text-purple-400',
-              'bg-teal-500/10 text-teal-600 dark:text-teal-400',
-              'bg-rose-500/10 text-rose-600 dark:text-rose-400'
-            ];
-            const activeGrad = disciplineGradients[idx % disciplineGradients.length];
-            const activeIcon = iconBg[idx % iconBg.length];
-
-            return (
-              <div
-                key={cat.id}
-                onClick={() => onNavigate('categories')}
-                className={`group relative bg-surface-container-lowest rounded-2xl p-5 sm:p-6 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between border border-surface-container cursor-pointer overflow-hidden ${activeGrad}`}
-              >
-                {/* Decorative background watermark */}
-                <span className="absolute -bottom-4 -right-2 font-arabic text-6xl text-on-surface/[0.03] select-none pointer-events-none group-hover:scale-105 transition-transform">
-                  {cat.arabicName}
+      {/* Category Showcase Grid (Controlled from Admin) */}
+      {sections.categoriesGrid.enabled && (
+        <section className="py-8 sm:py-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-tertiary"></span>
+                <span className="font-label-sm text-xs uppercase tracking-wider text-tertiary font-bold">
+                  Classification of Islamic Sciences (Tartīb al-‘Ulūm)
                 </span>
-
-                <div className="space-y-4 relative z-10">
-                  <div className="flex items-center justify-between">
-                    <span className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors shadow-2xs ${activeIcon}`}>
-                      <span className="material-symbols-outlined text-2xl">{cat.icon}</span>
-                    </span>
-                    <span className="font-arabic text-xl sm:text-2xl text-tertiary font-bold">
-                      {cat.arabicName}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="font-display text-lg font-bold text-primary group-hover:text-tertiary transition-colors">
-                      {cat.name}
-                    </h3>
-                    <p className="font-body-sm text-xs text-on-surface-variant mt-1.5 leading-relaxed line-clamp-2">
-                      {cat.description}
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5 font-label-sm">
-                    {cat.tags.slice(0, 3).map((tag, i) => (
-                      <span key={i} className="px-2 py-0.5 rounded-md bg-surface-container-low text-[11px] text-on-surface-variant font-medium border border-surface-container">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="pt-4 mt-4 flex items-center justify-between text-on-surface-variant font-label-sm text-xs border-t border-surface-container relative z-10">
-                  <span className="font-bold text-primary">{cat.volumeCount.toLocaleString()} Verified Volumes</span>
-                  <span className="group-hover:translate-x-1 transition-transform text-tertiary font-bold flex items-center gap-1">
-                    Explore Branch →
-                  </span>
-                </div>
               </div>
-            );
-          })}
-        </div>
-      </section>
+              <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-primary">
+                {sections.categoriesGrid.title || 'Classified Sciences of Knowledge'}
+              </h2>
+              <p className="font-body-md text-sm sm:text-base text-on-surface-variant max-w-xl">
+                {sections.categoriesGrid.subtitle || 'Systematically organized primary sources across canonical jurisprudence, exegesis, transmitted prophetic traditions, and sacred theology.'}
+              </p>
+            </div>
+            <button
+              onClick={() => onNavigate('categories')}
+              className="mt-4 md:mt-0 inline-flex items-center gap-1.5 font-title-md text-sm font-bold text-primary hover:text-tertiary transition-colors cursor-pointer group"
+            >
+              <span>View All 28 Classifications</span>
+              <span className="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {categories.slice(0, sections.categoriesGrid.maxDisplay || 6).map((cat, idx) => {
+              const disciplineGradients = [
+                'hover:border-emerald-500/50 hover:shadow-emerald-950/10',
+                'hover:border-amber-500/50 hover:shadow-amber-950/10',
+                'hover:border-sky-500/50 hover:shadow-sky-950/10',
+                'hover:border-purple-500/50 hover:shadow-purple-950/10',
+                'hover:border-teal-500/50 hover:shadow-teal-950/10',
+                'hover:border-rose-500/50 hover:shadow-rose-950/10'
+              ];
+              const iconBg = [
+                'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+                'bg-amber-500/10 text-amber-600 dark:text-amber-400',
+                'bg-sky-500/10 text-sky-600 dark:text-sky-400',
+                'bg-purple-500/10 text-purple-600 dark:text-purple-400',
+                'bg-teal-500/10 text-teal-600 dark:text-teal-400',
+                'bg-rose-500/10 text-rose-600 dark:text-rose-400'
+              ];
+              const activeGrad = disciplineGradients[idx % disciplineGradients.length];
+              const activeIcon = iconBg[idx % iconBg.length];
+
+              return (
+                <div
+                  key={cat.id}
+                  onClick={() => onNavigate('categories')}
+                  className={`group relative bg-surface-container-lowest rounded-2xl p-5 sm:p-6 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between border border-surface-container cursor-pointer overflow-hidden ${activeGrad}`}
+                >
+                  <span className="absolute -bottom-4 -right-2 font-arabic text-6xl text-on-surface/[0.03] select-none pointer-events-none group-hover:scale-105 transition-transform">
+                    {cat.arabicName}
+                  </span>
+
+                  <div className="space-y-4 relative z-10">
+                    <div className="flex items-center justify-between">
+                      <span className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors shadow-2xs ${activeIcon}`}>
+                        <span className="material-symbols-outlined text-2xl">{cat.icon}</span>
+                      </span>
+                      <span className="font-arabic text-xl sm:text-2xl text-tertiary font-bold">
+                        {cat.arabicName}
+                      </span>
+                    </div>
+                    <div>
+                      <h3 className="font-display text-lg font-bold text-primary group-hover:text-tertiary transition-colors">
+                        {cat.name}
+                      </h3>
+                      <p className="font-body-sm text-xs text-on-surface-variant mt-1.5 leading-relaxed line-clamp-2">
+                        {cat.description}
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 font-label-sm">
+                      {cat.tags.slice(0, 3).map((tag, i) => (
+                        <span key={i} className="px-2 py-0.5 rounded-md bg-surface-container-low text-[11px] text-on-surface-variant font-medium border border-surface-container">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-4 mt-4 flex items-center justify-between text-on-surface-variant font-label-sm text-xs border-t border-surface-container relative z-10">
+                    <span className="font-bold text-primary">{cat.volumeCount.toLocaleString()} Verified Volumes</span>
+                    <span className="group-hover:translate-x-1 transition-transform text-tertiary font-bold flex items-center gap-1">
+                      Explore Branch →
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* Featured & Recommended Books Shelf */}
+      {sections.featuredShelf.enabled && (
       <section className="py-8 sm:py-12" id="featured-shelf">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 sm:mb-8">
           <div className="space-y-1.5">
@@ -481,9 +515,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 Scholarly Academic Canon
               </span>
             </div>
-            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-primary">Featured Critical Editions</h2>
+            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-primary">
+              {sections.featuredShelf.title || 'Featured Critical Editions'}
+            </h2>
             <p className="font-body-sm text-xs sm:text-sm text-on-surface-variant">
-              Rigorous recensions with isnād apparatus, academic footnotes, and dual-language parallel views.
+              {sections.featuredShelf.subtitle || 'Rigorous recensions with isnād apparatus, academic footnotes, and dual-language parallel views.'}
             </p>
           </div>
 
@@ -523,7 +559,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
-            {getFilteredBooks().map((book) => (
+            {filteredBooks.map((book) => (
               <div
                 key={book.id}
                 className="group bg-surface-container-lowest rounded-2xl shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden border border-surface-container hover:border-[#cba72f]/50"
@@ -537,6 +573,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     src={book.coverImage}
                     alt={book.title}
+                    loading="lazy"
+                    decoding="async"
                   />
                   {/* Book Spine shadow overlay */}
                   <div className="absolute inset-y-0 left-0 w-3 bg-gradient-to-r from-black/40 via-black/15 to-transparent pointer-events-none"></div>
@@ -617,8 +655,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
           </div>
         )}
       </section>
+      )}
 
       {/* In-Browser Desktop Reading Experience Preview */}
+      {sections.readerPreview.enabled && (
       <section className="py-8 sm:py-12" id="reader-preview">
         <div className="space-y-2 mb-6 sm:mb-8 text-center max-w-2xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-surface-container-low text-tertiary font-label-sm text-xs font-bold border border-[#cba72f]/30">
@@ -650,7 +690,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block shadow-2xs"></span>
               </div>
               <span className="font-display text-xs sm:text-sm font-bold text-primary truncate max-w-xs sm:max-w-md">
-                {readingSection.bookTitle} — Book {readingSection.chapterNumber}: {readingSection.chapterTitleEn}
+                {activeReader.bookTitle} — Book {activeReader.chapterNumber}: {activeReader.chapterTitleEn}
               </span>
             </div>
 
@@ -727,6 +767,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 </span>
               </button>
 
+              {/* Admin Reader Controls Link */}
+              <a
+                href="/admin"
+                className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#cba72f]/15 hover:bg-[#cba72f]/30 text-[#967400] dark:text-[#f3cc51] border border-[#cba72f]/40 font-label-sm text-xs font-bold transition-colors"
+                title="Change or customize this reader in Admin Portal"
+              >
+                <span className="material-symbols-outlined text-sm">tune</span>
+                <span>Admin Control</span>
+              </a>
+
               {/* Full Reader Studio View */}
               <button
                 onClick={() => onOpenReader()}
@@ -747,13 +797,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   Table of Contents
                 </p>
                 <p className="font-display text-sm font-bold text-primary">
-                  Hadīth #{readingSection.entryNumber} of {readingSection.totalEntries.toLocaleString()}
+                  Hadīth #{activeReader.entryNumber} of {activeReader.totalEntries.toLocaleString()}
                 </p>
               </div>
 
               <div className="space-y-1.5 font-body-sm text-xs">
                 <div className="p-2.5 rounded-xl bg-surface-container-lowest text-primary font-bold shadow-xs flex items-center justify-between border border-[#cba72f]/40">
-                  <span>1. How Revelation Began</span>
+                  <span>1. {activeReader.chapterTitleEn}</span>
                   <span className="material-symbols-outlined text-xs text-tertiary">chevron_right</span>
                 </div>
                 <div className="p-2.5 rounded-xl hover:bg-surface-container-high text-on-surface-variant transition-colors flex items-center justify-between cursor-pointer">
@@ -777,7 +827,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   <span className="text-[10px] text-on-surface-variant font-semibold">Inspect</span>
                 </div>
                 <div className="space-y-1 text-xs text-on-surface-variant">
-                  {readingSection.isnadChain.slice(0, 4).map((node, i) => (
+                  {activeReader.isnadChain.slice(0, 4).map((node, i) => (
                     <div key={node.id}>
                       <button
                         onClick={() => onOpenNarrator(node)}
@@ -791,14 +841,18 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       {i < 3 && <div className="ml-1 w-0.5 h-1.5 bg-outline-variant/60"></div>}
                     </div>
                   ))}
-                  <div className="ml-1 w-0.5 h-1.5 bg-outline-variant/60"></div>
-                  <button
-                    onClick={() => onOpenNarrator(readingSection.isnadChain[readingSection.isnadChain.length - 1])}
-                    className="flex items-center gap-2 font-bold text-primary hover:text-tertiary transition-colors cursor-pointer text-left py-0.5"
-                  >
-                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span className="text-[11px]">{readingSection.isnadChain[readingSection.isnadChain.length - 1].name}</span>
-                  </button>
+                  {activeReader.isnadChain.length > 0 && (
+                    <>
+                      <div className="ml-1 w-0.5 h-1.5 bg-outline-variant/60"></div>
+                      <button
+                        onClick={() => onOpenNarrator(activeReader.isnadChain[activeReader.isnadChain.length - 1])}
+                        className="flex items-center gap-2 font-bold text-primary hover:text-tertiary transition-colors cursor-pointer text-left py-0.5"
+                      >
+                        <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        <span className="text-[11px]">{activeReader.isnadChain[activeReader.isnadChain.length - 1].name}</span>
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -815,10 +869,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       <span className="w-1 bg-emerald-500 h-2 animate-pulse"></span>
                       <span className="w-1 bg-emerald-500 h-4 animate-bounce"></span>
                     </div>
-                    <span>Recitation Active: <strong>Sheikh Mishary Rashid Alafasy</strong> (Kitāb Bad’ al-Waḥy)</span>
+                    <span>Recitation Active: <strong>{sections.readerPreview.audioReciter || 'Sheikh Mishary Rashid Alafasy'}</strong> ({activeReader.chapterTitleAr || activeReader.chapterTitleEn})</span>
                   </div>
                   <span className="font-mono text-xs font-bold shrink-0 bg-emerald-500/20 px-2 py-0.5 rounded-md">
-                    00:42 / 01:15
+                    {sections.readerPreview.audioDuration || '00:42 / 01:15'}
                   </span>
                 </div>
               )}
@@ -829,9 +883,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   <div className="space-y-4">
                     <div className="inline-flex items-center gap-2 font-label-sm text-xs text-on-surface-variant flex-wrap">
                       <span className="px-2.5 py-0.5 rounded-full bg-primary-container text-on-primary font-bold shadow-2xs">
-                        {readingSection.englishHeading}
+                        {activeReader.englishHeading}
                       </span>
-                      <span className="font-bold text-emerald-600 dark:text-emerald-400">• {readingSection.authenticityStatus}</span>
+                      <span className="font-bold text-emerald-600 dark:text-emerald-400">• {activeReader.authenticityStatus}</span>
                     </div>
 
                     <div 
@@ -839,87 +893,95 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       style={{ fontSize: `${readerFontSize}px` }}
                     >
                       <p>
-                        {readingSection.englishLeadText}{' '}
+                        {activeReader.englishLeadText}{' '}
                         <span className="font-bold text-primary underline decoration-[#cba72f] decoration-2">
-                          {readingSection.englishHighlightText}
+                          {activeReader.englishHighlightText}
                         </span>
                       </p>
-                      <p className="font-body-md text-on-surface-variant">
-                        {readingSection.englishSubsequentText}
-                      </p>
-                    </div>
-
-                    {/* Collapsible Scholarly Marginalia */}
-                    <div className="bg-surface-container-low p-4 rounded-xl space-y-2 border border-surface-container">
-                      <div 
-                        onClick={() => setActiveFootnoteOpen(!activeFootnoteOpen)}
-                        className="flex items-center justify-between text-tertiary font-title-md text-sm font-bold cursor-pointer select-none"
-                      >
-                        <span className="flex items-center gap-1.5">
-                          <span className="material-symbols-outlined text-base">notes</span>
-                          <span>{readingSection.footnotes[0].code} — {readingSection.footnotes[0].title}</span>
-                        </span>
-                        <span className="font-label-sm text-xs text-on-surface-variant flex items-center gap-1">
-                          <span>{readingSection.footnotes[0].scholar} ({readingSection.footnotes[0].scholarDeathAH})</span>
-                          <span className="material-symbols-outlined text-xs">
-                            {activeFootnoteOpen ? 'expand_less' : 'expand_more'}
-                          </span>
-                        </span>
-                      </div>
-                      {activeFootnoteOpen && (
-                        <p className="font-body-sm text-xs text-on-surface-variant pt-1 leading-relaxed border-t border-surface-container-high/60">
-                          {readingSection.footnotes[0].text}
+                      {activeReader.englishSubsequentText && (
+                        <p className="font-body-md text-on-surface-variant">
+                          {activeReader.englishSubsequentText}
                         </p>
                       )}
                     </div>
+
+                    {/* Collapsible Scholarly Marginalia */}
+                    {activeReader.footnotes && activeReader.footnotes.length > 0 && (
+                      <div className="bg-surface-container-low p-4 rounded-xl space-y-2 border border-surface-container">
+                        <div 
+                          onClick={() => setActiveFootnoteOpen(!activeFootnoteOpen)}
+                          className="flex items-center justify-between text-tertiary font-title-md text-sm font-bold cursor-pointer select-none"
+                        >
+                          <span className="flex items-center gap-1.5">
+                            <span className="material-symbols-outlined text-base">notes</span>
+                            <span>{activeReader.footnotes[0].code} — {activeReader.footnotes[0].title}</span>
+                          </span>
+                          <span className="font-label-sm text-xs text-on-surface-variant flex items-center gap-1">
+                            <span>{activeReader.footnotes[0].scholar} ({activeReader.footnotes[0].scholarDeathAH})</span>
+                            <span className="material-symbols-outlined text-xs">
+                              {activeFootnoteOpen ? 'expand_less' : 'expand_more'}
+                            </span>
+                          </span>
+                        </div>
+                        {activeFootnoteOpen && (
+                          <p className="font-body-sm text-xs text-on-surface-variant pt-1 leading-relaxed border-t border-surface-container-high/60">
+                            {activeReader.footnotes[0].text}
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {/* Right Pane: Classical Arabic (RTL, authentic spacing) */}
-                <div className="space-y-4 text-right flex flex-col justify-between" dir="rtl">
+                <div className="space-y-4 text-right flex flex-col justify-between" dir="rtl" lang="ar">
                   <div className="inline-flex items-center gap-2 self-start font-label-sm text-xs text-tertiary">
                     <span className="font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">حَدِيثٌ صَحِيحٌ</span>
                     <span className="text-outline-variant">•</span>
-                    <span className="font-bold">رَقْمُ الحَدِيثِ : ١</span>
+                    <span className="font-bold">رَقْمُ الحَدِيثِ : {activeReader.entryNumber}</span>
                   </div>
 
                   <div className="space-y-4">
-                    <p 
-                      className="font-arabic text-primary leading-loose font-medium"
-                      style={{ fontSize: `${Math.round(readerFontSize * 1.35)}px` }}
-                    >
-                      {readingSection.arabicLead}
-                    </p>
+                    {activeReader.arabicLead && (
+                      <p 
+                        className="font-arabic text-primary leading-loose font-medium"
+                        style={{ fontSize: `${Math.round(readerFontSize * 1.35)}px` }}
+                      >
+                        {activeReader.arabicLead}
+                      </p>
+                    )}
 
                     <div className="p-4 rounded-2xl bg-gradient-to-br from-[#cba72f]/15 to-transparent text-right border-2 border-[#cba72f]/40 shadow-xs">
                       <p 
                         className="font-arabic font-bold text-primary leading-relaxed"
                         style={{ fontSize: `${Math.round(readerFontSize * 1.45)}px` }}
                       >
-                        {readingSection.arabicMatn}
+                        {activeReader.arabicMatn}
                       </p>
                     </div>
 
                     {/* Interactive Word Inspector strip */}
-                    <div className="p-3 rounded-xl bg-surface-container-low text-xs text-on-surface-variant space-y-1.5 border border-surface-container" dir="ltr">
-                      <div className="flex items-center justify-between text-tertiary font-bold">
-                        <span className="flex items-center gap-1.5">
-                          <span className="material-symbols-outlined text-sm">spellcheck</span>
-                          Click Word for Root Morphology:
-                        </span>
+                    {activeReader.wordAnalyses && activeReader.wordAnalyses.length > 0 && (
+                      <div className="p-3 rounded-xl bg-surface-container-low text-xs text-on-surface-variant space-y-1.5 border border-surface-container" dir="ltr">
+                        <div className="flex items-center justify-between text-tertiary font-bold">
+                          <span className="flex items-center gap-1.5">
+                            <span className="material-symbols-outlined text-sm">spellcheck</span>
+                            Click Word for Root Morphology:
+                          </span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                          {activeReader.wordAnalyses.map((w, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => onOpenWordAnalysis(w)}
+                              className="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-primary hover:text-white text-primary font-arabic text-sm transition-all cursor-pointer border border-surface-container-high shadow-2xs hover:scale-105"
+                            >
+                              {w.arabic}
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                      <div className="flex flex-wrap gap-1.5 pt-1">
-                        {readingSection.wordAnalyses.map((w, idx) => (
-                          <button
-                            key={idx}
-                            onClick={() => onOpenWordAnalysis(w)}
-                            className="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-primary hover:text-white text-primary font-arabic text-sm transition-all cursor-pointer border border-surface-container-high shadow-2xs hover:scale-105"
-                          >
-                            {w.arabic}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
+                    )}
                   </div>
 
                   <div className="pt-2 flex items-center justify-between text-on-surface-variant font-label-sm text-xs" dir="ltr">
@@ -930,7 +992,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       <span className="material-symbols-outlined text-base">share</span>
                       <span>{shareToast ? 'Hadith link copied!' : 'Share Hadith'}</span>
                     </button>
-                    <span className="text-outline-variant font-mono text-[11px]">{readingSection.arabicSubtext}</span>
+                    <span className="text-outline-variant font-mono text-[11px]">{activeReader.arabicSubtext}</span>
                   </div>
                 </div>
               </div>
@@ -944,7 +1006,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   <span className="material-symbols-outlined text-sm">arrow_back</span> Previous Section
                 </button>
                 <span className="font-label-sm text-xs text-center text-on-surface-variant/80 font-semibold">
-                  Page {readingSection.currentPage} of {readingSection.totalPages} • Kitāb Bad’ al-Waḥy
+                  Page {activeReader.currentPage} of {activeReader.totalPages} • {activeReader.chapterTitleAr || activeReader.chapterTitleEn}
                 </span>
                 <button 
                   onClick={() => onOpenReader()}
@@ -957,8 +1019,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
           </div>
         </div>
       </section>
+      )}
 
       {/* About Al-Maktabah & Scholarly Mission (2-Column Minimalist Layout) */}
+      {sections.preservationSection.enabled && (
       <section className="py-8 sm:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column: Commitment to Waqf */}
@@ -1039,8 +1103,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
           </div>
         </div>
       </section>
+      )}
 
       {/* Scholarly Newsletter & Digest Strip */}
+      {sections.newsletterSection.enabled && (
       <section className="py-8 sm:py-12">
         <div className="rounded-3xl p-6 sm:p-10 md:p-12 shadow-2xl relative overflow-hidden bg-gradient-to-br from-[#022c22] via-[#064e3b] to-[#022c22] border-2 border-[#cba72f]/40 text-[#f7eed4]">
           {/* Decorative Arabesque Vector Overlay */}
@@ -1098,6 +1164,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           </div>
         </div>
       </section>
+      )}
     </div>
   );
 };

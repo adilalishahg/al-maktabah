@@ -74,6 +74,8 @@ export const LatestReleasesView: React.FC<LatestReleasesViewProps> = ({
               <img
                 src={item.book.coverImage}
                 alt={item.book.title}
+                loading="lazy"
+                decoding="async"
                 className="w-14 h-18 sm:w-16 sm:h-20 object-cover rounded-lg shadow-xs shrink-0 cursor-pointer"
                 onClick={() => onSelectBook(item.book)}
               />

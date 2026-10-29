@@ -74,6 +74,11 @@ const BookSchema = new Schema<IBookDocument>(
   }
 );
 
+// Compound indexes for optimal catalog filtering and sort ordering
+BookSchema.index({ published: 1, discipline: 1, createdAt: -1 });
+BookSchema.index({ published: 1, createdAt: -1 });
+BookSchema.index({ discipline: 1, createdAt: -1 });
+
 // Compound text index for fast multi-lingual full-text search across titles, authors, and matn text
 BookSchema.index({
   title: 'text',

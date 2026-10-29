@@ -72,6 +72,7 @@ export const Header: React.FC<HeaderProps> = ({
           <img
             alt="Al-Maktabah Brand Logo"
             className="h-7 sm:h-8 w-auto object-contain"
+            decoding="async"
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkk5vdhfETWDMXgUobuz8b7OFIRxT1RnZyf7NS9WywvGhN2DjXfBC38oWKpOPBa1Qs_m1ca4JDUU4MPkxVPn_Sc46Y9KuVauZl1My3j3Je5ikE7fJ0utasVbauXGLar-TbkdJmDkpxhfmPHXPvXvl3Bffa8uNNmdDFvmiUQbiT0GyDAuAJEGh7OHztOzMPqH7Ugw6p3FwSAO-cR9R2gvZLOgmsldiGILWTav5h_tWWlYQ6vJe9X8xI"
           />
           <div className="flex flex-col">
@@ -189,14 +190,23 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           </div>
 
-          {/* User Profile Avatar */}
-          <div className="flex items-center shrink-0">
+          {/* Admin Portal Shortcut & Scholar Avatar */}
+          <a
+            href="/admin"
+            title="Open Admin Portal"
+            className="flex items-center gap-1.5 p-1 rounded-full hover:bg-surface-container-high transition-colors group shrink-0"
+          >
             <img
-              alt="Scholar Profile"
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover ring-2 ring-tertiary-container ring-offset-2 ring-offset-surface shrink-0"
+              alt="Scholar Profile / Admin"
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover ring-2 ring-tertiary-container ring-offset-2 ring-offset-surface shrink-0 group-hover:scale-105 transition-transform"
+              loading="lazy"
+              decoding="async"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuCp6hjwy-OtUiOFhXULVfc39TXd10KeuRXfFUG5sIqXVsYPcK5Q3_sXBUEWdWMQiSBlB-RSNxE5NSOG1gAp2qrAfJdN9ukCek7BibNabA20PebeMtnMMzmI8puJlGt9eWVf06upC4lVHJo3seg2JriFqz6XknjL28boYGcDkKgVHJ7UJLGLIr5O_cfctFnbYX28zDj5WwUvVllMUdmi0tkU4ok2-XSiS14eZeUo7chnLI3iQWQdDkYf"
             />
-          </div>
+            <span className="hidden lg:inline text-[11px] font-bold text-tertiary px-1.5 py-0.5 rounded-md bg-tertiary-container/15 border border-tertiary/20">
+              Admin
+            </span>
+          </a>
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

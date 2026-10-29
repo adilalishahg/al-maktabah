@@ -1,9 +1,19 @@
 import { NextResponse } from 'next/server';
+import { verifyAdminRequest } from '@/lib/authGuard';
+import { validateUploadFile } from '@/lib/fileSecurity';
 
 // Get upload signature parameters for direct browser-to-Cloudinary upload
-// This completely bypasses Vercel's 4.5 MB serverless function payload limit!
+// Protected: Only authenticated administrators can generate upload signatures
 export async function GET(request: Request) {
   try {
+    const auth = verifyAdminRequest(request);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { configured: false, message: auth.message || 'Unauthorized: Admin authentication required.' },
+        { status: 401 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const folder = searchParams.get('folder') || 'al-maktabah/books';
 
@@ -41,6 +51,15 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    // Security Gate: Admin authentication required
+    const auth = verifyAdminRequest(request);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, message: auth.message || 'Unauthorized: Admin authentication required.' },
+        { status: 401 }
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
     const folder = (formData.get('folder') as string) || 'al-maktabah/books';
@@ -49,16 +68,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'No file uploaded' }, { status: 400 });
     }
 
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    // Deep binary verification: Magic byte inspection & size constraint checks
+    const validation = validateUploadFile(file, buffer);
+    if (!validation.valid) {
+      return NextResponse.json(
+        { success: false, message: validation.error || 'Invalid or untrusted file upload.' },
+        { status: 400 }
+      );
+    }
+
     const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
     const apiKey = process.env.CLOUDINARY_API_KEY;
     const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
     // Check if Cloudinary credentials exist
     if (cloudName && apiKey && apiSecret) {
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
       const base64Data = buffer.toString('base64');
-      const dataUri = `data:${file.type};base64,${base64Data}`;
+      const mime = validation.mimeType || file.type || 'application/octet-stream';
+      const dataUri = `data:${mime};base64,${base64Data}`;
 
       // Upload directly to Cloudinary REST endpoint
       const timestamp = Math.round(new Date().getTime() / 1000);
@@ -94,16 +124,15 @@ export async function POST(request: Request) {
     }
 
     // High performance local fallback if Cloudinary env is not set yet
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
     const base64 = buffer.toString('base64');
-    const localDataUrl = `data:${file.type || 'image/jpeg'};base64,${base64}`;
+    const localDataUrl = `data:${validation.mimeType || file.type || 'application/octet-stream'};base64,${base64}`;
 
     return NextResponse.json({
       success: true,
       url: localDataUrl,
       fileName: file.name,
       size: file.size,
+      mimeType: validation.mimeType,
       provider: 'Direct In-Memory CDN (Add CLOUDINARY_CLOUD_NAME to .env for Production CDN)',
     });
   } catch (error: any) {

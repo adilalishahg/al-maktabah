@@ -1,9 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { DetailedBook, BookChapter } from '../types/bookContent';
 import { ReaderTheme } from '../types/library';
-import { CodexPdfReader } from '@/components/CodexPdfReader';
+import { ScholarlyJsonLd } from '@/components/seo/ScholarlyJsonLd';
+
+// Lazy-load the heavy PDF rendering engine & canvas worker
+const CodexPdfReader = lazy(() =>
+  import('@/components/CodexPdfReader').then((m) => ({ default: m.CodexPdfReader }))
+);
 
 interface BookReaderViewProps {
   book: DetailedBook;
@@ -107,6 +112,7 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
 
   return (
     <div className="mt-1 sm:mt-2 space-y-3 sm:space-y-4 animate-fade-in pb-16">
+      <ScholarlyJsonLd book={book} />
       {/* Sleek Master Reader Toolbar (Device-Responsive: 2-Tier on Mobile, 1-Tier on Desktop) */}
       <div className="sticky top-[86px] sm:top-[106px] z-30 bg-surface-container-lowest/95 backdrop-blur-md p-2 sm:p-3 rounded-2xl border border-surface-container shadow-md select-none">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3">
@@ -394,18 +400,30 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
       {/* Reader Body: Continuous Facsimile PDF Codex OR Classical Matn View */}
       {readingFormat === 'facsimile' ? (
         <div className="w-full">
-          <CodexPdfReader
-            book={book}
-            pdfUrl={book.pdfUrl}
-            hideHeader={true}
-            externalScale={zoomScale}
-            externalPage={parseInt(pageInput) || 1}
-            sidebarOpenExternal={sidebarOpen}
-            onToggleSidebarExternal={() => setSidebarOpen(!sidebarOpen)}
-            onPageChange={(p) => setPageInput(String(p))}
-            onSwitchToMatn={() => setReadingFormat('matn')}
-            onClose={() => onNavigate('browse-library')}
-          />
+          <Suspense
+            fallback={
+              <div className="h-[65vh] flex flex-col items-center justify-center gap-3 text-emerald-800 dark:text-emerald-400 bg-surface-container-lowest/50 rounded-2xl border border-surface-container p-8 animate-pulse">
+                <span className="material-symbols-outlined text-4xl animate-spin">menu_book</span>
+                <span className="font-serif text-sm tracking-wider uppercase font-semibold">
+                  Loading Facsimile Manuscript Canvas...
+                </span>
+                <span className="text-xs text-gray-500 font-arabic">جاري تهيئة العارض الرقمي للمخطوطة</span>
+              </div>
+            }
+          >
+            <CodexPdfReader
+              book={book}
+              pdfUrl={book.pdfUrl}
+              hideHeader={true}
+              externalScale={zoomScale}
+              externalPage={parseInt(pageInput) || 1}
+              sidebarOpenExternal={sidebarOpen}
+              onToggleSidebarExternal={() => setSidebarOpen(!sidebarOpen)}
+              onPageChange={(p) => setPageInput(String(p))}
+              onSwitchToMatn={() => setReadingFormat('matn')}
+              onClose={() => onNavigate('browse-library')}
+            />
+          </Suspense>
         </div>
       ) : (
         /* Classical Matn View with Chapters Drawer */
