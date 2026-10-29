@@ -243,9 +243,9 @@ export default function App() {
 
       {/* Main Content Viewport */}
       <main
-        style={currentPath === 'book-viewer' ? { paddingTop: 'calc(var(--app-header-height, 108px) + 2px)' } : undefined}
-        className={`flex-1 w-full pb-8 sm:pb-12 overflow-x-hidden ${
-          currentPath === 'book-viewer' ? 'pt-0' : 'pt-20 sm:pt-24'
+        style={currentPath === 'book-viewer' ? { paddingTop: 'var(--app-header-height, 108px)' } : undefined}
+        className={`flex-1 w-full overflow-x-hidden ${
+          currentPath === 'book-viewer' ? 'pt-0 pb-3 sm:pb-4' : 'pt-20 sm:pt-24 pb-8 sm:pb-12'
         }`}
       >
         <div className="w-full max-w-7xl xl:max-w-archive-xl 2xl:max-w-archive-2xl mx-auto px-2 sm:px-6 lg:px-8">

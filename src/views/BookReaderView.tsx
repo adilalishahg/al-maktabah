@@ -113,11 +113,11 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
   return (
     <>
       <ScholarlyJsonLd book={book} />
-      <div className="space-y-3 sm:space-y-4 animate-fade-in pb-16">
+      <div className="space-y-1.5 sm:space-y-2 animate-fade-in pb-6 pt-1 sm:pt-1.5">
         {/* Sleek Master Reader Toolbar (Device-Responsive: 2-Tier on Mobile, 1-Tier on Desktop) */}
         <div
-          style={{ top: 'calc(var(--app-header-height, 108px) + 2px)' }}
-          className="sticky z-30 !mt-0 bg-surface-container-lowest/95 backdrop-blur-md p-2 sm:p-3 rounded-2xl border border-surface-container shadow-md select-none"
+          style={{ top: 'calc(var(--app-header-height, 108px) + 4px)' }}
+          className="sticky z-30 !mt-0 bg-surface-container-lowest/95 backdrop-blur-md p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-surface-container shadow-xs select-none"
         >
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3">
           {/* Group 1: Navigation, Chapter TOC Drawer Button & Book Title */}

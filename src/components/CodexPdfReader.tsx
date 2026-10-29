@@ -236,8 +236,14 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
 
       if (viewMode === 'pdf') {
         const el = document.getElementById(`pdf-page-slot-${clamped}`);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (el && containerRef.current) {
+          const containerRect = containerRef.current.getBoundingClientRect();
+          const elRect = el.getBoundingClientRect();
+          const targetTop = containerRef.current.scrollTop + (elRect.top - containerRect.top) - 8;
+          containerRef.current.scrollTo({
+            top: Math.max(0, targetTop),
+            behavior: 'smooth',
+          });
         }
       }
     },
@@ -321,7 +327,7 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
         isFullscreen
           ? 'fixed inset-0 z-[100] w-screen h-screen'
           : hideHeader
-            ? 'h-[calc(100dvh-9.5rem)] sm:h-[84vh] min-h-reader-shelf w-full rounded-2xl border border-tertiary/40 shadow-xl'
+            ? 'h-[calc(100dvh-var(--app-header-height,108px)-4.5rem)] min-h-[460px] w-full rounded-2xl border border-tertiary/40 shadow-xl'
             : 'h-[calc(100dvh-6.5rem)] sm:h-[86vh] min-h-reader-tall w-full rounded-xl sm:rounded-2xl border border-tertiary/40 shadow-2xl mt-2 sm:mt-4 mb-6'
       }`}
     >

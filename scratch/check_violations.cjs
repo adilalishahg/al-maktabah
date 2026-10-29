@@ -44,3 +44,4 @@ if (report.length > 0) {
     r.violations.slice(0, 3).forEach(v => console.log(`   L${v.line}: ${v.content}`));
   });
 }
+
