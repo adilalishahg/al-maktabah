@@ -111,10 +111,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
     <div className="w-full">
       {/* Top Daily Ayah / Hadith Calligraphic Banner */}
       {sections.dailyBanner.enabled && (
-        <div className="relative w-full overflow-hidden rounded-2xl p-3 sm:p-4 mb-6 sm:mb-8 border border-[#cba72f]/40 bg-gradient-to-r from-surface-container-high/90 via-surface-container-lowest to-surface-container-high/90 shadow-md">
+        <div className="relative w-full overflow-hidden rounded-2xl p-3 sm:p-4 mb-6 sm:mb-8 border border-tertiary/40 bg-gradient-to-r from-surface-container-high/90 via-surface-container-lowest to-surface-container-high/90 shadow-md">
           <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
-              <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-[#cba72f]/25 to-tertiary-container/30 text-[#967400] dark:text-[#f3cc51] border border-[#cba72f]/40 shadow-xs shrink-0">
+              <span className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-tertiary-container/25 to-tertiary-container/30 text-gold-dark dark:text-gold-bright border border-tertiary/40 shadow-xs shrink-0">
                 <span className="material-symbols-outlined text-lg">auto_stories</span>
               </span>
               <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3 min-w-0">
@@ -123,7 +123,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 </span>
                 <span className="font-body-sm text-xs sm:text-sm text-on-surface-variant font-medium">
                   {sections.dailyBanner.translation || '“My Lord, increase me in knowledge.”'}{' '}
-                  <span className="text-tertiary font-label-sm text-[11px] sm:text-xs font-bold tracking-wider ml-1 bg-tertiary-container/15 px-2 py-0.5 rounded-full border border-tertiary/20">
+                  <span className="text-tertiary font-label-sm text-label-sm sm:text-xs font-bold tracking-wider ml-1 bg-tertiary-container/15 px-2 py-0.5 rounded-full border border-tertiary/20">
                     {sections.dailyBanner.reference || 'Surah Ṭā-Hā 20:114'}
                   </span>
                 </span>
@@ -144,18 +144,18 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center pb-8 sm:pb-12">
         {/* Left Hero Column */}
         <div className="lg:col-span-7 flex flex-col gap-5 sm:gap-6">
-          <div className="inline-flex items-center gap-2.5 self-start px-3.5 py-1.5 rounded-full bg-surface-container-lowest shadow-xs border border-[#cba72f]/30">
+          <div className="inline-flex items-center gap-2.5 self-start px-3.5 py-1.5 rounded-full bg-surface-container-lowest shadow-xs border border-tertiary/30">
             <span className="font-arabic text-sm sm:text-base text-tertiary font-bold">
               بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-tertiary-container"></span>
-            <span className="font-label-sm text-[10px] sm:text-xs uppercase tracking-widest text-primary font-bold">
+            <span className="font-label-sm text-label-xs sm:text-xs uppercase tracking-widest text-primary font-bold">
               Autonomous Waqf Digital Repository
             </span>
           </div>
 
           <div className="space-y-3">
-            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-[44px] xl:text-[48px] text-primary tracking-tight font-extrabold leading-[1.18]">
+            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-display-hero xl:text-display-xl text-primary tracking-tight font-extrabold leading-[1.18]">
               Authentic Islamic Codices &amp; Scholarly Archives
               <span className="block font-display italic text-tertiary font-normal mt-1.5 text-2xl sm:text-3xl md:text-4xl">
                 Open, Peer-Reviewed &amp; Preserved for Posterity.
@@ -177,7 +177,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 value={heroSearchInput}
                 onChange={(e) => setHeroSearchInput(e.target.value)}
               />
-              <span className="hidden md:inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono text-outline bg-surface-container border border-surface-container-high shrink-0">
+              <span className="hidden md:inline-flex items-center px-2 py-0.5 rounded text-label-sm font-mono text-outline bg-surface-container border border-surface-container-high shrink-0">
                 ⌘K
               </span>
               <button
@@ -189,7 +189,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               </button>
             </form>
             <div className="mt-2 pt-2 px-2 sm:px-3 flex items-center gap-2 bg-surface-container-low/60 rounded-xl py-1.5 border-t border-surface-container overflow-x-auto">
-              <span className="font-label-sm text-[11px] text-on-surface-variant font-bold shrink-0 flex items-center gap-1">
+              <span className="font-label-sm text-label-sm text-on-surface-variant font-bold shrink-0 flex items-center gap-1">
                 <span className="material-symbols-outlined text-xs text-tertiary">bolt</span>
                 Direct Access:
               </span>
@@ -219,7 +219,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </button>
             <button
               onClick={() => onOpenReader()}
-              className="px-6 py-3.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container-high text-on-surface font-title-md text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-xs hover:shadow-md cursor-pointer border border-[#cba72f]/40 hover:border-[#cba72f]"
+              className="px-6 py-3.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container-high text-on-surface font-title-md text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-xs hover:shadow-md cursor-pointer border border-tertiary/40 hover:border-tertiary"
             >
               <span className="material-symbols-outlined text-lg text-tertiary">chrome_reader_mode</span>
               <span>Launch Web Reader Studio</span>
@@ -237,7 +237,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               {/* <div className="font-label-sm text-xs text-on-surface-variant font-medium mt-0.5">Verified Codices</div> */}
             </div>
 
-            <div className="p-3.5 bg-gradient-to-br from-surface-container-lowest to-surface-container-low rounded-xl shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all border border-[#cba72f]/30 group">
+            <div className="p-3.5 bg-gradient-to-br from-surface-container-lowest to-surface-container-low rounded-xl shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all border border-tertiary/30 group">
               <div className="flex items-center justify-between mb-1">
                 <span className="material-symbols-outlined text-tertiary text-xl">volunteer_activism</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-tertiary/40 group-hover:bg-tertiary transition-colors"></span>
@@ -269,10 +269,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
         {/* Right Hero Column: 3D Showcase of Classic Volumes */}
         <div className="lg:col-span-5 relative flex items-center justify-center py-6 sm:py-10 select-none overflow-hidden sm:overflow-visible">
           {/* Ambient Multi-layer Glow Behind Stack */}
-          <div className="absolute w-72 sm:w-80 h-72 sm:h-80 rounded-full bg-[#cba72f]/15 filter blur-3xl pointer-events-none"></div>
+          <div className="absolute w-72 sm:w-80 h-72 sm:h-80 rounded-full bg-tertiary-container/15 filter blur-3xl pointer-events-none"></div>
           <div className="absolute w-56 sm:w-64 h-56 sm:h-64 rounded-full bg-primary/20 filter blur-2xl pointer-events-none"></div>
           
-          <div className="relative w-full max-w-[340px] xs:max-w-[380px] sm:max-w-md h-[420px] sm:h-[480px] flex items-center justify-center scale-[0.92] xs:scale-95 sm:scale-100 origin-center">
+          <div className="relative w-full max-w-shelf-card xs:max-w-sm sm:max-w-md h-96 sm:h-[28rem] flex items-center justify-center scale-[0.92] xs:scale-95 sm:scale-100 origin-center">
             {/* Book 1: Al-Bidayah wan-Nihayah (Background, offset left) */}
             <div
               onClick={() => {
@@ -280,29 +280,29 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 if (target) onSelectBook(target);
                 else onNavigate('browse-library');
               }}
-              className="absolute -left-2 sm:-left-4 top-4 sm:top-6 w-48 sm:w-56 h-72 sm:h-82 rounded-2xl bg-gradient-to-br from-[#0f3d2e] via-[#09291e] to-[#041610] text-[#f7eed4] shadow-2xl p-4 flex flex-col justify-between transform -rotate-12 hover:-rotate-4 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden border-2 border-[#cba72f]/40 group"
+              className="absolute -left-2 sm:-left-4 top-4 sm:top-6 w-48 sm:w-56 h-72 sm:h-82 rounded-2xl bg-gradient-to-br from-emerald-dark via-emerald-deep to-primary text-tertiary-fixed shadow-2xl p-4 flex flex-col justify-between transform -rotate-12 hover:-rotate-4 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden border-2 border-tertiary/40 group"
             >
               {/* Gold foil corner ornament */}
-              <div className="absolute top-0 right-0 w-12 h-12 bg-gradient-to-bl from-[#cba72f]/40 to-transparent pointer-events-none"></div>
-              <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#ffe088_1px,transparent_1px)] [background-size:10px_10px]"></div>
+              <div className="absolute top-0 right-0 w-12 h-12 bg-gradient-to-bl from-tertiary-container/40 to-transparent pointer-events-none"></div>
+              <div className="absolute inset-0 opacity-15 bg-tertiary-fixed/10 bg-repeat"></div>
               
               <div className="relative z-10 flex justify-between items-start">
-                <span className="font-label-sm text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full bg-[#cba72f]/20 text-[#f3cc51] border border-[#cba72f]/40 font-bold uppercase tracking-wider">
+                <span className="font-label-sm text-label-xs sm:text-xs px-2.5 py-0.5 rounded-full bg-tertiary-container/20 text-gold-bright border border-tertiary/40 font-bold uppercase tracking-wider">
                   Tārīkh Codex
                 </span>
-                <span className="material-symbols-outlined text-[#f3cc51] text-base sm:text-lg">bookmark</span>
+                <span className="material-symbols-outlined text-gold-bright text-base sm:text-lg">bookmark</span>
               </div>
               <div className="relative z-10 text-center space-y-1 my-auto">
-                <div className="w-9 h-9 mx-auto rounded-full border border-[#cba72f]/50 flex items-center justify-center text-[#f3cc51] mb-1">
+                <div className="w-9 h-9 mx-auto rounded-full border border-tertiary/50 flex items-center justify-center text-gold-bright mb-1">
                   <span className="material-symbols-outlined text-base">history_edu</span>
                 </div>
-                <p className="font-arabic text-xl sm:text-2xl text-[#f3cc51] font-bold leading-tight drop-shadow-sm">
+                <p className="font-arabic text-xl sm:text-2xl text-gold-bright font-bold leading-tight drop-shadow-sm">
                   البداية والنهاية
                 </p>
                 <p className="font-body-sm text-xs sm:text-sm font-semibold tracking-wide text-white">Al-Bidāyah wan-Nihāyah</p>
-                <p className="font-label-sm text-[11px] text-[#e0cfb0]">Ibn Kathīr (d. 774 AH)</p>
+                <p className="font-label-sm text-label-sm text-tertiary-fixed">Ibn Kathīr (d. 774 AH)</p>
               </div>
-              <div className="relative z-10 pt-2 flex justify-between items-center text-[10px] sm:text-xs text-[#f3cc51]/80 border-t border-[#cba72f]/30">
+              <div className="relative z-10 pt-2 flex justify-between items-center text-label-xs sm:text-xs text-gold-bright/80 border-t border-tertiary/30">
                 <span>Vol. 1 of 14</span>
                 <span>840 pgs • 4K OCR</span>
               </div>
@@ -315,28 +315,28 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 if (target) onSelectBook(target);
                 else onNavigate('browse-library');
               }}
-              className="absolute -right-2 sm:-right-4 top-8 sm:top-12 w-52 sm:w-60 h-78 sm:h-86 rounded-2xl bg-gradient-to-br from-[#122e40] via-[#0b1c27] to-[#050e14] text-[#f7eed4] shadow-2xl p-4 flex flex-col justify-between transform rotate-12 hover:rotate-4 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden border-2 border-[#cba72f]/40 group"
+              className="absolute -right-2 sm:-right-4 top-8 sm:top-12 w-52 sm:w-60 h-78 sm:h-86 rounded-2xl bg-gradient-to-br from-secondary via-on-secondary-fixed to-secondary-fixed-dim text-tertiary-fixed shadow-2xl p-4 flex flex-col justify-between transform rotate-12 hover:rotate-4 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden border-2 border-tertiary/40 group"
             >
-              <div className="absolute top-0 left-0 w-12 h-12 bg-gradient-to-br from-[#cba72f]/40 to-transparent pointer-events-none"></div>
-              <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#cba72f_1px,transparent_1px)] [background-size:10px_10px]"></div>
+              <div className="absolute top-0 left-0 w-12 h-12 bg-gradient-to-br from-tertiary-container/40 to-transparent pointer-events-none"></div>
+              <div className="absolute inset-0 opacity-15 bg-tertiary/10 bg-repeat"></div>
               
               <div className="relative z-10 flex justify-between items-start">
-                <span className="font-label-sm text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full bg-[#cba72f]/20 text-[#f3cc51] border border-[#cba72f]/40 font-bold uppercase tracking-wider">
+                <span className="font-label-sm text-label-xs sm:text-xs px-2.5 py-0.5 rounded-full bg-tertiary-container/20 text-gold-bright border border-tertiary/40 font-bold uppercase tracking-wider">
                   Tazkiyah Canon
                 </span>
-                <span className="material-symbols-outlined text-[#f3cc51] text-base sm:text-lg">workspace_premium</span>
+                <span className="material-symbols-outlined text-gold-bright text-base sm:text-lg">workspace_premium</span>
               </div>
               <div className="relative z-10 text-center space-y-1 my-auto">
-                <div className="w-9 h-9 mx-auto rounded-full border border-[#cba72f]/50 flex items-center justify-center text-[#f3cc51] mb-1">
+                <div className="w-9 h-9 mx-auto rounded-full border border-tertiary/50 flex items-center justify-center text-gold-bright mb-1">
                   <span className="material-symbols-outlined text-base">psychology</span>
                 </div>
-                <p className="font-arabic text-xl sm:text-2xl text-[#f3cc51] font-bold leading-tight drop-shadow-sm">
+                <p className="font-arabic text-xl sm:text-2xl text-gold-bright font-bold leading-tight drop-shadow-sm">
                   إحياء علوم الدين
                 </p>
                 <p className="font-body-sm text-xs sm:text-sm font-semibold tracking-wide text-white">Iḥyā’ ‘Ulūm al-Dīn</p>
-                <p className="font-label-sm text-[11px] text-[#e0cfb0]">Imām al-Ghazālī (d. 505 AH)</p>
+                <p className="font-label-sm text-label-sm text-tertiary-fixed">Imām al-Ghazālī (d. 505 AH)</p>
               </div>
-              <div className="relative z-10 pt-2 flex justify-between items-center text-[10px] sm:text-xs text-[#f3cc51]/80 border-t border-[#cba72f]/30">
+              <div className="relative z-10 pt-2 flex justify-between items-center text-label-xs sm:text-xs text-gold-bright/80 border-t border-tertiary/30">
                 <span>Critical Recension</span>
                 <span>1,120 pgs • Verified</span>
               </div>
@@ -353,10 +353,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     if (centerBook) onOpenReader(centerBook);
                     else onNavigate('browse-library');
                   }}
-                  className="relative z-20 w-60 sm:w-68 h-88 sm:h-[410px] rounded-2xl bg-gradient-to-b from-surface-container-lowest via-surface-container-low to-surface-container-lowest text-on-surface shadow-2xl p-5 flex flex-col justify-between transform hover:-translate-y-2 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35)] transition-all duration-300 cursor-pointer border-2 border-[#cba72f]/60 ring-2 ring-[#cba72f]/20"
+                  className="relative z-20 w-60 sm:w-68 h-88 sm:h-reader-shelf rounded-2xl bg-gradient-to-b from-surface-container-lowest via-surface-container-low to-surface-container-lowest text-on-surface shadow-2xl p-5 flex flex-col justify-between transform hover:-translate-y-2 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35)] transition-all duration-300 cursor-pointer border-2 border-tertiary/60 ring-2 ring-tertiary/20"
                 >
                   {/* Ornate Inner Double Frame */}
-                  <div className="absolute inset-2 rounded-xl border border-[#cba72f]/30 pointer-events-none"></div>
+                  <div className="absolute inset-2 rounded-xl border border-tertiary/30 pointer-events-none"></div>
 
                   <div className="relative z-10 flex justify-between items-center">
                     <span className="inline-flex items-center gap-1.5 font-label-sm text-xs px-2.5 py-1 rounded-full bg-primary-container text-on-primary font-bold shadow-xs">
@@ -369,8 +369,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   </div>
 
                   <div className="relative z-10 my-auto text-center space-y-2">
-                    <div className="w-12 h-12 mx-auto rounded-full bg-surface-container-high border border-[#cba72f]/40 flex items-center justify-center text-tertiary shadow-xs">
-                      <span className="material-symbols-outlined text-2xl text-[#967400] dark:text-[#f3cc51]">menu_book</span>
+                    <div className="w-12 h-12 mx-auto rounded-full bg-surface-container-high border border-tertiary/40 flex items-center justify-center text-tertiary shadow-xs">
+                      <span className="material-symbols-outlined text-2xl text-gold-dark dark:text-gold-bright">menu_book</span>
                     </div>
                     <h2 className="font-arabic text-2xl sm:text-3xl text-primary font-bold leading-none">
                       {centerBook?.arabicTitle || 'رياض الصالحين'}
@@ -381,13 +381,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     <p className="font-body-sm text-xs text-on-surface-variant font-medium line-clamp-1">
                       {centerBook?.description || 'The Gardens of the Righteous'}
                     </p>
-                    <div className="h-0.5 w-16 bg-gradient-to-r from-transparent via-[#cba72f] to-transparent mx-auto rounded"></div>
+                    <div className="h-0.5 w-16 bg-gradient-to-r from-transparent via-tertiary-container to-transparent mx-auto rounded"></div>
                     <p className="font-label-sm text-xs text-tertiary font-bold truncate">
                       {centerBook?.author || 'Imām Yaḥyā ibn Sharaf an-Nawawī'}
                     </p>
                   </div>
 
-                  <div className="relative z-10 bg-surface-container-high/90 rounded-xl p-2.5 flex items-center justify-between text-on-surface-variant font-label-sm text-xs border border-[#cba72f]/30 shadow-xs">
+                  <div className="relative z-10 bg-surface-container-high/90 rounded-xl p-2.5 flex items-center justify-between text-on-surface-variant font-label-sm text-xs border border-tertiary/30 shadow-xs">
                     <div className="flex items-center gap-1.5 text-primary font-semibold">
                       <span className="material-symbols-outlined text-base text-primary">auto_stories</span>
                       <span>{centerBook?.pages || 720} Pages • Verified</span>
@@ -484,7 +484,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     </div>
                     <div className="flex flex-wrap gap-1.5 font-label-sm">
                       {cat.tags.slice(0, 3).map((tag, i) => (
-                        <span key={i} className="px-2 py-0.5 rounded-md bg-surface-container-low text-[11px] text-on-surface-variant font-medium border border-surface-container">
+                        <span key={i} className="px-2 py-0.5 rounded-md bg-surface-container-low text-label-sm text-on-surface-variant font-medium border border-surface-container">
                           {tag}
                         </span>
                       ))}
@@ -510,7 +510,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 sm:mb-8">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#cba72f] text-base sm:text-lg">verified</span>
+              <span className="material-symbols-outlined text-tertiary text-base sm:text-lg">verified</span>
               <span className="font-label-sm text-xs uppercase tracking-wider text-tertiary font-bold">
                 Scholarly Academic Canon
               </span>
@@ -531,7 +531,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 onClick={() => setActiveFeaturedTab(tab)}
                 className={`px-3 py-1.5 rounded-lg font-title-md text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
                   activeFeaturedTab === tab
-                    ? 'bg-surface-container-lowest text-primary font-bold shadow-xs border border-[#cba72f]/30'
+                    ? 'bg-surface-container-lowest text-primary font-bold shadow-xs border border-tertiary/30'
                     : 'text-on-surface-variant hover:text-on-surface'
                 }`}
               >
@@ -543,7 +543,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
         {/* 4 Rich Book Cards Grid */}
         {books.length === 0 ? (
-          <div className="py-12 px-6 text-center bg-surface-container-lowest rounded-2xl border-2 border-dashed border-[#cba72f]/40 max-w-xl mx-auto space-y-3">
+          <div className="py-12 px-6 text-center bg-surface-container-lowest rounded-2xl border-2 border-dashed border-tertiary/40 max-w-xl mx-auto space-y-3">
             <span className="material-symbols-outlined text-3xl text-tertiary">library_books</span>
             <h3 className="font-title-md font-bold text-primary">No Codices in Database Yet</h3>
             <p className="text-xs text-on-surface-variant">
@@ -562,7 +562,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             {filteredBooks.map((book) => (
               <div
                 key={book.id}
-                className="group bg-surface-container-lowest rounded-2xl shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden border border-surface-container hover:border-[#cba72f]/50"
+                className="group bg-surface-container-lowest rounded-2xl shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden border border-surface-container hover:border-tertiary/50"
               >
                 {/* Cover with Book Spine effect */}
                 <div 
@@ -596,10 +596,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   )}
 
                   <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-white text-xs font-medium">
-                    <span className="flex items-center gap-1 font-bold text-[#f3cc51]">
+                    <span className="flex items-center gap-1 font-bold text-gold-bright">
                       ★ {book.rating || 4.9}
                     </span>
-                    <span className="px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-sm text-[11px]">
+                    <span className="px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-sm text-label-sm">
                       {book.pages} pgs • {book.sizeMb} MB
                     </span>
                   </div>
@@ -611,7 +611,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       <span className="font-arabic text-base sm:text-lg font-bold truncate">
                         {book.arabicTitle}
                       </span>
-                      <span className="text-[10px] font-mono text-outline font-semibold shrink-0 bg-surface-container px-2 py-0.5 rounded border border-surface-container-high">
+                      <span className="text-label-xs font-mono text-outline font-semibold shrink-0 bg-surface-container px-2 py-0.5 rounded border border-surface-container-high">
                         {book.authorHijriYear?.split('(')[0]?.trim() || '1445 AH'}
                       </span>
                     </div>
@@ -626,7 +626,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     </p>
                     <div className="flex flex-wrap items-center gap-1.5 pt-1">
                       {book.formats.slice(0, 3).map((fmt, i) => (
-                        <span key={i} className="px-2 py-0.5 rounded-md bg-surface-container text-on-surface-variant font-label-sm text-[10px] font-semibold border border-surface-container-high">
+                        <span key={i} className="px-2 py-0.5 rounded-md bg-surface-container text-on-surface-variant font-label-sm text-label-xs font-semibold border border-surface-container-high">
                           {fmt}
                         </span>
                       ))}
@@ -661,8 +661,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {sections.readerPreview.enabled && (
       <section className="py-8 sm:py-12" id="reader-preview">
         <div className="space-y-2 mb-6 sm:mb-8 text-center max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-surface-container-low text-tertiary font-label-sm text-xs font-bold border border-[#cba72f]/30">
-            <span className="material-symbols-outlined text-sm text-[#cba72f]">devices</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-surface-container-low text-tertiary font-label-sm text-xs font-bold border border-tertiary/30">
+            <span className="material-symbols-outlined text-sm text-tertiary">devices</span>
             <span>Zero Installation • Built-in Scholar Apparatus</span>
           </div>
           <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-primary">
@@ -674,11 +674,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
         </div>
 
         {/* Mockup Container with Gold Leaf Border */}
-        <div className={`rounded-2xl shadow-2xl overflow-hidden flex flex-col border border-[#cba72f]/40 transition-colors ring-1 ring-[#cba72f]/20 ${
+        <div className={`rounded-2xl shadow-2xl overflow-hidden flex flex-col border border-tertiary/40 transition-colors ring-1 ring-tertiary/20 ${
           readerTheme === 'night' 
-            ? 'bg-[#0d1a14] text-[#e5ede9]' 
+            ? 'bg-night-card text-night-text' 
             : readerTheme === 'sepia' 
-              ? 'bg-[#fffcf7] text-[#26211a]' 
+              ? 'bg-parchment-canvas text-sepia-text' 
               : 'bg-surface-container-lowest text-on-surface'
         }`}>
           {/* Reader Toolbar */}
@@ -709,7 +709,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <button
                   onClick={() => setReaderTheme('night')}
                   className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
-                    readerTheme === 'night' ? 'bg-[#192e25] text-white font-bold shadow-xs' : 'hover:text-on-surface'
+                    readerTheme === 'night' ? 'bg-surface-container text-white font-bold shadow-xs' : 'hover:text-on-surface'
                   }`}
                 >
                   Night
@@ -717,7 +717,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <button
                   onClick={() => setReaderTheme('sepia')}
                   className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
-                    readerTheme === 'sepia' ? 'bg-[#ded1c1] text-[#26211a] font-bold shadow-xs' : 'hover:text-on-surface'
+                    readerTheme === 'sepia' ? 'bg-sepia-border text-sepia-text font-bold shadow-xs' : 'hover:text-on-surface'
                   }`}
                 >
                   Sepia
@@ -770,7 +770,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               {/* Admin Reader Controls Link */}
               <a
                 href="/admin"
-                className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#cba72f]/15 hover:bg-[#cba72f]/30 text-[#967400] dark:text-[#f3cc51] border border-[#cba72f]/40 font-label-sm text-xs font-bold transition-colors"
+                className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-tertiary-container/15 hover:bg-tertiary-container/30 text-gold-dark dark:text-gold-bright border border-tertiary/40 font-label-sm text-xs font-bold transition-colors"
                 title="Change or customize this reader in Admin Portal"
               >
                 <span className="material-symbols-outlined text-sm">tune</span>
@@ -789,7 +789,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           </div>
 
           {/* Reader Body (Dual Pane Preview) */}
-          <div className="grid grid-cols-12 min-h-[460px]">
+          <div className="grid grid-cols-12 min-h-reader-shelf">
             {/* Left Marginalia Sidebar */}
             <div className="hidden md:block md:col-span-3 bg-surface-container-low/40 p-5 space-y-5 border-r border-surface-container">
               <div className="space-y-1">
@@ -802,7 +802,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               </div>
 
               <div className="space-y-1.5 font-body-sm text-xs">
-                <div className="p-2.5 rounded-xl bg-surface-container-lowest text-primary font-bold shadow-xs flex items-center justify-between border border-[#cba72f]/40">
+                <div className="p-2.5 rounded-xl bg-surface-container-lowest text-primary font-bold shadow-xs flex items-center justify-between border border-tertiary/40">
                   <span>1. {activeReader.chapterTitleEn}</span>
                   <span className="material-symbols-outlined text-xs text-tertiary">chevron_right</span>
                 </div>
@@ -824,7 +824,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     <span className="material-symbols-outlined text-sm">hub</span>
                     Isnād Chain Nodes
                   </p>
-                  <span className="text-[10px] text-on-surface-variant font-semibold">Inspect</span>
+                  <span className="text-label-xs text-on-surface-variant font-semibold">Inspect</span>
                 </div>
                 <div className="space-y-1 text-xs text-on-surface-variant">
                   {activeReader.isnadChain.slice(0, 4).map((node, i) => (
@@ -834,9 +834,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
                         className="flex items-center gap-2 text-left hover:text-primary transition-colors cursor-pointer group py-0.5"
                       >
                         <span className={`w-2 h-2 rounded-full group-hover:scale-125 transition-transform ${
-                          i === 0 ? 'bg-[#cba72f]' : 'bg-primary'
+                          i === 0 ? 'bg-tertiary-container' : 'bg-primary'
                         }`}></span>
-                        <span className="group-hover:underline truncate max-w-[170px] text-[11px] font-medium">{node.name}</span>
+                        <span className="group-hover:underline truncate max-w-44 text-label-sm font-medium">{node.name}</span>
                       </button>
                       {i < 3 && <div className="ml-1 w-0.5 h-1.5 bg-outline-variant/60"></div>}
                     </div>
@@ -849,7 +849,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                         className="flex items-center gap-2 font-bold text-primary hover:text-tertiary transition-colors cursor-pointer text-left py-0.5"
                       >
                         <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        <span className="text-[11px]">{activeReader.isnadChain[activeReader.isnadChain.length - 1].name}</span>
+                        <span className="text-label-sm">{activeReader.isnadChain[activeReader.isnadChain.length - 1].name}</span>
                       </button>
                     </>
                   )}
@@ -894,7 +894,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     >
                       <p>
                         {activeReader.englishLeadText}{' '}
-                        <span className="font-bold text-primary underline decoration-[#cba72f] decoration-2">
+                        <span className="font-bold text-primary underline decoration-tertiary decoration-2">
                           {activeReader.englishHighlightText}
                         </span>
                       </p>
@@ -951,7 +951,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       </p>
                     )}
 
-                    <div className="p-4 rounded-2xl bg-gradient-to-br from-[#cba72f]/15 to-transparent text-right border-2 border-[#cba72f]/40 shadow-xs">
+                    <div className="p-4 rounded-2xl bg-gradient-to-br from-tertiary-container/15 to-transparent text-right border-2 border-tertiary/40 shadow-xs">
                       <p 
                         className="font-arabic font-bold text-primary leading-relaxed"
                         style={{ fontSize: `${Math.round(readerFontSize * 1.45)}px` }}
@@ -992,7 +992,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       <span className="material-symbols-outlined text-base">share</span>
                       <span>{shareToast ? 'Hadith link copied!' : 'Share Hadith'}</span>
                     </button>
-                    <span className="text-outline-variant font-mono text-[11px]">{activeReader.arabicSubtext}</span>
+                    <span className="text-outline-variant font-mono text-label-sm">{activeReader.arabicSubtext}</span>
                   </div>
                 </div>
               </div>
@@ -1027,8 +1027,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column: Commitment to Waqf */}
           <div className="lg:col-span-6 space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-low text-primary font-label-sm text-xs font-bold border border-[#cba72f]/30">
-              <span className="material-symbols-outlined text-sm text-[#cba72f]">verified</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-low text-primary font-label-sm text-xs font-bold border border-tertiary/30">
+              <span className="material-symbols-outlined text-sm text-tertiary">verified</span>
               <span>Endowment for Eternity (Waqf Lillāh)</span>
             </div>
             <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-primary">
@@ -1108,22 +1108,22 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* Scholarly Newsletter & Digest Strip */}
       {sections.newsletterSection.enabled && (
       <section className="py-8 sm:py-12">
-        <div className="rounded-3xl p-6 sm:p-10 md:p-12 shadow-2xl relative overflow-hidden bg-gradient-to-br from-[#022c22] via-[#064e3b] to-[#022c22] border-2 border-[#cba72f]/40 text-[#f7eed4]">
+        <div className="rounded-3xl p-6 sm:p-10 md:p-12 shadow-2xl relative overflow-hidden bg-gradient-to-br from-emerald-deep via-emerald-dark to-emerald-deep border-2 border-tertiary/40 text-tertiary-fixed">
           {/* Decorative Arabesque Vector Overlay */}
-          <div className="absolute -right-12 -top-12 w-64 h-64 opacity-10 pointer-events-none text-[#cba72f]">
+          <div className="absolute -right-12 -top-12 w-64 h-64 opacity-10 pointer-events-none text-tertiary">
             <svg fill="currentColor" viewBox="0 0 100 100">
               <polygon points="50,0 62,38 100,38 69,62 81,100 50,75 19,100 31,62 0,38 38,38"></polygon>
             </svg>
           </div>
           <div className="relative z-10 max-w-3xl mx-auto text-center space-y-4">
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#cba72f]/20 text-[#f3cc51] border border-[#cba72f]/40 font-label-sm text-xs uppercase font-bold tracking-wider">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-tertiary-container/20 text-gold-bright border border-tertiary/40 font-label-sm text-xs uppercase font-bold tracking-wider">
               <span className="material-symbols-outlined text-sm">mark_email_read</span>
               The Monthly Scholarly Dispatch
             </span>
             <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-white">
               Join 140,000+ Seekers &amp; Researchers of Sacred Knowledge
             </h2>
-            <p className="font-body-md text-xs sm:text-sm text-[#e0cfb0] max-w-xl mx-auto leading-relaxed">
+            <p className="font-body-md text-xs sm:text-sm text-tertiary-fixed max-w-xl mx-auto leading-relaxed">
               Receive monthly digests of newly digitized manuscripts, authenticated translations, paleographic findings, and academic reading roadmaps. No promotional spam.
             </p>
 
@@ -1135,7 +1135,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             ) : (
               <form onSubmit={handleDispatchSubmit} className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 max-w-md mx-auto">
                 <input
-                  className="w-full sm:w-auto flex-1 px-4 py-3.5 rounded-xl bg-white/95 text-stone-900 placeholder:text-stone-500 font-body-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#cba72f] shadow-lg"
+                  className="w-full sm:w-auto flex-1 px-4 py-3.5 rounded-xl bg-white/95 text-stone-900 placeholder:text-stone-500 font-body-sm text-sm focus:outline-none focus:ring-2 focus:ring-tertiary shadow-lg"
                   placeholder="scholar@university.edu"
                   type="email"
                   value={dispatchEmail}
@@ -1143,7 +1143,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   required
                 />
                 <button
-                  className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#d4af37] via-[#e5c053] to-[#cba72f] text-stone-950 font-title-md text-sm hover:brightness-110 transition-all flex items-center justify-center gap-2 shadow-lg font-extrabold shrink-0 cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-gradient-to-r from-gold-leaf via-tertiary-fixed to-tertiary-container text-stone-950 font-title-md text-sm hover:brightness-110 transition-all flex items-center justify-center gap-2 shadow-lg font-extrabold shrink-0 cursor-pointer"
                   type="submit"
                 >
                   <span>Subscribe</span>
@@ -1152,13 +1152,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
               </form>
             )}
 
-            <div className="flex items-center justify-center gap-4 text-[#e0cfb0] font-label-sm text-xs pt-1">
+            <div className="flex items-center justify-center gap-4 text-tertiary-fixed font-label-sm text-xs pt-1">
               <span className="flex items-center gap-1">
-                <span className="material-symbols-outlined text-xs text-[#cba72f]">lock</span> 100% Privacy Protected
+                <span className="material-symbols-outlined text-xs text-tertiary">lock</span> 100% Privacy Protected
               </span>
               <span>•</span>
               <span className="flex items-center gap-1">
-                <span className="material-symbols-outlined text-xs text-[#cba72f]">history_edu</span> Academic Editorial Board
+                <span className="material-symbols-outlined text-xs text-tertiary">history_edu</span> Academic Editorial Board
               </span>
             </div>
           </div>

@@ -43,7 +43,7 @@ export const BookDetailModal: React.FC<BookDetailModalProps> = ({
               Scholarly Codex Record
             </span>
             {book.verified && (
-              <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-semibold text-tertiary px-2 py-0.5 rounded-full bg-surface-container-lowest border border-tertiary/20 shrink-0">
+              <span className="hidden sm:inline-flex items-center gap-1 text-label-sm font-semibold text-tertiary px-2 py-0.5 rounded-full bg-surface-container-lowest border border-tertiary/20 shrink-0">
                 <span className="material-symbols-outlined text-xs">verified</span> Academic Council Verified
               </span>
             )}
@@ -104,15 +104,15 @@ export const BookDetailModal: React.FC<BookDetailModalProps> = ({
               {/* Quick stats pills */}
               <div className="grid grid-cols-3 gap-1.5 sm:gap-2 text-center text-xs">
                 <div className="p-2 sm:p-2.5 rounded-lg bg-surface-container-low border border-surface-container">
-                  <span className="text-on-surface-variant block font-label-sm uppercase text-[10px] sm:text-xs">Canonical Status</span>
+                  <span className="text-on-surface-variant block font-label-sm uppercase text-label-xs sm:text-xs">Canonical Status</span>
                   <span className="font-semibold text-primary block mt-0.5 text-xs sm:text-sm truncate">{book.canonicalStatus || 'Verified Text'}</span>
                 </div>
                 <div className="p-2 sm:p-2.5 rounded-lg bg-surface-container-low border border-surface-container">
-                  <span className="text-on-surface-variant block font-label-sm uppercase text-[10px] sm:text-xs">Volumes</span>
+                  <span className="text-on-surface-variant block font-label-sm uppercase text-label-xs sm:text-xs">Volumes</span>
                   <span className="font-semibold text-primary block mt-0.5 text-xs sm:text-sm">{book.volumes} {book.volumes > 1 ? 'Vols' : 'Vol'}</span>
                 </div>
                 <div className="p-2 sm:p-2.5 rounded-lg bg-surface-container-low border border-surface-container">
-                  <span className="text-on-surface-variant block font-label-sm uppercase text-[10px] sm:text-xs">Read Time</span>
+                  <span className="text-on-surface-variant block font-label-sm uppercase text-label-xs sm:text-xs">Read Time</span>
                   <span className="font-semibold text-primary block mt-0.5 text-xs sm:text-sm">~{book.readingTimeHours || 12}h</span>
                 </div>
               </div>

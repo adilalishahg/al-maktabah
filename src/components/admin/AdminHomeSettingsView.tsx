@@ -185,20 +185,20 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Top Banner & Save Action Bar */}
-      <div className="bg-[#12241b] rounded-2xl p-5 border border-[#21392e] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
+      <div className="bg-emerald-surface rounded-2xl p-5 border border-emerald-border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-lg bg-[#0f382c] border border-[#79a292]/40 text-[#ffe088] flex items-center justify-center">
+            <span className="w-8 h-8 rounded-lg bg-primary-container border border-emerald-highlight/40 text-tertiary-fixed flex items-center justify-center">
               <span className="material-symbols-outlined text-lg">tune</span>
             </span>
             <h2 className="font-display text-lg sm:text-xl font-bold text-white">
               Homepage Layout &amp; Codex Reader Control
             </h2>
-            <span className="px-2 py-0.5 rounded-full bg-[#194032] text-[#86efac] text-[10px] font-bold uppercase tracking-wider border border-[#276749]">
+            <span className="px-2 py-0.5 rounded-full bg-emerald-card text-emerald-300 text-label-xs font-bold uppercase tracking-wider border border-emerald-border">
               Live Controller
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-[#a2b7ad] max-w-2xl">
+          <p className="text-xs sm:text-sm text-emerald-highlight max-w-2xl">
             Control which sections appear on the public homepage, toggle them active/hidden, and choose or customize what text and book appears in the live Scholarly Codex Reader.
           </p>
         </div>
@@ -215,7 +215,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
             href="/"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3.5 py-2 rounded-xl bg-[#192e25] hover:bg-[#223d32] text-[#d1fae5] text-xs font-semibold flex items-center gap-1.5 transition-all border border-[#2e5344]"
+            className="px-3.5 py-2 rounded-xl bg-surface-container hover:bg-emerald-surface text-emerald-100 text-xs font-semibold flex items-center gap-1.5 transition-all border border-emerald-border"
           >
             <span className="material-symbols-outlined text-sm">visibility</span>
             <span>View Live Site</span>
@@ -224,7 +224,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
           <button
             onClick={() => onSaveSettings(currentSettings)}
             disabled={isSaving}
-            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#d4af37] via-[#e5c053] to-[#cba72f] hover:brightness-110 active:scale-95 text-stone-950 text-xs sm:text-sm font-extrabold shadow-lg flex items-center gap-2 cursor-pointer transition-all disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold-leaf via-tertiary-fixed to-tertiary-container hover:brightness-110 active:scale-95 text-stone-950 text-xs sm:text-sm font-extrabold shadow-lg flex items-center gap-2 cursor-pointer transition-all disabled:opacity-50"
           >
             <span className="material-symbols-outlined text-base">
               {isSaving ? 'sync' : 'publish'}
@@ -235,13 +235,13 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
       </div>
 
       {/* Sub Navigation Pills */}
-      <div className="flex items-center bg-[#0d1a14] rounded-xl p-1 border border-[#21392e] w-fit">
+      <div className="flex items-center bg-night-surface rounded-xl p-1 border border-emerald-border w-fit">
         <button
           onClick={() => setActiveSubTab('sections')}
           className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer ${
             activeSubTab === 'sections'
-              ? 'bg-[#0f382c] text-white shadow-xs'
-              : 'text-[#a2b7ad] hover:text-white'
+              ? 'bg-primary-container text-white shadow-xs'
+              : 'text-emerald-highlight hover:text-white'
           }`}
         >
           <span className="material-symbols-outlined text-sm">view_quilt</span>
@@ -252,8 +252,8 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
           onClick={() => setActiveSubTab('reader')}
           className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer ${
             activeSubTab === 'reader'
-              ? 'bg-[#0f382c] text-white shadow-xs'
-              : 'text-[#a2b7ad] hover:text-white'
+              ? 'bg-primary-container text-white shadow-xs'
+              : 'text-emerald-highlight hover:text-white'
           }`}
         >
           <span className="material-symbols-outlined text-sm">auto_stories</span>
@@ -267,8 +267,8 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
           onClick={() => setActiveSubTab('preview')}
           className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer ${
             activeSubTab === 'preview'
-              ? 'bg-[#0f382c] text-white shadow-xs'
-              : 'text-[#a2b7ad] hover:text-white'
+              ? 'bg-primary-container text-white shadow-xs'
+              : 'text-emerald-highlight hover:text-white'
           }`}
         >
           <span className="material-symbols-outlined text-sm">preview</span>
@@ -281,19 +281,19 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
       {/* ========================================================================= */}
       {activeSubTab === 'sections' && (
         <div className="space-y-6">
-          <div className="bg-[#12241b] rounded-2xl p-6 border border-[#21392e] space-y-4">
-            <div className="flex items-center justify-between border-b border-[#21392e] pb-4">
+          <div className="bg-emerald-surface rounded-2xl p-6 border border-emerald-border space-y-4">
+            <div className="flex items-center justify-between border-b border-emerald-border pb-4">
               <div>
                 <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#ffe088] text-lg">toggle_on</span>
+                  <span className="material-symbols-outlined text-tertiary-fixed text-lg">toggle_on</span>
                   Homepage View Sections Visibility
                 </h3>
-                <p className="text-xs text-[#a2b7ad] mt-0.5">
+                <p className="text-xs text-emerald-highlight mt-0.5">
                   Click the switch on any section to toggle it Active (shown) or Inactive (hidden) on the public homepage.
                 </p>
               </div>
 
-              <span className="text-xs text-[#a2b7ad]">
+              <span className="text-xs text-emerald-highlight">
                 {Object.values(sections).filter((s) => s.enabled).length} of 7 Sections Active
               </span>
             </div>
@@ -303,19 +303,19 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
               {/* 1. Daily Ayah & Hadith Banner */}
               <div className={`p-4 rounded-xl border transition-all ${
                 sections.dailyBanner.enabled
-                  ? 'bg-[#0c1e15] border-emerald-500/40 shadow-sm'
-                  : 'bg-[#101b16] border-[#21392e] opacity-75'
+                  ? 'bg-night-surface border-emerald-500/40 shadow-sm'
+                  : 'bg-night-surface border-emerald-border opacity-75'
               }`}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="w-7 h-7 rounded-lg bg-[#193d2c] text-emerald-400 flex items-center justify-center">
+                    <span className="w-7 h-7 rounded-lg bg-emerald-surface text-emerald-400 flex items-center justify-center">
                       <span className="material-symbols-outlined text-base">format_quote</span>
                     </span>
                     <span className="text-xs font-bold text-white">Daily Insight Banner</span>
                   </div>
                   <button
                     onClick={() => handleToggleSection('dailyBanner')}
-                    className={`px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1 cursor-pointer transition-colors ${
+                    className={`px-2.5 py-1 rounded-full text-label-sm font-bold flex items-center gap-1 cursor-pointer transition-colors ${
                       sections.dailyBanner.enabled
                         ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50'
                         : 'bg-zinc-800 text-zinc-400 border border-zinc-700'
@@ -325,11 +325,11 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                     <span>{sections.dailyBanner.enabled ? 'ACTIVE' : 'HIDDEN'}</span>
                   </button>
                 </div>
-                <p className="text-[11px] text-[#a2b7ad] leading-relaxed mb-3">
+                <p className="text-label-sm text-emerald-highlight leading-relaxed mb-3">
                   Top calligraphic banner displaying daily Quranic ayah or hadith with citation.
                 </p>
                 {sections.dailyBanner.enabled && (
-                  <div className="space-y-2 pt-2 border-t border-[#1d3529] text-xs">
+                  <div className="space-y-2 pt-2 border-t border-emerald-border text-xs">
                     <input
                       type="text"
                       dir="rtl"
@@ -344,7 +344,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                         })
                       }
                       placeholder="Arabic Calligraphy Text"
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-[#08150f] border border-[#21392e] text-white text-right text-xs focus:outline-none focus:border-emerald-500"
+                      className="w-full px-2.5 py-1.5 rounded-lg bg-night-canvas border border-emerald-border text-white text-right text-xs focus:outline-none focus:border-emerald-500"
                     />
                     <input
                       type="text"
@@ -359,7 +359,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                         })
                       }
                       placeholder="English Translation"
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-[#08150f] border border-[#21392e] text-white text-xs focus:outline-none focus:border-emerald-500"
+                      className="w-full px-2.5 py-1.5 rounded-lg bg-night-canvas border border-emerald-border text-white text-xs focus:outline-none focus:border-emerald-500"
                     />
                     <input
                       type="text"
@@ -374,7 +374,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                         })
                       }
                       placeholder="Surah / Hadith Reference"
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-[#08150f] border border-[#21392e] text-white text-xs focus:outline-none focus:border-emerald-500"
+                      className="w-full px-2.5 py-1.5 rounded-lg bg-night-canvas border border-emerald-border text-white text-xs focus:outline-none focus:border-emerald-500"
                     />
                   </div>
                 )}
@@ -383,19 +383,19 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
               {/* 2. Hero 3D Manuscripts Showcase */}
               <div className={`p-4 rounded-xl border transition-all ${
                 sections.heroSection.enabled
-                  ? 'bg-[#0c1e15] border-emerald-500/40 shadow-sm'
-                  : 'bg-[#101b16] border-[#21392e] opacity-75'
+                  ? 'bg-night-surface border-emerald-500/40 shadow-sm'
+                  : 'bg-night-surface border-emerald-border opacity-75'
               }`}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="w-7 h-7 rounded-lg bg-[#193d2c] text-emerald-400 flex items-center justify-center">
+                    <span className="w-7 h-7 rounded-lg bg-emerald-surface text-emerald-400 flex items-center justify-center">
                       <span className="material-symbols-outlined text-base">view_in_ar</span>
                     </span>
                     <span className="text-xs font-bold text-white">Hero 3D Showcase</span>
                   </div>
                   <button
                     onClick={() => handleToggleSection('heroSection')}
-                    className={`px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1 cursor-pointer transition-colors ${
+                    className={`px-2.5 py-1 rounded-full text-label-sm font-bold flex items-center gap-1 cursor-pointer transition-colors ${
                       sections.heroSection.enabled
                         ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50'
                         : 'bg-zinc-800 text-zinc-400 border border-zinc-700'
@@ -405,12 +405,12 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                     <span>{sections.heroSection.enabled ? 'ACTIVE' : 'HIDDEN'}</span>
                   </button>
                 </div>
-                <p className="text-[11px] text-[#a2b7ad] leading-relaxed mb-3">
+                <p className="text-label-sm text-emerald-highlight leading-relaxed mb-3">
                   Primary hero column with title, metrics strip, and 3D illuminated codices stack.
                 </p>
                 {sections.heroSection.enabled && (
-                  <div className="space-y-2 pt-2 border-t border-[#1d3529] text-xs">
-                    <label className="text-[10px] text-[#79a292] font-semibold block">Center Pedestal Book:</label>
+                  <div className="space-y-2 pt-2 border-t border-emerald-border text-xs">
+                    <label className="text-label-xs text-on-primary-container font-semibold block">Center Pedestal Book:</label>
                     <select
                       value={sections.heroSection.centerBookId || ''}
                       onChange={(e) =>
@@ -422,7 +422,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                           },
                         })
                       }
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-[#08150f] border border-[#21392e] text-white text-xs focus:outline-none focus:border-emerald-500"
+                      className="w-full px-2.5 py-1.5 rounded-lg bg-night-canvas border border-emerald-border text-white text-xs focus:outline-none focus:border-emerald-500"
                     >
                       <option value="riyad-salihin">Default: Riyāḍ aṣ-Ṣāliḥīn (رياض الصالحين)</option>
                       {books.map((b) => (
@@ -438,19 +438,19 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
               {/* 3. Classified Sciences of Knowledge (Categories) */}
               <div className={`p-4 rounded-xl border transition-all ${
                 sections.categoriesGrid.enabled
-                  ? 'bg-[#0c1e15] border-emerald-500/40 shadow-sm'
-                  : 'bg-[#101b16] border-[#21392e] opacity-75'
+                  ? 'bg-night-surface border-emerald-500/40 shadow-sm'
+                  : 'bg-night-surface border-emerald-border opacity-75'
               }`}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="w-7 h-7 rounded-lg bg-[#193d2c] text-emerald-400 flex items-center justify-center">
+                    <span className="w-7 h-7 rounded-lg bg-emerald-surface text-emerald-400 flex items-center justify-center">
                       <span className="material-symbols-outlined text-base">category</span>
                     </span>
                     <span className="text-xs font-bold text-white">Categories Grid</span>
                   </div>
                   <button
                     onClick={() => handleToggleSection('categoriesGrid')}
-                    className={`px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1 cursor-pointer transition-colors ${
+                    className={`px-2.5 py-1 rounded-full text-label-sm font-bold flex items-center gap-1 cursor-pointer transition-colors ${
                       sections.categoriesGrid.enabled
                         ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50'
                         : 'bg-zinc-800 text-zinc-400 border border-zinc-700'
@@ -460,13 +460,13 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                     <span>{sections.categoriesGrid.enabled ? 'ACTIVE' : 'HIDDEN'}</span>
                   </button>
                 </div>
-                <p className="text-[11px] text-[#a2b7ad] leading-relaxed mb-3">
+                <p className="text-label-sm text-emerald-highlight leading-relaxed mb-3">
                   Classification of Islamic Sciences (Tartīb al-‘Ulūm) grid featuring disciplines.
                 </p>
                 {sections.categoriesGrid.enabled && (
-                  <div className="space-y-2 pt-2 border-t border-[#1d3529] text-xs">
+                  <div className="space-y-2 pt-2 border-t border-emerald-border text-xs">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] text-[#79a292] font-semibold">Max Display Cards:</span>
+                      <span className="text-label-xs text-on-primary-container font-semibold">Max Display Cards:</span>
                       <select
                         value={sections.categoriesGrid.maxDisplay || 6}
                         onChange={(e) =>
@@ -481,7 +481,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                             },
                           })
                         }
-                        className="px-2 py-1 rounded-lg bg-[#08150f] border border-[#21392e] text-white text-xs focus:outline-none"
+                        className="px-2 py-1 rounded-lg bg-night-canvas border border-emerald-border text-white text-xs focus:outline-none"
                       >
                         <option value={3}>3 Disciplines</option>
                         <option value={6}>6 Disciplines</option>
@@ -496,19 +496,19 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
               {/* 4. Featured Critical Editions Shelf */}
               <div className={`p-4 rounded-xl border transition-all ${
                 sections.featuredShelf.enabled
-                  ? 'bg-[#0c1e15] border-emerald-500/40 shadow-sm'
-                  : 'bg-[#101b16] border-[#21392e] opacity-75'
+                  ? 'bg-night-surface border-emerald-500/40 shadow-sm'
+                  : 'bg-night-surface border-emerald-border opacity-75'
               }`}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="w-7 h-7 rounded-lg bg-[#193d2c] text-emerald-400 flex items-center justify-center">
+                    <span className="w-7 h-7 rounded-lg bg-emerald-surface text-emerald-400 flex items-center justify-center">
                       <span className="material-symbols-outlined text-base">shelves</span>
                     </span>
                     <span className="text-xs font-bold text-white">Featured Books Shelf</span>
                   </div>
                   <button
                     onClick={() => handleToggleSection('featuredShelf')}
-                    className={`px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1 cursor-pointer transition-colors ${
+                    className={`px-2.5 py-1 rounded-full text-label-sm font-bold flex items-center gap-1 cursor-pointer transition-colors ${
                       sections.featuredShelf.enabled
                         ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50'
                         : 'bg-zinc-800 text-zinc-400 border border-zinc-700'
@@ -518,11 +518,11 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                     <span>{sections.featuredShelf.enabled ? 'ACTIVE' : 'HIDDEN'}</span>
                   </button>
                 </div>
-                <p className="text-[11px] text-[#a2b7ad] leading-relaxed mb-3">
+                <p className="text-label-sm text-emerald-highlight leading-relaxed mb-3">
                   Curated shelf highlighting uploaded critical codices with filter tabs.
                 </p>
                 {sections.featuredShelf.enabled && (
-                  <div className="space-y-2 pt-2 border-t border-[#1d3529] text-xs">
+                  <div className="space-y-2 pt-2 border-t border-emerald-border text-xs">
                     <input
                       type="text"
                       value={sections.featuredShelf.title}
@@ -536,7 +536,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                         })
                       }
                       placeholder="Shelf Title (e.g. Featured Critical Editions)"
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-[#08150f] border border-[#21392e] text-white text-xs focus:outline-none focus:border-emerald-500"
+                      className="w-full px-2.5 py-1.5 rounded-lg bg-night-canvas border border-emerald-border text-white text-xs focus:outline-none focus:border-emerald-500"
                     />
                   </div>
                 )}
@@ -545,22 +545,22 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
               {/* 5. The Scholarly Codex Reader Preview (CORE FOCUS) */}
               <div className={`p-4 rounded-xl border-2 transition-all ${
                 sections.readerPreview.enabled
-                  ? 'bg-[#153426] border-[#ffe088] shadow-md'
-                  : 'bg-[#101b16] border-[#21392e] opacity-75'
+                  ? 'bg-emerald-surface border-tertiary-fixed shadow-md'
+                  : 'bg-night-surface border-emerald-border opacity-75'
               }`}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="w-7 h-7 rounded-lg bg-[#ffe088]/20 text-[#ffe088] flex items-center justify-center border border-[#ffe088]/40">
+                    <span className="w-7 h-7 rounded-lg bg-tertiary-fixed/20 text-tertiary-fixed flex items-center justify-center border border-tertiary-fixed/40">
                       <span className="material-symbols-outlined text-base">chrome_reader_mode</span>
                     </span>
                     <div>
                       <span className="text-xs font-bold text-white block">Scholarly Codex Reader</span>
-                      <span className="text-[10px] text-[#ffe088] font-semibold">Featured Live Reading Canvas</span>
+                      <span className="text-label-xs text-tertiary-fixed font-semibold">Featured Live Reading Canvas</span>
                     </div>
                   </div>
                   <button
                     onClick={() => handleToggleSection('readerPreview')}
-                    className={`px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1 cursor-pointer transition-colors ${
+                    className={`px-2.5 py-1 rounded-full text-label-sm font-bold flex items-center gap-1 cursor-pointer transition-colors ${
                       sections.readerPreview.enabled
                         ? 'bg-emerald-500 text-stone-950 shadow-md'
                         : 'bg-zinc-800 text-zinc-400 border border-zinc-700'
@@ -570,16 +570,16 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                     <span>{sections.readerPreview.enabled ? 'ACTIVE ON HOME' : 'HIDDEN'}</span>
                   </button>
                 </div>
-                <p className="text-[11px] text-[#d1fae5] leading-relaxed mb-3">
+                <p className="text-label-sm text-emerald-100 leading-relaxed mb-3">
                   The dual-pane interactive reader featuring isnād transmission chains, Arabic matn, English translation, audio, and footnotes.
                 </p>
-                <div className="pt-2 border-t border-[#26533e] flex items-center justify-between gap-2">
-                  <span className="text-[11px] text-[#a2b7ad] truncate max-w-[150px]">
+                <div className="pt-2 border-t border-emerald-border flex items-center justify-between gap-2">
+                  <span className="text-label-sm text-emerald-highlight truncate max-w-36">
                     Current: <strong>{reader.bookTitle || 'Custom Hadith'}</strong>
                   </span>
                   <button
                     onClick={() => setActiveSubTab('reader')}
-                    className="px-2.5 py-1 rounded-lg bg-[#ffe088] hover:bg-[#ffe8a8] text-stone-950 text-xs font-bold flex items-center gap-1 transition-all cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg bg-tertiary-fixed hover:bg-tertiary-fixed text-stone-950 text-xs font-bold flex items-center gap-1 transition-all cursor-pointer"
                   >
                     <span className="material-symbols-outlined text-xs">edit</span>
                     <span>Edit Reader Content →</span>
@@ -590,19 +590,19 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
               {/* 6. Preservation & Waqf Commitment */}
               <div className={`p-4 rounded-xl border transition-all ${
                 sections.preservationSection.enabled
-                  ? 'bg-[#0c1e15] border-emerald-500/40 shadow-sm'
-                  : 'bg-[#101b16] border-[#21392e] opacity-75'
+                  ? 'bg-night-surface border-emerald-500/40 shadow-sm'
+                  : 'bg-night-surface border-emerald-border opacity-75'
               }`}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="w-7 h-7 rounded-lg bg-[#193d2c] text-emerald-400 flex items-center justify-center">
+                    <span className="w-7 h-7 rounded-lg bg-emerald-surface text-emerald-400 flex items-center justify-center">
                       <span className="material-symbols-outlined text-base">verified</span>
                     </span>
                     <span className="text-xs font-bold text-white">Preservation &amp; Waqf</span>
                   </div>
                   <button
                     onClick={() => handleToggleSection('preservationSection')}
-                    className={`px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1 cursor-pointer transition-colors ${
+                    className={`px-2.5 py-1 rounded-full text-label-sm font-bold flex items-center gap-1 cursor-pointer transition-colors ${
                       sections.preservationSection.enabled
                         ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50'
                         : 'bg-zinc-800 text-zinc-400 border border-zinc-700'
@@ -612,7 +612,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                     <span>{sections.preservationSection.enabled ? 'ACTIVE' : 'HIDDEN'}</span>
                   </button>
                 </div>
-                <p className="text-[11px] text-[#a2b7ad] leading-relaxed mb-3">
+                <p className="text-label-sm text-emerald-highlight leading-relaxed mb-3">
                   Scholarly mission statement, CC licensing pledge, and Waqf charter matrix.
                 </p>
               </div>
@@ -620,19 +620,19 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
               {/* 7. Monthly Scholarly Dispatch Newsletter */}
               <div className={`p-4 rounded-xl border transition-all ${
                 sections.newsletterSection.enabled
-                  ? 'bg-[#0c1e15] border-emerald-500/40 shadow-sm'
-                  : 'bg-[#101b16] border-[#21392e] opacity-75'
+                  ? 'bg-night-surface border-emerald-500/40 shadow-sm'
+                  : 'bg-night-surface border-emerald-border opacity-75'
               }`}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="w-7 h-7 rounded-lg bg-[#193d2c] text-emerald-400 flex items-center justify-center">
+                    <span className="w-7 h-7 rounded-lg bg-emerald-surface text-emerald-400 flex items-center justify-center">
                       <span className="material-symbols-outlined text-base">mail</span>
                     </span>
                     <span className="text-xs font-bold text-white">Newsletter Banner</span>
                   </div>
                   <button
                     onClick={() => handleToggleSection('newsletterSection')}
-                    className={`px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1 cursor-pointer transition-colors ${
+                    className={`px-2.5 py-1 rounded-full text-label-sm font-bold flex items-center gap-1 cursor-pointer transition-colors ${
                       sections.newsletterSection.enabled
                         ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50'
                         : 'bg-zinc-800 text-zinc-400 border border-zinc-700'
@@ -642,7 +642,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                     <span>{sections.newsletterSection.enabled ? 'ACTIVE' : 'HIDDEN'}</span>
                   </button>
                 </div>
-                <p className="text-[11px] text-[#a2b7ad] leading-relaxed mb-3">
+                <p className="text-label-sm text-emerald-highlight leading-relaxed mb-3">
                   Patron newsletter enrollment box with calligraphic arabesque seal.
                 </p>
               </div>
@@ -657,28 +657,28 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
       {activeSubTab === 'reader' && (
         <div className="space-y-6">
           {/* Quick Populate from Uploaded Books Banner */}
-          <div className="bg-gradient-to-r from-[#193e2e] via-[#122e22] to-[#193e2e] rounded-2xl p-5 border-2 border-[#cba72f]/50 shadow-xl space-y-3">
+          <div className="bg-gradient-to-r from-emerald-surface via-emerald-surface to-emerald-surface rounded-2xl p-5 border-2 border-tertiary/50 shadow-xl space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-2xl text-[#ffe088]">cloud_sync</span>
+                <span className="material-symbols-outlined text-2xl text-tertiary-fixed">cloud_sync</span>
                 <div>
                   <h3 className="text-sm sm:text-base font-bold text-white">
                     Populate Reader Directly from Uploaded Books
                   </h3>
-                  <p className="text-xs text-[#a2b7ad]">
+                  <p className="text-xs text-emerald-highlight">
                     Pick any book you uploaded to the library and select which chapter/matn to display on the homepage reader.
                   </p>
                 </div>
               </div>
 
-              <span className="px-2.5 py-1 rounded-full bg-[#cba72f]/20 text-[#ffe088] text-xs font-bold border border-[#cba72f]/40 self-start sm:self-auto">
+              <span className="px-2.5 py-1 rounded-full bg-tertiary-container/20 text-tertiary-fixed text-xs font-bold border border-tertiary/40 self-start sm:self-auto">
                 {books.length} Uploaded Codices Available
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-2">
               <div className="sm:col-span-6">
-                <label className="text-xs text-[#d1fae5] font-semibold block mb-1">Select Uploaded Book:</label>
+                <label className="text-xs text-emerald-100 font-semibold block mb-1">Select Uploaded Book:</label>
                 <select
                   value={selectedBookId}
                   onChange={(e) => {
@@ -690,7 +690,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       setSelectedChapterId('');
                     }
                   }}
-                  className="w-full px-3 py-2 rounded-xl bg-[#08150f] border border-[#2e5e48] text-white text-xs font-semibold focus:outline-none focus:border-[#ffe088]"
+                  className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-white text-xs font-semibold focus:outline-none focus:border-tertiary-fixed"
                 >
                   {books.map((b) => (
                     <option key={b.id} value={b.id}>
@@ -701,11 +701,11 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
               </div>
 
               <div className="sm:col-span-4">
-                <label className="text-xs text-[#d1fae5] font-semibold block mb-1">Select Chapter / Matn:</label>
+                <label className="text-xs text-emerald-100 font-semibold block mb-1">Select Chapter / Matn:</label>
                 <select
                   value={selectedChapterId}
                   onChange={(e) => setSelectedChapterId(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-[#08150f] border border-[#2e5e48] text-white text-xs font-semibold focus:outline-none focus:border-[#ffe088]"
+                  className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-white text-xs font-semibold focus:outline-none focus:border-tertiary-fixed"
                   disabled={currentBookChapters.length === 0}
                 >
                   {currentBookChapters.length > 0 ? (
@@ -724,7 +724,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                 <button
                   type="button"
                   onClick={handleLoadBookIntoReader}
-                  className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-[#ffe088] to-[#cba72f] text-stone-950 text-xs font-bold hover:brightness-110 active:scale-95 transition-all shadow-md flex items-center justify-center gap-1 cursor-pointer"
+                  className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-tertiary-fixed to-tertiary-container text-stone-950 text-xs font-bold hover:brightness-110 active:scale-95 transition-all shadow-md flex items-center justify-center gap-1 cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-sm">download</span>
                   <span>Load Content</span>
@@ -734,15 +734,15 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
           </div>
 
           {/* Reader Core Identity Fields */}
-          <div className="bg-[#12241b] rounded-2xl p-6 border border-[#21392e] space-y-4">
-            <h3 className="text-base font-bold text-white flex items-center gap-2 border-b border-[#21392e] pb-3">
-              <span className="material-symbols-outlined text-[#ffe088]">badge</span>
+          <div className="bg-emerald-surface rounded-2xl p-6 border border-emerald-border space-y-4">
+            <h3 className="text-base font-bold text-white flex items-center gap-2 border-b border-emerald-border pb-3">
+              <span className="material-symbols-outlined text-tertiary-fixed">badge</span>
               Reader Identification &amp; Chapter Header
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
               <div>
-                <label className="text-[#a2b7ad] font-semibold block mb-1">Book Title (English):</label>
+                <label className="text-emerald-highlight font-semibold block mb-1">Book Title (English):</label>
                 <input
                   type="text"
                   value={reader.bookTitle}
@@ -752,12 +752,12 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       readerSection: { ...reader, bookTitle: e.target.value },
                     })
                   }
-                  className="w-full px-3 py-2 rounded-xl bg-[#08150f] border border-[#21392e] text-white focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-white focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div>
-                <label className="text-[#a2b7ad] font-semibold block mb-1">Book Title (Arabic):</label>
+                <label className="text-emerald-highlight font-semibold block mb-1">Book Title (Arabic):</label>
                 <input
                   type="text"
                   dir="rtl"
@@ -768,12 +768,12 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       readerSection: { ...reader, bookTitleArabic: e.target.value },
                     })
                   }
-                  className="w-full px-3 py-2 rounded-xl bg-[#08150f] border border-[#21392e] text-white text-right focus:outline-none focus:border-emerald-500 font-arabic text-sm"
+                  className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-white text-right focus:outline-none focus:border-emerald-500 font-arabic text-sm"
                 />
               </div>
 
               <div>
-                <label className="text-[#a2b7ad] font-semibold block mb-1">Chapter Title (English):</label>
+                <label className="text-emerald-highlight font-semibold block mb-1">Chapter Title (English):</label>
                 <input
                   type="text"
                   value={reader.chapterTitleEn}
@@ -783,12 +783,12 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       readerSection: { ...reader, chapterTitleEn: e.target.value },
                     })
                   }
-                  className="w-full px-3 py-2 rounded-xl bg-[#08150f] border border-[#21392e] text-white focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-white focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div>
-                <label className="text-[#a2b7ad] font-semibold block mb-1">Chapter Title (Arabic):</label>
+                <label className="text-emerald-highlight font-semibold block mb-1">Chapter Title (Arabic):</label>
                 <input
                   type="text"
                   dir="rtl"
@@ -799,12 +799,12 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       readerSection: { ...reader, chapterTitleAr: e.target.value },
                     })
                   }
-                  className="w-full px-3 py-2 rounded-xl bg-[#08150f] border border-[#21392e] text-white text-right focus:outline-none focus:border-emerald-500 font-arabic text-sm"
+                  className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-white text-right focus:outline-none focus:border-emerald-500 font-arabic text-sm"
                 />
               </div>
 
               <div>
-                <label className="text-[#a2b7ad] font-semibold block mb-1">Chapter Number:</label>
+                <label className="text-emerald-highlight font-semibold block mb-1">Chapter Number:</label>
                 <input
                   type="number"
                   value={reader.chapterNumber}
@@ -814,12 +814,12 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       readerSection: { ...reader, chapterNumber: parseInt(e.target.value) || 1 },
                     })
                   }
-                  className="w-full px-3 py-2 rounded-xl bg-[#08150f] border border-[#21392e] text-white focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-white focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div>
-                <label className="text-[#a2b7ad] font-semibold block mb-1">Hadith / Entry Number:</label>
+                <label className="text-emerald-highlight font-semibold block mb-1">Hadith / Entry Number:</label>
                 <input
                   type="number"
                   value={reader.entryNumber}
@@ -829,12 +829,12 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       readerSection: { ...reader, entryNumber: parseInt(e.target.value) || 1 },
                     })
                   }
-                  className="w-full px-3 py-2 rounded-xl bg-[#08150f] border border-[#21392e] text-white focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-white focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div>
-                <label className="text-[#a2b7ad] font-semibold block mb-1">Total Entries in Book:</label>
+                <label className="text-emerald-highlight font-semibold block mb-1">Total Entries in Book:</label>
                 <input
                   type="number"
                   value={reader.totalEntries}
@@ -844,12 +844,12 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       readerSection: { ...reader, totalEntries: parseInt(e.target.value) || 1 },
                     })
                   }
-                  className="w-full px-3 py-2 rounded-xl bg-[#08150f] border border-[#21392e] text-white focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-white focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div>
-                <label className="text-[#a2b7ad] font-semibold block mb-1">Authenticity Status Badge:</label>
+                <label className="text-emerald-highlight font-semibold block mb-1">Authenticity Status Badge:</label>
                 <input
                   type="text"
                   value={reader.authenticityStatus}
@@ -859,31 +859,31 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       readerSection: { ...reader, authenticityStatus: e.target.value },
                     })
                   }
-                  className="w-full px-3 py-2 rounded-xl bg-[#08150f] border border-[#21392e] text-emerald-400 font-semibold focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-emerald-400 font-semibold focus:outline-none focus:border-emerald-500"
                 />
               </div>
             </div>
           </div>
 
           {/* Dual-Pane Texts Editor: Classical Arabic & English */}
-          <div className="bg-[#12241b] rounded-2xl p-6 border border-[#21392e] space-y-4">
-            <h3 className="text-base font-bold text-white flex items-center gap-2 border-b border-[#21392e] pb-3">
-              <span className="material-symbols-outlined text-[#ffe088]">translate</span>
+          <div className="bg-emerald-surface rounded-2xl p-6 border border-emerald-border space-y-4">
+            <h3 className="text-base font-bold text-white flex items-center gap-2 border-b border-emerald-border pb-3">
+              <span className="material-symbols-outlined text-tertiary-fixed">translate</span>
               Sacred Matn &amp; Parallel Translation Content
             </h3>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-xs">
               {/* Right Column (Classical Arabic RTL) */}
-              <div className="space-y-3 bg-[#0a1711] p-4 rounded-xl border border-[#1b3a2c]">
+              <div className="space-y-3 bg-night-canvas p-4 rounded-xl border border-emerald-border">
                 <div className="flex items-center justify-between">
-                  <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold uppercase tracking-wider text-[10px]">
+                  <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold uppercase tracking-wider text-label-xs">
                     Classical Arabic Canvas (RTL)
                   </span>
-                  <span className="text-[11px] text-[#79a292]">النص العربي المعتمد</span>
+                  <span className="text-label-sm text-on-primary-container">النص العربي المعتمد</span>
                 </div>
 
                 <div>
-                  <label className="text-[#a2b7ad] font-semibold block mb-1">Arabic Sanad / Lead Text:</label>
+                  <label className="text-emerald-highlight font-semibold block mb-1">Arabic Sanad / Lead Text:</label>
                   <textarea
                     dir="rtl"
                     rows={3}
@@ -895,12 +895,12 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       })
                     }
                     placeholder="حَدَّثَنَا فُلانٌ قَالَ..."
-                    className="w-full px-3 py-2 rounded-xl bg-[#040e09] border border-[#21392e] text-white text-right font-arabic text-sm leading-relaxed focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-white text-right font-arabic text-sm leading-relaxed focus:outline-none focus:border-emerald-500"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[#ffe088] font-bold block mb-1">
+                  <label className="text-tertiary-fixed font-bold block mb-1">
                     Arabic Sacred Matn (Main Core Text):
                   </label>
                   <textarea
@@ -914,12 +914,12 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       })
                     }
                     placeholder="« إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ... »"
-                    className="w-full px-3 py-2 rounded-xl bg-[#040e09] border-2 border-[#cba72f]/50 text-white text-right font-arabic text-base font-bold leading-loose focus:outline-none focus:border-[#ffe088]"
+                    className="w-full px-3 py-2 rounded-xl bg-night-canvas border-2 border-tertiary/50 text-white text-right font-arabic text-base font-bold leading-loose focus:outline-none focus:border-tertiary-fixed"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[#a2b7ad] font-semibold block mb-1">Arabic Chapter Subtext:</label>
+                  <label className="text-emerald-highlight font-semibold block mb-1">Arabic Chapter Subtext:</label>
                   <input
                     type="text"
                     dir="rtl"
@@ -931,22 +931,22 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       })
                     }
                     placeholder="باب كيف كان بدء الوحي..."
-                    className="w-full px-3 py-2 rounded-xl bg-[#040e09] border border-[#21392e] text-white text-right font-arabic text-xs focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-white text-right font-arabic text-xs focus:outline-none focus:border-emerald-500"
                   />
                 </div>
               </div>
 
               {/* Left Column (English Vernacular & Scholarly Translation) */}
-              <div className="space-y-3 bg-[#0a1711] p-4 rounded-xl border border-[#1b3a2c]">
+              <div className="space-y-3 bg-night-canvas p-4 rounded-xl border border-emerald-border">
                 <div className="flex items-center justify-between">
-                  <span className="px-2 py-0.5 rounded bg-primary-container text-white font-bold uppercase tracking-wider text-[10px]">
+                  <span className="px-2 py-0.5 rounded bg-primary-container text-white font-bold uppercase tracking-wider text-label-xs">
                     English Translation &amp; Apparatus
                   </span>
-                  <span className="text-[11px] text-[#79a292]">Academic Recension</span>
+                  <span className="text-label-sm text-on-primary-container">Academic Recension</span>
                 </div>
 
                 <div>
-                  <label className="text-[#a2b7ad] font-semibold block mb-1">English Heading:</label>
+                  <label className="text-emerald-highlight font-semibold block mb-1">English Heading:</label>
                   <input
                     type="text"
                     value={reader.englishHeading}
@@ -957,12 +957,12 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       })
                     }
                     placeholder="Narrated by 'Umar bin Al-Khattab"
-                    className="w-full px-3 py-2 rounded-xl bg-[#040e09] border border-[#21392e] text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-white focus:outline-none focus:border-emerald-500"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[#a2b7ad] font-semibold block mb-1">English Lead Text:</label>
+                  <label className="text-emerald-highlight font-semibold block mb-1">English Lead Text:</label>
                   <input
                     type="text"
                     value={reader.englishLeadText}
@@ -973,12 +973,12 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       })
                     }
                     placeholder="I heard Allah's Messenger (ﷺ) saying,"
-                    className="w-full px-3 py-2 rounded-xl bg-[#040e09] border border-[#21392e] text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-white focus:outline-none focus:border-emerald-500"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[#ffe088] font-bold block mb-1">
+                  <label className="text-tertiary-fixed font-bold block mb-1">
                     English Highlighted Matn (Gold Underlined):
                   </label>
                   <textarea
@@ -991,12 +991,12 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       })
                     }
                     placeholder='"The reward of deeds depends upon the intentions..."'
-                    className="w-full px-3 py-2 rounded-xl bg-[#040e09] border-2 border-[#cba72f]/50 text-white font-semibold leading-relaxed focus:outline-none focus:border-[#ffe088]"
+                    className="w-full px-3 py-2 rounded-xl bg-night-canvas border-2 border-tertiary/50 text-white font-semibold leading-relaxed focus:outline-none focus:border-tertiary-fixed"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[#a2b7ad] font-semibold block mb-1">English Subsequent Text:</label>
+                  <label className="text-emerald-highlight font-semibold block mb-1">English Subsequent Text:</label>
                   <textarea
                     rows={2}
                     value={reader.englishSubsequentText}
@@ -1007,7 +1007,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       })
                     }
                     placeholder="So whoever emigrated for worldly benefits..."
-                    className="w-full px-3 py-2 rounded-xl bg-[#040e09] border border-[#21392e] text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-white focus:outline-none focus:border-emerald-500"
                   />
                 </div>
               </div>
@@ -1015,14 +1015,14 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
           </div>
 
           {/* Isnād Transmission Chain Nodes */}
-          <div className="bg-[#12241b] rounded-2xl p-6 border border-[#21392e] space-y-4">
-            <div className="flex items-center justify-between border-b border-[#21392e] pb-3">
+          <div className="bg-emerald-surface rounded-2xl p-6 border border-emerald-border space-y-4">
+            <div className="flex items-center justify-between border-b border-emerald-border pb-3">
               <div>
                 <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#ffe088]">hub</span>
+                  <span className="material-symbols-outlined text-tertiary-fixed">hub</span>
                   Isnād Transmission Chain Nodes ({reader.isnadChain.length})
                 </h3>
-                <p className="text-xs text-[#a2b7ad]">
+                <p className="text-xs text-emerald-highlight">
                   Scholars and narrators in the transmission line shown in the reader sidebar. Clicking their node opens their full bio.
                 </p>
               </div>
@@ -1030,7 +1030,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
               <button
                 type="button"
                 onClick={handleAddNarrator}
-                className="px-3 py-1.5 rounded-lg bg-[#193d2c] hover:bg-[#20513b] text-emerald-300 text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer border border-emerald-600/40"
+                className="px-3 py-1.5 rounded-lg bg-emerald-surface hover:bg-emerald-surface text-emerald-300 text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer border border-emerald-600/40"
               >
                 <span className="material-symbols-outlined text-sm">add</span>
                 <span>Add Narrator Node</span>
@@ -1041,10 +1041,10 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
               {reader.isnadChain.map((node, idx) => (
                 <div
                   key={node.id || idx}
-                  className="p-3.5 rounded-xl bg-[#0a1711] border border-[#1b3a2c] flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs"
+                  className="p-3.5 rounded-xl bg-night-canvas border border-emerald-border flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs"
                 >
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className="w-6 h-6 rounded-full bg-[#ffe088]/20 text-[#ffe088] font-mono font-bold flex items-center justify-center text-xs">
+                    <span className="w-6 h-6 rounded-full bg-tertiary-fixed/20 text-tertiary-fixed font-mono font-bold flex items-center justify-center text-xs">
                       {idx + 1}
                     </span>
                     <input
@@ -1052,7 +1052,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       value={node.name}
                       onChange={(e) => handleUpdateNarrator(idx, 'name', e.target.value)}
                       placeholder="Scholar Name (English)"
-                      className="px-2.5 py-1.5 rounded-lg bg-[#040e09] border border-[#21392e] text-white font-semibold w-48 sm:w-56 focus:outline-none focus:border-emerald-500"
+                      className="px-2.5 py-1.5 rounded-lg bg-night-canvas border border-emerald-border text-white font-semibold w-48 sm:w-56 focus:outline-none focus:border-emerald-500"
                     />
                   </div>
 
@@ -1062,14 +1062,14 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       value={node.reliability}
                       onChange={(e) => handleUpdateNarrator(idx, 'reliability', e.target.value)}
                       placeholder="Scholastic Reliability (e.g. Thiqah Thabt)"
-                      className="flex-1 px-2.5 py-1.5 rounded-lg bg-[#040e09] border border-[#21392e] text-white text-xs focus:outline-none focus:border-emerald-500"
+                      className="flex-1 px-2.5 py-1.5 rounded-lg bg-night-canvas border border-emerald-border text-white text-xs focus:outline-none focus:border-emerald-500"
                     />
                     <input
                       type="text"
                       value={node.birthDeathAH}
                       onChange={(e) => handleUpdateNarrator(idx, 'birthDeathAH', e.target.value)}
                       placeholder="d. 219 AH"
-                      className="w-24 px-2 py-1.5 rounded-lg bg-[#040e09] border border-[#21392e] text-white text-xs focus:outline-none focus:border-emerald-500"
+                      className="w-24 px-2 py-1.5 rounded-lg bg-night-canvas border border-emerald-border text-white text-xs focus:outline-none focus:border-emerald-500"
                     />
                   </div>
 
@@ -1087,14 +1087,14 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
           </div>
 
           {/* Footnotes & Scholarly Commentary */}
-          <div className="bg-[#12241b] rounded-2xl p-6 border border-[#21392e] space-y-4">
-            <div className="flex items-center justify-between border-b border-[#21392e] pb-3">
+          <div className="bg-emerald-surface rounded-2xl p-6 border border-emerald-border space-y-4">
+            <div className="flex items-center justify-between border-b border-emerald-border pb-3">
               <div>
                 <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#ffe088]">notes</span>
+                  <span className="material-symbols-outlined text-tertiary-fixed">notes</span>
                   Footnotes &amp; Commentary Marginalia ({reader.footnotes.length})
                 </h3>
-                <p className="text-xs text-[#a2b7ad]">
+                <p className="text-xs text-emerald-highlight">
                   Scholastic annotations appearing under the English translation pane.
                 </p>
               </div>
@@ -1102,7 +1102,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
               <button
                 type="button"
                 onClick={handleAddFootnote}
-                className="px-3 py-1.5 rounded-lg bg-[#193d2c] hover:bg-[#20513b] text-emerald-300 text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer border border-emerald-600/40"
+                className="px-3 py-1.5 rounded-lg bg-emerald-surface hover:bg-emerald-surface text-emerald-300 text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer border border-emerald-600/40"
               >
                 <span className="material-symbols-outlined text-sm">add</span>
                 <span>Add Footnote</span>
@@ -1113,7 +1113,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
               {reader.footnotes.map((fn, idx) => (
                 <div
                   key={fn.id || idx}
-                  className="p-4 rounded-xl bg-[#0a1711] border border-[#1b3a2c] space-y-2 text-xs"
+                  className="p-4 rounded-xl bg-night-canvas border border-emerald-border space-y-2 text-xs"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2 flex-wrap">
@@ -1122,21 +1122,21 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                         value={fn.code}
                         onChange={(e) => handleUpdateFootnote(idx, 'code', e.target.value)}
                         placeholder="Footnote [1.1]"
-                        className="w-32 px-2.5 py-1 rounded-lg bg-[#040e09] border border-[#21392e] text-[#ffe088] font-mono text-xs focus:outline-none"
+                        className="w-32 px-2.5 py-1 rounded-lg bg-night-canvas border border-emerald-border text-tertiary-fixed font-mono text-xs focus:outline-none"
                       />
                       <input
                         type="text"
                         value={fn.title}
                         onChange={(e) => handleUpdateFootnote(idx, 'title', e.target.value)}
                         placeholder="Commentary Title"
-                        className="w-48 sm:w-60 px-2.5 py-1 rounded-lg bg-[#040e09] border border-[#21392e] text-white font-semibold text-xs focus:outline-none"
+                        className="w-48 sm:w-60 px-2.5 py-1 rounded-lg bg-night-canvas border border-emerald-border text-white font-semibold text-xs focus:outline-none"
                       />
                       <input
                         type="text"
                         value={fn.scholar}
                         onChange={(e) => handleUpdateFootnote(idx, 'scholar', e.target.value)}
                         placeholder="Commentator Scholar"
-                        className="w-44 px-2.5 py-1 rounded-lg bg-[#040e09] border border-[#21392e] text-[#a2b7ad] text-xs focus:outline-none"
+                        className="w-44 px-2.5 py-1 rounded-lg bg-night-canvas border border-emerald-border text-emerald-highlight text-xs focus:outline-none"
                       />
                     </div>
 
@@ -1155,7 +1155,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                     value={fn.text}
                     onChange={(e) => handleUpdateFootnote(idx, 'text', e.target.value)}
                     placeholder="Commentary text..."
-                    className="w-full px-3 py-2 rounded-lg bg-[#040e09] border border-[#21392e] text-white text-xs leading-relaxed focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3 py-2 rounded-lg bg-night-canvas border border-emerald-border text-white text-xs leading-relaxed focus:outline-none focus:border-emerald-500"
                   />
                 </div>
               ))}
@@ -1163,15 +1163,15 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
           </div>
 
           {/* Recitation Audio Controls */}
-          <div className="bg-[#12241b] rounded-2xl p-6 border border-[#21392e] space-y-4">
-            <h3 className="text-base font-bold text-white flex items-center gap-2 border-b border-[#21392e] pb-3">
-              <span className="material-symbols-outlined text-[#ffe088]">volume_up</span>
+          <div className="bg-emerald-surface rounded-2xl p-6 border border-emerald-border space-y-4">
+            <h3 className="text-base font-bold text-white flex items-center gap-2 border-b border-emerald-border pb-3">
+              <span className="material-symbols-outlined text-tertiary-fixed">volume_up</span>
               Vocal Recitation Apparatus
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
               <div>
-                <label className="text-[#a2b7ad] font-semibold block mb-1">Reciter Name:</label>
+                <label className="text-emerald-highlight font-semibold block mb-1">Reciter Name:</label>
                 <input
                   type="text"
                   value={sections.readerPreview.audioReciter || ''}
@@ -1188,12 +1188,12 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                     })
                   }
                   placeholder="Sheikh Mishary Rashid Alafasy"
-                  className="w-full px-3 py-2 rounded-xl bg-[#08150f] border border-[#21392e] text-white focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-white focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div>
-                <label className="text-[#a2b7ad] font-semibold block mb-1">Duration Indicator:</label>
+                <label className="text-emerald-highlight font-semibold block mb-1">Duration Indicator:</label>
                 <input
                   type="text"
                   value={sections.readerPreview.audioDuration || '00:42 / 01:15'}
@@ -1210,7 +1210,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                     })
                   }
                   placeholder="00:42 / 01:15"
-                  className="w-full px-3 py-2 rounded-xl bg-[#08150f] border border-[#21392e] text-white font-mono focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3 py-2 rounded-xl bg-night-canvas border border-emerald-border text-white font-mono focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
@@ -1219,7 +1219,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                   type="button"
                   onClick={() => onSaveSettings(currentSettings)}
                   disabled={isSaving}
-                  className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#d4af37] via-[#e5c053] to-[#cba72f] hover:brightness-110 active:scale-95 text-stone-950 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-gold-leaf via-tertiary-fixed to-tertiary-container hover:brightness-110 active:scale-95 text-stone-950 font-bold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                 >
                   <span className="material-symbols-outlined text-base">save</span>
                   <span>Save All Changes</span>
@@ -1235,20 +1235,20 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
       {/* ========================================================================= */}
       {activeSubTab === 'preview' && (
         <div className="space-y-4">
-          <div className="bg-[#12241b] p-4 rounded-xl border border-[#21392e] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+          <div className="bg-emerald-surface p-4 rounded-xl border border-emerald-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#ffe088]">visibility</span>
+              <span className="material-symbols-outlined text-tertiary-fixed">visibility</span>
               <span className="text-white font-bold">
                 Live Rendering Preview of &ldquo;{reader.bookTitle}&rdquo;
               </span>
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="flex items-center bg-[#08150f] rounded-lg p-0.5 gap-0.5 border border-[#21392e]">
+              <div className="flex items-center bg-night-canvas rounded-lg p-0.5 gap-0.5 border border-emerald-border">
                 <button
                   onClick={() => setPreviewTheme('parchment')}
                   className={`px-2.5 py-1 rounded text-xs transition-colors cursor-pointer ${
-                    previewTheme === 'parchment' ? 'bg-[#fbf9f5] text-[#1b1c1a] font-bold' : 'text-[#a2b7ad]'
+                    previewTheme === 'parchment' ? 'bg-parchment-canvas text-on-surface font-bold' : 'text-emerald-highlight'
                   }`}
                 >
                   Parchment
@@ -1256,7 +1256,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                 <button
                   onClick={() => setPreviewTheme('night')}
                   className={`px-2.5 py-1 rounded text-xs transition-colors cursor-pointer ${
-                    previewTheme === 'night' ? 'bg-[#192e25] text-white font-bold' : 'text-[#a2b7ad]'
+                    previewTheme === 'night' ? 'bg-surface-container text-white font-bold' : 'text-emerald-highlight'
                   }`}
                 >
                   Night
@@ -1264,7 +1264,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                 <button
                   onClick={() => setPreviewTheme('sepia')}
                   className={`px-2.5 py-1 rounded text-xs transition-colors cursor-pointer ${
-                    previewTheme === 'sepia' ? 'bg-[#ded1c1] text-[#26211a] font-bold' : 'text-[#a2b7ad]'
+                    previewTheme === 'sepia' ? 'bg-sepia-border text-sepia-text font-bold' : 'text-emerald-highlight'
                   }`}
                 >
                   Sepia
@@ -1274,7 +1274,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
               <button
                 onClick={() => onSaveSettings(currentSettings)}
                 disabled={isSaving}
-                className="px-4 py-1.5 rounded-lg bg-[#ffe088] hover:bg-[#ffe8a8] text-stone-950 font-bold transition-all flex items-center gap-1 cursor-pointer"
+                className="px-4 py-1.5 rounded-lg bg-tertiary-fixed hover:bg-tertiary-fixed text-stone-950 font-bold transition-all flex items-center gap-1 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-sm">publish</span>
                 <span>Publish to Home</span>
@@ -1286,10 +1286,10 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
           <div
             className={`rounded-2xl sm:rounded-3xl shadow-xl border overflow-hidden transition-all duration-300 ${
               previewTheme === 'night'
-                ? 'bg-[#0f1f18] text-[#e5ede9] border-[#1d4032]'
+                ? 'bg-night-surface text-night-text border-emerald-border'
                 : previewTheme === 'sepia'
-                ? 'bg-[#fbf4ea] text-[#2c2419] border-[#e0cfb8]'
-                : 'bg-surface-container-lowest text-[#1b1c1a] border-surface-container-high'
+                ? 'bg-parchment-canvas text-sepia-text border-sepia-border'
+                : 'bg-surface-container-lowest text-on-surface border-surface-container-high'
             }`}
           >
             {/* Window title bar */}
@@ -1319,7 +1319,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
             </div>
 
             {/* Reader Body Grid */}
-            <div className="grid grid-cols-12 min-h-[460px]">
+            <div className="grid grid-cols-12 min-h-reader-shelf">
               {/* Left TOC & Isnād Sidebar */}
               <div className="hidden md:block md:col-span-3 bg-surface-container-low/40 p-5 space-y-5 border-r border-surface-container">
                 <div className="space-y-1">
@@ -1332,7 +1332,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                 </div>
 
                 <div className="space-y-1.5 font-body-sm text-xs">
-                  <div className="p-2.5 rounded-xl bg-surface-container-lowest text-primary font-bold shadow-xs flex items-center justify-between border border-[#cba72f]/40">
+                  <div className="p-2.5 rounded-xl bg-surface-container-lowest text-primary font-bold shadow-xs flex items-center justify-between border border-tertiary/40">
                     <span>1. {reader.chapterTitleEn}</span>
                     <span className="material-symbols-outlined text-xs text-tertiary">chevron_right</span>
                   </div>
@@ -1348,7 +1348,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       <span className="material-symbols-outlined text-sm">hub</span>
                       Isnād Chain Nodes
                     </p>
-                    <span className="text-[10px] text-on-surface-variant font-semibold">Inspect</span>
+                    <span className="text-label-xs text-on-surface-variant font-semibold">Inspect</span>
                   </div>
                   <div className="space-y-1 text-xs text-on-surface-variant">
                     {reader.isnadChain.slice(0, 4).map((node, i) => (
@@ -1356,10 +1356,10 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                         <div className="flex items-center gap-2 py-0.5">
                           <span
                             className={`w-2 h-2 rounded-full ${
-                              i === 0 ? 'bg-[#cba72f]' : 'bg-primary'
+                              i === 0 ? 'bg-tertiary-container' : 'bg-primary'
                             }`}
                           ></span>
-                          <span className="truncate max-w-[170px] text-[11px] font-medium">{node.name}</span>
+                          <span className="truncate max-w-44 text-label-sm font-medium">{node.name}</span>
                         </div>
                         {i < 3 && <div className="ml-1 w-0.5 h-1.5 bg-outline-variant/60"></div>}
                       </div>
@@ -1389,7 +1389,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                       >
                         <p>
                           {reader.englishLeadText}{' '}
-                          <span className="font-bold text-primary underline decoration-[#cba72f] decoration-2">
+                          <span className="font-bold text-primary underline decoration-tertiary decoration-2">
                             {reader.englishHighlightText}
                           </span>
                         </p>
@@ -1448,7 +1448,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                         </p>
                       )}
 
-                      <div className="p-4 rounded-2xl bg-gradient-to-br from-[#cba72f]/15 to-transparent text-right border-2 border-[#cba72f]/40 shadow-xs">
+                      <div className="p-4 rounded-2xl bg-gradient-to-br from-tertiary-container/15 to-transparent text-right border-2 border-tertiary/40 shadow-xs">
                         <p
                           className="font-arabic font-bold text-primary leading-relaxed"
                           style={{ fontSize: `${Math.round(previewFontSize * 1.45)}px` }}
@@ -1481,7 +1481,7 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
                     </div>
 
                     <div className="pt-2 flex items-center justify-between text-on-surface-variant font-label-sm text-xs" dir="ltr">
-                      <span className="text-outline-variant font-mono text-[11px]">{reader.arabicSubtext}</span>
+                      <span className="text-outline-variant font-mono text-label-sm">{reader.arabicSubtext}</span>
                     </div>
                   </div>
                 </div>

@@ -142,18 +142,18 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
               >
                 <span className="material-symbols-outlined text-sm sm:text-base">menu_book</span>
                 <span className="hidden sm:inline">Index &amp; Chapters</span>
-                <span className="bg-primary-container text-on-primary px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold">
+                <span className="bg-primary-container text-on-primary px-1.5 py-0.2 rounded-full text-label-xs font-mono font-bold">
                   {chapters.length}
                 </span>
               </button>
 
-              <div className="hidden lg:block w-[1px] h-5 bg-surface-container shrink-0 mx-0.5" />
+              <div className="hidden lg:block w-px h-5 bg-surface-container shrink-0 mx-0.5" />
 
               <div className="min-w-0 truncate">
-                <h1 className="font-title-md font-bold text-xs sm:text-sm text-primary truncate max-w-[130px] sm:max-w-xs md:max-w-sm">
+                <h1 className="font-title-md font-bold text-xs sm:text-sm text-primary truncate max-w-32 sm:max-w-xs md:max-w-sm">
                   {book.title}
                 </h1>
-                <span className="text-[10px] sm:text-[11px] text-tertiary font-arabic truncate block leading-tight">
+                <span className="text-label-xs sm:text-label-sm text-tertiary font-arabic truncate block leading-tight">
                   {book.arabicTitle}
                 </span>
               </div>
@@ -203,7 +203,7 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
             </button>
 
             <form onSubmit={handleJumpToPage} className="flex items-center gap-1 text-xs font-mono">
-              <span className="text-[11px] text-on-surface-variant uppercase font-semibold">P.</span>
+              <span className="text-label-sm text-on-surface-variant uppercase font-semibold">P.</span>
               <input
                 type="number"
                 min="1"
@@ -212,10 +212,10 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
                 onChange={(e) => setPageInput(e.target.value)}
                 className="w-12 px-1.5 py-0.5 rounded bg-surface-container-lowest border border-surface-container text-xs text-center font-mono font-bold text-primary focus:outline-none focus:border-primary"
               />
-              <span className="text-[11px] text-on-surface-variant">/ {book.pages || 631}</span>
+              <span className="text-label-sm text-on-surface-variant">/ {book.pages || 631}</span>
               <button
                 type="submit"
-                className="px-2 py-0.5 rounded bg-primary-container text-on-primary text-[10px] font-bold hover:bg-primary cursor-pointer"
+                className="px-2 py-0.5 rounded bg-primary-container text-on-primary text-label-xs font-bold hover:bg-primary cursor-pointer"
               >
                 Go
               </button>
@@ -259,10 +259,10 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
                   onChange={(e) => setPageInput(e.target.value)}
                   className="w-10 px-1 py-0.5 rounded bg-surface-container-lowest border border-surface-container text-xs text-center font-mono font-bold text-primary focus:outline-none focus:border-primary"
                 />
-                <span className="text-[10px] text-on-surface-variant">/ {book.pages || 631}</span>
+                <span className="text-label-xs text-on-surface-variant">/ {book.pages || 631}</span>
                 <button
                   type="submit"
-                  className="px-1.5 py-0.5 rounded bg-primary-container text-on-primary text-[10px] font-bold hover:bg-primary cursor-pointer"
+                  className="px-1.5 py-0.5 rounded bg-primary-container text-on-primary text-label-xs font-bold hover:bg-primary cursor-pointer"
                 >
                   Go
                 </button>
@@ -327,7 +327,7 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
                   setZoomScale(1.0);
                   setFontSize(22);
                 }}
-                className="px-1 text-[11px] font-mono font-bold text-primary cursor-pointer hover:underline"
+                className="px-1 text-label-sm font-mono font-bold text-primary cursor-pointer hover:underline"
                 title="Click to Reset Zoom (100%)"
               >
                 {Math.round(zoomScale * 100)}%
@@ -349,7 +349,7 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
                   setZoomScale(1.0);
                   setFontSize(22);
                 }}
-                className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] rounded bg-surface-container hover:bg-surface-container-high text-on-surface-variant cursor-pointer ml-0.5 font-semibold"
+                className="hidden sm:inline-block px-1.5 py-0.5 text-label-xs rounded bg-surface-container hover:bg-surface-container-high text-on-surface-variant cursor-pointer ml-0.5 font-semibold"
                 title="Fit to Width (100%)"
               >
                 Fit
@@ -445,7 +445,7 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
                   Table of Contents (فهرس الأبواب)
                 </h2>
               </div>
-              <span className="text-[11px] text-on-surface-variant font-mono">
+              <span className="text-label-sm text-on-surface-variant font-mono">
                 {chapters.length} Chapters
               </span>
             </div>
@@ -469,10 +469,10 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className={`text-[10px] font-bold uppercase ${isSelected ? 'text-tertiary-fixed' : 'text-tertiary'}`}>
+                        <span className={`text-label-xs font-bold uppercase ${isSelected ? 'text-tertiary-fixed' : 'text-tertiary'}`}>
                           Ch. {ch.number}
                         </span>
-                        <span className={`text-[10px] font-mono ${isSelected ? 'text-on-primary/70' : 'text-on-surface-variant'}`}>
+                        <span className={`text-label-xs font-mono ${isSelected ? 'text-on-primary/70' : 'text-on-surface-variant'}`}>
                           p.{ch.startPage}
                         </span>
                       </div>
@@ -500,7 +500,7 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
               <div className="flex flex-wrap items-center justify-between gap-3 pb-6 border-b border-surface-container">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-bold font-mono px-2 py-0.5 rounded bg-surface-container text-tertiary uppercase">
+                    <span className="text-label-sm font-bold font-mono px-2 py-0.5 rounded bg-surface-container text-tertiary uppercase">
                       Chapter {activeChapter.number}
                     </span>
                     <span className="text-xs font-mono text-on-surface-variant">

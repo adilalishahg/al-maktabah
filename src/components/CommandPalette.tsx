@@ -81,7 +81,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           {/* Quick Nav Suggestions */}
           {query.trim() === '' && (
             <div className="p-2 space-y-1">
-              <p className="font-label-sm uppercase tracking-wider text-on-surface-variant text-[11px] px-2 py-1">Direct Navigation</p>
+              <p className="font-label-sm uppercase tracking-wider text-on-surface-variant text-label-sm px-2 py-1">Direct Navigation</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-sm">
                 <button
                   onClick={() => { onNavigate('reader-studio'); onClose(); }}
@@ -118,7 +118,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           {/* Book Results */}
           {filteredBooks.length > 0 && (
             <div className="p-2 space-y-1">
-              <p className="font-label-sm uppercase tracking-wider text-on-surface-variant text-[11px] px-2 py-1">Classical Books & Treatises</p>
+              <p className="font-label-sm uppercase tracking-wider text-on-surface-variant text-label-sm px-2 py-1">Classical Books & Treatises</p>
               {filteredBooks.slice(0, 5).map((book) => (
                 <button
                   key={book.id}
@@ -147,7 +147,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           {/* Category Results */}
           {filteredCategories.length > 0 && (
             <div className="p-2 space-y-1">
-              <p className="font-label-sm uppercase tracking-wider text-on-surface-variant text-[11px] px-2 py-1">Classified Sciences</p>
+              <p className="font-label-sm uppercase tracking-wider text-on-surface-variant text-label-sm px-2 py-1">Classified Sciences</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
                 {filteredCategories.slice(0, 4).map((cat) => (
                   <button
@@ -161,7 +161,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     <span className="material-symbols-outlined text-primary text-lg">{cat.icon}</span>
                     <div className="truncate">
                       <div className="font-title-md text-xs font-semibold text-primary">{cat.name}</div>
-                      <div className="text-[11px] text-on-surface-variant">{cat.volumeCount} Volumes</div>
+                      <div className="text-label-sm text-on-surface-variant">{cat.volumeCount} Volumes</div>
                     </div>
                   </button>
                 ))}
@@ -178,7 +178,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           )}
         </div>
 
-        <div className="px-4 py-2 bg-surface-container-low text-[11px] text-on-surface-variant flex items-center justify-between border-t border-surface-container">
+        <div className="px-4 py-2 bg-surface-container-low text-label-sm text-on-surface-variant flex items-center justify-between border-t border-surface-container">
           <div className="flex items-center gap-2">
             <span>Press <kbd className="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-semibold">↵</kbd> to select</span>
             <span>•</span>

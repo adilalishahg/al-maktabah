@@ -39,7 +39,7 @@ export const ManuscriptsView: React.FC<ManuscriptsViewProps> = ({ manuscripts })
             </span>
             <div className="min-w-0">
               <h3 className="font-title-md text-sm sm:text-base font-bold text-primary truncate">{selectedCodex.title}</h3>
-              <p className="text-[11px] sm:text-xs text-on-surface-variant truncate">
+              <p className="text-label-sm sm:text-xs text-on-surface-variant truncate">
                 {selectedCodex.callNumber} • {selectedCodex.holdingRepository} ({selectedCodex.location})
               </p>
             </div>
@@ -74,9 +74,9 @@ export const ManuscriptsView: React.FC<ManuscriptsViewProps> = ({ manuscripts })
         {/* Center Split: High-Res Folio Viewport & Paleography Notes */}
         <div className="grid grid-cols-1 lg:grid-cols-12">
           {/* Folio Canvas */}
-          <div className="lg:col-span-8 bg-[#1a1714] p-3 sm:p-6 flex items-center justify-center overflow-auto min-h-[320px] sm:min-h-[460px] relative">
+          <div className="lg:col-span-8 bg-night-canvas p-3 sm:p-6 flex items-center justify-center overflow-auto min-h-80 sm:min-h-reader-shelf relative">
             <div 
-              className="transition-transform duration-300 origin-center max-w-xl shadow-2xl rounded-lg overflow-hidden border border-[#38312b]"
+              className="transition-transform duration-300 origin-center max-w-xl shadow-2xl rounded-lg overflow-hidden border border-night-border"
               style={{ transform: `scale(${zoomLevel / 100})` }}
             >
               <img
@@ -84,10 +84,10 @@ export const ManuscriptsView: React.FC<ManuscriptsViewProps> = ({ manuscripts })
                 alt={selectedCodex.title}
                 loading="lazy"
                 decoding="async"
-                className="w-full h-auto object-cover max-h-[520px]"
+                className="w-full h-auto object-cover max-h-reader-tall"
               />
             </div>
-            <div className="absolute bottom-3 left-3 px-3 py-1 bg-black/75 backdrop-blur-sm rounded-lg text-white text-[11px] font-mono flex items-center gap-2">
+            <div className="absolute bottom-3 left-3 px-3 py-1 bg-black/75 backdrop-blur-sm rounded-lg text-white text-label-sm font-mono flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
               <span>4K High-Density Scan • Folio 1b (Opening Unwān)</span>
             </div>
@@ -173,8 +173,8 @@ export const ManuscriptsView: React.FC<ManuscriptsViewProps> = ({ manuscripts })
               />
               <div className="min-w-0">
                 <h4 className="font-semibold text-xs text-primary truncate">{ms.title}</h4>
-                <p className="text-[11px] text-tertiary font-medium">{ms.eraHijri}</p>
-                <p className="text-[10px] text-on-surface-variant truncate">{ms.location}</p>
+                <p className="text-label-sm text-tertiary font-medium">{ms.eraHijri}</p>
+                <p className="text-label-xs text-on-surface-variant truncate">{ms.location}</p>
               </div>
             </div>
           ))}

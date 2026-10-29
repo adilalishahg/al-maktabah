@@ -265,26 +265,26 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
       {/* Stats Ribbon */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         <div className="p-4 rounded-xl bg-surface-container-low border border-surface-container">
-          <span className="text-[11px] font-label-sm uppercase text-on-surface-variant font-semibold block">Total Cataloged</span>
+          <span className="text-label-sm font-label-sm uppercase text-on-surface-variant font-semibold block">Total Cataloged</span>
           <span className="font-display text-2xl font-bold text-primary mt-0.5 block">{books.length}</span>
           <span className="text-xs text-on-surface-variant mt-0.5 block">Authentic treatises</span>
         </div>
         <div className="p-4 rounded-xl bg-surface-container-low border border-surface-container">
-          <span className="text-[11px] font-label-sm uppercase text-on-surface-variant font-semibold block">Published Live</span>
+          <span className="text-label-sm font-label-sm uppercase text-on-surface-variant font-semibold block">Published Live</span>
           <span className="font-display text-2xl font-bold text-primary mt-0.5 block">
             {books.filter((b) => b.published).length}
           </span>
           <span className="text-xs text-primary font-medium mt-0.5 block">Available to readers</span>
         </div>
         <div className="p-4 rounded-xl bg-surface-container-low border border-surface-container">
-          <span className="text-[11px] font-label-sm uppercase text-on-surface-variant font-semibold block">Draft Treatises</span>
+          <span className="text-label-sm font-label-sm uppercase text-on-surface-variant font-semibold block">Draft Treatises</span>
           <span className="font-display text-2xl font-bold text-tertiary mt-0.5 block">
             {books.filter((b) => !b.published).length}
           </span>
           <span className="text-xs text-on-surface-variant mt-0.5 block">Under scholarly review</span>
         </div>
         <div className="p-4 rounded-xl bg-surface-container-low border border-surface-container">
-          <span className="text-[11px] font-label-sm uppercase text-on-surface-variant font-semibold block">Total Chapters</span>
+          <span className="text-label-sm font-label-sm uppercase text-on-surface-variant font-semibold block">Total Chapters</span>
           <span className="font-display text-2xl font-bold text-secondary mt-0.5 block">
             {books.reduce((acc, b) => acc + (b.chapters?.length || 0), 0)}
           </span>
@@ -455,7 +455,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                   </label>
                 </div>
                 {uploadSuccessMessage && (
-                  <span className="text-[11px] text-primary font-medium mt-1 block">
+                  <span className="text-label-sm text-primary font-medium mt-1 block">
                     ✓ {uploadSuccessMessage}
                   </span>
                 )}
@@ -508,7 +508,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                     }`}
                   >
                     <span>{ch.number}. {ch.title}</span>
-                    <span className="text-[10px] opacity-75 font-mono">p.{ch.startPage}</span>
+                    <span className="text-label-xs opacity-75 font-mono">p.{ch.startPage}</span>
                     {formData.chapters.length > 1 && (
                       <span
                         onClick={(e) => {
@@ -572,7 +572,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                       <label className="text-xs font-bold text-primary flex items-center gap-1">
                         <span>Arabic Matn (النص الأصلي بالتشكيل)</span>
                       </label>
-                      <span className="text-[11px] text-on-surface-variant font-mono">
+                      <span className="text-label-sm text-on-surface-variant font-mono">
                         Words: {currentChapter.content ? currentChapter.content.split(/\s+/).filter(Boolean).length : 0}
                       </span>
                     </div>
@@ -616,7 +616,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                 </div>
               ) : (
                 /* Live Formatted Preview */
-                <div className="p-6 rounded-xl bg-[#fbf9f5] border border-surface-container space-y-6">
+                <div className="p-6 rounded-xl bg-surface border border-surface-container space-y-6">
                   <div className="text-center pb-4 border-b border-surface-container">
                     <span className="font-label-sm uppercase tracking-wider text-tertiary text-xs font-bold block">
                       {formData.title} • Chapter {currentChapter.number}
@@ -643,7 +643,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                   {/* Translation */}
                   {currentChapter.translation && (
                     <div className="p-4 rounded-xl bg-surface-container-lowest border border-surface-container text-sm text-on-surface leading-relaxed whitespace-pre-line">
-                      <span className="font-label-sm uppercase text-[10px] text-tertiary font-bold block mb-1">
+                      <span className="font-label-sm uppercase text-label-xs text-tertiary font-bold block mb-1">
                         Authorized English Rendering
                       </span>
                       {currentChapter.translation}
@@ -722,12 +722,12 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-1">
-                      <span className="font-label-sm uppercase text-[10px] text-tertiary font-bold truncate">
+                      <span className="font-label-sm uppercase text-label-xs text-tertiary font-bold truncate">
                         {book.disciplineName}
                       </span>
                       <button
                         onClick={() => handleTogglePublish(book)}
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold transition-colors ${
+                        className={`px-2 py-0.5 rounded-full text-label-xs font-bold transition-colors ${
                           book.published
                             ? 'bg-primary-container/15 text-primary'
                             : 'bg-surface-container text-on-surface-variant'
@@ -748,7 +748,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-1 pt-2 border-t border-surface-container text-center text-[11px] text-on-surface-variant">
+                <div className="grid grid-cols-3 gap-1 pt-2 border-t border-surface-container text-center text-label-sm text-on-surface-variant">
                   <div className="p-1 rounded bg-surface-container-low">
                     <span className="font-semibold text-primary block">{book.chapters?.length || 1}</span>
                     <span>Chapters</span>

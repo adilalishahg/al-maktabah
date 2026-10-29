@@ -43,11 +43,11 @@ export const MorphologyModal: React.FC<MorphologyModalProps> = ({ word, onClose 
         <div className="p-4 sm:p-6 space-y-4 text-sm overflow-y-auto">
           <div className="grid grid-cols-2 gap-3">
             <div className="p-3 rounded-xl bg-surface-container-low">
-              <span className="text-[11px] font-label-sm text-on-surface-variant uppercase block">Tri-Literal Root (الجذر)</span>
+              <span className="text-label-sm font-label-sm text-on-surface-variant uppercase block">Tri-Literal Root (الجذر)</span>
               <span className="font-arabic text-xl text-primary font-bold block mt-1">{word.root}</span>
             </div>
             <div className="p-3 rounded-xl bg-surface-container-low">
-              <span className="text-[11px] font-label-sm text-on-surface-variant uppercase block">Semantic Field</span>
+              <span className="text-label-sm font-label-sm text-on-surface-variant uppercase block">Semantic Field</span>
               <span className="font-body-md text-sm font-semibold text-on-surface block mt-1">{word.meaning}</span>
             </div>
           </div>

@@ -165,7 +165,7 @@ export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
                 }`}
             >
               <span>{d.label}</span>
-              <span className="text-[10px] opacity-75">({d.count})</span>
+              <span className="text-label-xs opacity-75">({d.count})</span>
             </button>
           ))}
         </div>
@@ -180,7 +180,7 @@ export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
           )}
         </span>
         {searchQuery && (
-          <span className="truncate max-w-[180px] sm:max-w-none">
+          <span className="truncate max-w-xs sm:max-w-none">
             Filtering by: <strong className="text-primary">"{searchQuery}"</strong>
           </span>
         )}
@@ -197,16 +197,16 @@ export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
         </div>
       ) : books.length === 0 ? (
         /* Empty State: No Books in Database */
-        <div className="py-14 px-6 sm:px-12 text-center bg-gradient-to-b from-surface-container-lowest via-surface-container-lowest to-surface-container-low/40 rounded-3xl border-2 border-dashed border-[#cba72f]/40 shadow-sm max-w-2xl mx-auto space-y-5">
-          <div className="relative w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-[#cba72f]/20 to-primary/10 border border-[#cba72f]/50 flex items-center justify-center text-tertiary shadow-sm">
-            <span className="material-symbols-outlined text-4xl text-[#967400] dark:text-[#f3cc51]">
+        <div className="py-14 px-6 sm:px-12 text-center bg-gradient-to-b from-surface-container-lowest via-surface-container-lowest to-surface-container-low/40 rounded-3xl border-2 border-dashed border-tertiary/40 shadow-sm max-w-2xl mx-auto space-y-5">
+          <div className="relative w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-tertiary-container/20 to-primary/10 border border-tertiary/50 flex items-center justify-center text-tertiary shadow-sm">
+            <span className="material-symbols-outlined text-4xl text-gold-dark dark:text-gold-bright">
               library_books
             </span>
             <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 ring-2 ring-surface"></span>
           </div>
 
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#cba72f]/15 text-[#967400] dark:text-[#f3cc51] text-xs font-bold border border-[#cba72f]/30">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-container/15 text-gold-dark dark:text-gold-bright text-xs font-bold border border-tertiary/30">
               <span className="material-symbols-outlined text-sm">database</span>
               <span>Live Database Connected</span>
             </div>
@@ -281,11 +281,11 @@ export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
                   decoding="async"
                 />
                 <div className="absolute top-2 left-2 flex gap-1">
-                  <span className={`px-2 py-0.5 rounded font-label-sm text-[11px] font-semibold shadow-sm ${book.badgeColor || 'bg-primary-container text-on-primary'}`}>
+                  <span className={`px-2 py-0.5 rounded font-label-sm text-label-sm font-semibold shadow-sm ${book.badgeColor || 'bg-primary-container text-on-primary'}`}>
                     {book.badge || book.disciplineName}
                   </span>
                 </div>
-                <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-surface/90 backdrop-blur-sm text-on-surface font-label-sm text-[11px] font-medium shadow-xs">
+                <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-surface/90 backdrop-blur-sm text-on-surface font-label-sm text-label-sm font-medium shadow-xs">
                   {book.pages} pgs • {book.sizeMb} MB
                 </div>
               </div>
@@ -316,7 +316,7 @@ export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
                   </p>
                   <div className="flex flex-wrap items-center gap-1 pt-1">
                     {book.formats.map((fmt, i) => (
-                      <span key={i} className="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant text-[10px] font-medium">
+                      <span key={i} className="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant text-label-xs font-medium">
                         {fmt}
                       </span>
                     ))}
@@ -383,7 +383,7 @@ export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
                     </td>
                     <td className="py-3 px-4 text-on-surface">
                       <div className="font-semibold">{book.author}</div>
-                      <div className="text-on-surface-variant text-[11px]">{book.authorHijriYear}</div>
+                      <div className="text-on-surface-variant text-label-sm">{book.authorHijriYear}</div>
                     </td>
                     <td className="py-3 px-4">
                       <span className="px-2 py-0.5 rounded bg-surface-container text-on-surface font-label-sm">
@@ -396,7 +396,7 @@ export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
                     <td className="py-3 px-4">
                       <div className="flex flex-wrap gap-1">
                         {book.formats.slice(0, 2).map((fmt, i) => (
-                          <span key={i} className="px-1.5 py-0.5 rounded bg-surface-container-low text-[10px]">
+                          <span key={i} className="px-1.5 py-0.5 rounded bg-surface-container-low text-label-xs">
                             {fmt}
                           </span>
                         ))}

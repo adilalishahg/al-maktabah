@@ -317,24 +317,24 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
 
   return (
     <div
-      className={`flex flex-col bg-[#141b17] text-[#e8f0ec] overflow-hidden transition-all duration-300 ${
+      className={`flex flex-col bg-night-card text-night-text overflow-hidden transition-all duration-300 ${
         isFullscreen
           ? 'fixed inset-0 z-[100] w-screen h-screen'
           : hideHeader
-            ? 'h-[calc(100dvh-9.5rem)] sm:h-[84vh] min-h-[500px] w-full rounded-2xl border border-[#cba72f]/40 shadow-xl'
-            : 'h-[calc(100dvh-6.5rem)] sm:h-[86vh] min-h-[520px] w-full rounded-xl sm:rounded-2xl border border-[#cba72f]/40 shadow-2xl mt-2 sm:mt-4 mb-6'
+            ? 'h-[calc(100dvh-9.5rem)] sm:h-[84vh] min-h-reader-shelf w-full rounded-2xl border border-tertiary/40 shadow-xl'
+            : 'h-[calc(100dvh-6.5rem)] sm:h-[86vh] min-h-reader-tall w-full rounded-xl sm:rounded-2xl border border-tertiary/40 shadow-2xl mt-2 sm:mt-4 mb-6'
       }`}
     >
       {/* Top Header & Navigation Bar (Fully Device-Responsive & Anti-Colliding) */}
       {!hideHeader && (
-        <div className="bg-[#0e1411] px-2.5 sm:px-4 py-2 border-b border-[#25332a] flex flex-col md:flex-row md:items-center md:justify-between gap-2 shrink-0 select-none">
+        <div className="bg-night-surface px-2.5 sm:px-4 py-2 border-b border-night-border flex flex-col md:flex-row md:items-center md:justify-between gap-2 shrink-0 select-none">
           {/* Top Row on Mobile / Left Group on Desktop */}
           <div className="flex items-center justify-between md:justify-start gap-2 min-w-0 w-full md:w-auto">
             <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
               {onClose && (
                 <button
                   onClick={onClose}
-                  className="p-1 sm:p-1.5 rounded-lg hover:bg-[#1f2b23] text-[#9eb5aa] hover:text-white transition-colors cursor-pointer shrink-0"
+                  className="p-1 sm:p-1.5 rounded-lg hover:bg-emerald-surface text-emerald-highlight hover:text-white transition-colors cursor-pointer shrink-0"
                   title="Back to Catalog"
                 >
                   <span className="material-symbols-outlined text-lg sm:text-xl">arrow_back</span>
@@ -345,27 +345,27 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
                 onClick={toggleSidebar}
                 className={`px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-semibold shrink-0 ${
                   isSidebarOpen
-                    ? 'bg-[#cba72f] text-black font-bold shadow-md shadow-[#cba72f]/20'
-                    : 'bg-[#1a251e] hover:bg-[#25332b] text-[#9eb5aa] border border-[#27372d]'
+                    ? 'bg-tertiary-container text-black font-bold shadow-md shadow-tertiary/20'
+                    : 'bg-emerald-card hover:bg-emerald-surface text-emerald-highlight border border-emerald-border'
                 }`}
                 title="Toggle Chapters / Table of Contents"
               >
                 <span className="material-symbols-outlined text-base">format_list_bulleted</span>
                 <span className="hidden sm:inline">Index &amp; Chapters</span>
-                <span className="px-1.5 py-0.2 bg-black/30 rounded-full text-[10px] font-mono font-bold">
+                <span className="px-1.5 py-0.2 bg-black/30 rounded-full text-label-xs font-mono font-bold">
                   {chapters.length}
                 </span>
               </button>
 
               {/* Vertical Divider on Desktop */}
-              <div className="hidden lg:block w-[1px] h-5 bg-[#25332a] mx-1 shrink-0" />
+              <div className="hidden lg:block w-px h-5 bg-night-border mx-1 shrink-0" />
 
               {/* Book Title with Safe Margin */}
-              <div className="min-w-0 truncate max-w-[150px] sm:max-w-xs md:max-w-sm lg:max-w-md">
+              <div className="min-w-0 truncate max-w-36 sm:max-w-xs md:max-w-sm lg:max-w-md">
                 <h3 className="font-display text-xs sm:text-sm font-bold text-white truncate">
                   {book.title}
                 </h3>
-                <p className="font-arabic text-[10px] sm:text-[11px] text-[#cba72f] truncate leading-tight">
+                <p className="font-arabic text-label-xs sm:text-label-sm text-tertiary truncate leading-tight">
                   {book.arabicTitle}
                 </p>
               </div>
@@ -375,7 +375,7 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
             <div className="flex md:hidden items-center gap-1 shrink-0">
               <button
                 onClick={() => setIsFullscreen(!isFullscreen)}
-                className="p-1.5 rounded-lg hover:bg-[#1f2b23] text-[#9eb5aa] hover:text-white transition-colors cursor-pointer"
+                className="p-1.5 rounded-lg hover:bg-emerald-surface text-emerald-highlight hover:text-white transition-colors cursor-pointer"
                 title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
               >
                 <span className="material-symbols-outlined text-base">
@@ -386,13 +386,13 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
           </div>
 
           {/* Bottom Row on Mobile / Right Group on Desktop */}
-          <div className="flex items-center justify-between md:justify-end gap-1.5 sm:gap-2.5 w-full md:w-auto pt-1.5 md:pt-0 border-t md:border-t-0 border-[#25332a]/70">
+          <div className="flex items-center justify-between md:justify-end gap-1.5 sm:gap-2.5 w-full md:w-auto pt-1.5 md:pt-0 border-t md:border-t-0 border-night-border/70">
             {/* Dynamic Page Number & Quick Navigation Box */}
-            <div className="flex items-center gap-0.5 sm:gap-1 bg-[#17221c] px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-xl border border-[#27372d] shadow-inner shrink-0">
+            <div className="flex items-center gap-0.5 sm:gap-1 bg-night-card px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-xl border border-emerald-border shadow-inner shrink-0">
               <button
                 onClick={() => scrollToPage(currentPage - 1)}
                 disabled={currentPage <= 1}
-                className="p-1 rounded hover:bg-[#25332b] disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer text-[#a5bbb0]"
+                className="p-1 rounded hover:bg-emerald-surface disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer text-emerald-highlight"
                 title="Previous Page"
               >
                 <span className="material-symbols-outlined text-sm sm:text-base">chevron_left</span>
@@ -403,12 +403,12 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
                   type="text"
                   value={pageInputValue}
                   onChange={(e) => setPageInputValue(e.target.value)}
-                  className="w-9 sm:w-12 text-center py-0.5 px-0.5 bg-[#0b100d] border border-[#33443a] rounded text-[#f7eed4] font-bold text-xs focus:outline-none focus:border-[#cba72f]"
+                  className="w-9 sm:w-12 text-center py-0.5 px-0.5 bg-night-canvas border border-emerald-border rounded text-tertiary-fixed font-bold text-xs focus:outline-none focus:border-tertiary"
                 />
-                <span className="text-[#8ba295] text-[11px] sm:text-xs">/ {totalPages}</span>
+                <span className="text-emerald-highlight text-label-sm sm:text-xs">/ {totalPages}</span>
                 <button
                   type="submit"
-                  className="hidden sm:inline px-1.5 py-0.5 bg-[#cba72f]/20 hover:bg-[#cba72f]/40 text-[#f7eed4] rounded text-[10px] font-bold cursor-pointer"
+                  className="hidden sm:inline px-1.5 py-0.5 bg-tertiary-container/20 hover:bg-tertiary-container/40 text-tertiary-fixed rounded text-label-xs font-bold cursor-pointer"
                 >
                   Go
                 </button>
@@ -417,7 +417,7 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
               <button
                 onClick={() => scrollToPage(currentPage + 1)}
                 disabled={currentPage >= totalPages}
-                className="p-1 rounded hover:bg-[#25332b] disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer text-[#a5bbb0]"
+                className="p-1 rounded hover:bg-emerald-surface disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer text-emerald-highlight"
                 title="Next Page"
               >
                 <span className="material-symbols-outlined text-sm sm:text-base">chevron_right</span>
@@ -425,13 +425,13 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
             </div>
 
             {/* View Mode Switcher Toggle */}
-            <div className="flex items-center bg-[#17221c] p-0.5 rounded-lg border border-[#27372d] text-xs shrink-0">
+            <div className="flex items-center bg-night-card p-0.5 rounded-lg border border-emerald-border text-xs shrink-0">
               <button
                 onClick={() => setViewMode('pdf')}
                 className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 cursor-pointer ${
                   viewMode === 'pdf'
-                    ? 'bg-[#cba72f] text-black font-bold shadow-xs'
-                    : 'text-[#9eb5aa] hover:text-white'
+                    ? 'bg-tertiary-container text-black font-bold shadow-xs'
+                    : 'text-emerald-highlight hover:text-white'
                 }`}
                 title="Facsimile Manuscript Pages"
               >
@@ -448,8 +448,8 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
                 }}
                 className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 cursor-pointer ${
                   viewMode === 'text'
-                    ? 'bg-[#cba72f] text-black font-bold shadow-xs'
-                    : 'text-[#9eb5aa] hover:text-white'
+                    ? 'bg-tertiary-container text-black font-bold shadow-xs'
+                    : 'text-emerald-highlight hover:text-white'
                 }`}
                 title="Arabic Matn & Translation"
               >
@@ -460,24 +460,24 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
 
             {/* Interactive Zoom Controls (Always visible on mobile & desktop!) */}
             {viewMode === 'pdf' && (
-              <div className="flex items-center bg-[#17221c] p-0.5 rounded-lg border border-[#27372d] text-xs shrink-0">
+              <div className="flex items-center bg-night-card p-0.5 rounded-lg border border-emerald-border text-xs shrink-0">
                 <button
                   onClick={() => setInternalScale((s) => Math.max(0.6, Number((s - 0.15).toFixed(2))))}
-                  className="p-1 text-[#9eb5aa] hover:text-white cursor-pointer"
+                  className="p-1 text-emerald-highlight hover:text-white cursor-pointer"
                   title="Zoom Out (-)"
                 >
                   <span className="material-symbols-outlined text-sm">remove</span>
                 </button>
                 <span
                   onClick={() => setInternalScale(1.0)}
-                  className="text-[11px] font-mono px-1 sm:px-1.5 text-white font-bold cursor-pointer hover:underline"
+                  className="text-label-sm font-mono px-1 sm:px-1.5 text-white font-bold cursor-pointer hover:underline"
                   title="Click to Reset Zoom (100%)"
                 >
                   {Math.round(activeScale * 100)}%
                 </span>
                 <button
                   onClick={() => setInternalScale((s) => Math.min(2.5, Number((s + 0.15).toFixed(2))))}
-                  className="p-1 text-[#9eb5aa] hover:text-white cursor-pointer"
+                  className="p-1 text-emerald-highlight hover:text-white cursor-pointer"
                   title="Zoom In (+)"
                 >
                   <span className="material-symbols-outlined text-sm">add</span>
@@ -488,7 +488,7 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
             {/* Desktop Fullscreen Mode Toggle */}
             <button
               onClick={() => setIsFullscreen(!isFullscreen)}
-              className="hidden md:flex p-1.5 rounded-lg hover:bg-[#1f2b23] text-[#9eb5aa] hover:text-white transition-colors cursor-pointer shrink-0"
+              className="hidden md:flex p-1.5 rounded-lg hover:bg-emerald-surface text-emerald-highlight hover:text-white transition-colors cursor-pointer shrink-0"
               title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen Reader Studio'}
             >
               <span className="material-symbols-outlined text-base">
@@ -513,22 +513,22 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
         <aside
           className={`
             fixed inset-y-0 left-0 z-40 w-4/5 max-w-xs md:max-w-sm md:static md:w-80 md:z-20
-            bg-[#111814] border-r border-[#25332a] flex flex-col shrink-0 transition-transform duration-300 ease-in-out shadow-2xl
+            bg-night-surface border-r border-night-border flex flex-col shrink-0 transition-transform duration-300 ease-in-out shadow-2xl
             ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:hidden'}
           `}
         >
           {/* Sidebar Header */}
-          <div className="p-3 border-b border-[#25332a] space-y-2">
+          <div className="p-3 border-b border-night-border space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#cba72f] flex items-center gap-1.5">
+              <span className="text-xs font-bold uppercase tracking-wider text-tertiary flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-sm">menu_book</span>
                 Treatise Chapters ({chapters.length})
               </span>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] text-[#8ba295] font-mono">1–{totalPages} Pgs</span>
+                <span className="text-label-xs text-emerald-highlight font-mono">1–{totalPages} Pgs</span>
                 <button
                   onClick={toggleSidebar}
-                  className="p-1 rounded-lg hover:bg-[#1f2b23] text-[#8ba295] hover:text-white md:hidden cursor-pointer"
+                  className="p-1 rounded-lg hover:bg-emerald-surface text-emerald-highlight hover:text-white md:hidden cursor-pointer"
                   title="Close Chapters Drawer"
                 >
                   <span className="material-symbols-outlined text-base">close</span>
@@ -536,7 +536,7 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
               </div>
             </div>
             <div className="relative">
-              <span className="material-symbols-outlined absolute left-2.5 top-2 text-[#688274] text-sm">
+              <span className="material-symbols-outlined absolute left-2.5 top-2 text-outline text-sm">
                 search
               </span>
               <input
@@ -544,14 +544,14 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
                 placeholder="Filter chapters or abwāb..."
                 value={chapterFilter}
                 onChange={(e) => setChapterFilter(e.target.value)}
-                className="w-full pl-8 pr-2.5 py-1 rounded-lg bg-[#0a0f0c] border border-[#25332a] text-xs text-white placeholder:text-[#556b60] focus:outline-none focus:border-[#cba72f]"
+                className="w-full pl-8 pr-2.5 py-1 rounded-lg bg-night-canvas border border-night-border text-xs text-white placeholder:text-outline focus:outline-none focus:border-tertiary"
               />
             </div>
           </div>
 
           <div className="flex-1 overflow-y-auto p-2 space-y-1.5 scrollbar-thin">
             {filteredChapters.length === 0 ? (
-              <div className="text-center py-8 text-xs text-[#688274]">
+              <div className="text-center py-8 text-xs text-outline">
                 No matching chapters found.
               </div>
             ) : (
@@ -563,20 +563,20 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
                     onClick={() => handleChapterClick(ch)}
                     className={`p-2.5 rounded-xl text-xs transition-all cursor-pointer flex flex-col gap-1 border ${
                       isActive
-                        ? 'bg-gradient-to-r from-[#0b3b2d] to-[#124b3b] text-white border-[#cba72f] shadow-md shadow-emerald-950/40 ring-1 ring-[#cba72f]/40'
-                        : 'bg-[#151f19] text-[#c3d4cb] border-[#1e2a22] hover:bg-[#1c2921] hover:text-white'
+                        ? 'bg-gradient-to-r from-emerald-dark to-emerald-surface text-white border-tertiary shadow-md shadow-emerald-950/40 ring-1 ring-tertiary/40'
+                        : 'bg-night-surface text-night-text border-night-border hover:bg-emerald-surface hover:text-white'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-1">
-                      <span className="font-bold text-[#f7eed4] truncate">
+                      <span className="font-bold text-tertiary-fixed truncate">
                         {ch.number}. {ch.title}
                       </span>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/40 text-[#cba72f] shrink-0">
+                      <span className="text-label-xs font-mono px-1.5 py-0.5 rounded bg-black/40 text-tertiary shrink-0">
                         p.{ch.startPage}
                       </span>
                     </div>
                     {ch.arabicTitle && (
-                      <p className="font-arabic text-right text-xs text-[#a9c9bb] leading-tight truncate">
+                      <p className="font-arabic text-right text-xs text-emerald-highlight leading-tight truncate">
                         {ch.arabicTitle}
                       </p>
                     )}
@@ -590,15 +590,15 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
         {/* Main Canvas Area (Full Width on Mobile with Pan & Zoom support) */}
         <main
           ref={containerRef}
-          className="flex-1 overflow-x-auto overflow-y-auto bg-[#0a0e0c] p-1 sm:p-4 md:p-6 relative scroll-smooth w-full"
+          className="flex-1 overflow-x-auto overflow-y-auto bg-night-canvas p-1 sm:p-4 md:p-6 relative scroll-smooth w-full"
         >
           {viewMode === 'pdf' ? (
             /* Continuous PDF Page Stream */
             <div className="max-w-4xl mx-auto flex flex-col items-center gap-3 sm:gap-6 w-full">
               {loadingDoc && (
                 <div className="py-24 text-center space-y-3">
-                  <div className="w-12 h-12 mx-auto rounded-full border-3 border-[#cba72f]/30 border-t-[#cba72f] animate-spin"></div>
-                  <p className="text-xs text-[#9eb5aa]">Streaming PDF pages directly from codex...</p>
+                  <div className="w-12 h-12 mx-auto rounded-full border-3 border-tertiary/30 border-t-tertiary animate-spin"></div>
+                  <p className="text-xs text-emerald-highlight">Streaming PDF pages directly from codex...</p>
                 </div>
               )}
 
@@ -606,13 +606,13 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
                 <div className="p-6 bg-rose-950/30 border border-rose-800 rounded-2xl text-center space-y-2 max-w-md">
                   <span className="material-symbols-outlined text-3xl text-rose-400">error</span>
                   <h4 className="font-title-md font-bold text-white">Could not stream PDF file directly</h4>
-                  <p className="text-xs text-[#c3d4cb]">{loadError}</p>
+                  <p className="text-xs text-night-text">{loadError}</p>
                   <button
                     onClick={() => {
                       if (onSwitchToMatn) onSwitchToMatn();
                       else setViewMode('text');
                     }}
-                    className="mt-2 px-4 py-2 bg-[#cba72f] text-black rounded-lg text-xs font-bold cursor-pointer"
+                    className="mt-2 px-4 py-2 bg-tertiary-container text-black rounded-lg text-xs font-bold cursor-pointer"
                   >
                     Read Extracted Matn & Chapters Instead
                   </button>
@@ -626,22 +626,22 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
                       key={pageNum}
                       id={`pdf-page-slot-${pageNum}`}
                       data-page-num={pageNum}
-                      className="pdf-page-slot relative bg-[#fdfcf9] text-black rounded-lg sm:rounded-xl shadow-lg overflow-hidden min-h-[350px] flex flex-col items-center border border-[#d5c3aa] transition-transform w-full mx-auto"
+                      className="pdf-page-slot relative bg-surface-container-lowest text-black rounded-lg sm:rounded-xl shadow-lg overflow-hidden min-h-88 flex flex-col items-center border border-sepia-border transition-transform w-full mx-auto"
                       style={{ maxWidth: `${820 * activeScale}px` }}
                     >
                       {/* Page Header Ribbon */}
-                      <div className="w-full bg-[#f4ece1] text-[#3d2e1a] px-2.5 sm:px-4 py-1 text-[10px] sm:text-[11px] font-mono flex items-center justify-between border-b border-[#e2d5c3] select-none">
-                        <span className="font-semibold truncate max-w-[180px] sm:max-w-[280px]">
+                      <div className="w-full bg-sepia-canvas text-sepia-text px-2.5 sm:px-4 py-1 text-label-xs sm:text-label-sm font-mono flex items-center justify-between border-b border-sepia-border select-none">
+                        <span className="font-semibold truncate max-w-44 sm:max-w-filter-panel">
                           {book.title}
                         </span>
-                        <span className="font-bold bg-[#e2d5c3] px-1.5 py-0.2 rounded text-[#2c2010]">
+                        <span className="font-bold bg-sepia-border px-1.5 py-0.2 rounded text-sepia-text">
                           p.{pageNum} / {totalPages}
                         </span>
                       </div>
 
                       {/* Continuous Surface: High-Res Cloudinary CDN Image OR Canvas */}
                       {isCloudinary ? (
-                        <div className="w-full relative flex items-center justify-center bg-white min-h-[350px] overflow-hidden">
+                        <div className="w-full relative flex items-center justify-center bg-white min-h-88 overflow-hidden">
                           <img
                             src={getCloudinaryPageUrl(effectivePdfUrl, pageNum)}
                             alt={`Page ${pageNum} - ${book.title}`}
@@ -665,13 +665,13 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
             /* Structured Matn & Parallel Text View */
             <div className="max-w-3xl mx-auto space-y-4 sm:space-y-6">
               {activeChapter ? (
-                <div className="bg-[#141d18] rounded-2xl p-4 sm:p-8 border border-[#2a3830] shadow-xl space-y-4 sm:space-y-6">
+                <div className="bg-night-card rounded-2xl p-4 sm:p-8 border border-night-border shadow-xl space-y-4 sm:space-y-6">
                   {/* Chapter Header */}
-                  <div className="text-center pb-4 sm:pb-6 border-b border-[#2a3830] space-y-1.5">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#cba72f]/15 text-[#cba72f] font-mono text-[11px] font-bold border border-[#cba72f]/30">
+                  <div className="text-center pb-4 sm:pb-6 border-b border-night-border space-y-1.5">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-tertiary-container/15 text-tertiary font-mono text-label-sm font-bold border border-tertiary/30">
                       Chapter {activeChapter.number} • Starting on Page {activeChapter.startPage}
                     </span>
-                    <h2 className="font-arabic text-2xl sm:text-3xl font-bold text-[#f7eed4] mt-1">
+                    <h2 className="font-arabic text-2xl sm:text-3xl font-bold text-tertiary-fixed mt-1">
                       {activeChapter.arabicTitle}
                     </h2>
                     <h3 className="font-display text-sm sm:text-lg font-bold text-white">
@@ -681,24 +681,24 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
 
                   {/* Arabic Matn Box */}
                   <div
-                    className="p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-[#19241e] to-[#0f1713] border-2 border-[#cba72f]/40 shadow-lg text-right"
+                    className="p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-emerald-surface to-night-surface border-2 border-tertiary/40 shadow-lg text-right"
                     dir="rtl"
                   >
-                    <span className="block text-xs font-bold text-[#cba72f] mb-2 sm:mb-3 font-sans">
+                    <span className="block text-xs font-bold text-tertiary mb-2 sm:mb-3 font-sans">
                       النص الأصلي بالتشكيل الكامل
                     </span>
-                    <p className="font-arabic text-lg sm:text-2xl text-[#f3f9f5] leading-loose whitespace-pre-line font-medium">
+                    <p className="font-arabic text-lg sm:text-2xl text-night-text leading-loose whitespace-pre-line font-medium">
                       {activeChapter.content || 'لا يوجد نص مدخل'}
                     </p>
                   </div>
 
                   {/* Urdu / English Translation */}
                   {activeChapter.translation && (
-                    <div className="p-4 sm:p-5 rounded-xl bg-[#101713] border border-[#2a3830] space-y-2">
+                    <div className="p-4 sm:p-5 rounded-xl bg-night-surface border border-night-border space-y-2">
                       <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider block">
                         Translation / ترجمہ
                       </span>
-                      <p className="text-xs sm:text-base text-[#dce7e1] leading-relaxed whitespace-pre-line">
+                      <p className="text-xs sm:text-base text-night-text leading-relaxed whitespace-pre-line">
                         {activeChapter.translation}
                       </p>
                     </div>
@@ -706,25 +706,25 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
 
                   {/* Scholarly Commentary & Notes */}
                   {activeChapter.notes && (
-                    <div className="p-3.5 sm:p-4 rounded-xl bg-[#0c130f] border border-[#223026] text-xs text-[#9eb5aa] space-y-1">
-                      <span className="font-bold text-[#cba72f] block">Scholarly Notes / حواشی:</span>
+                    <div className="p-3.5 sm:p-4 rounded-xl bg-night-canvas border border-night-border text-xs text-emerald-highlight space-y-1">
+                      <span className="font-bold text-tertiary block">Scholarly Notes / حواشی:</span>
                       <p>{activeChapter.notes}</p>
                     </div>
                   )}
 
                   {/* Chapter Navigation Buttons */}
-                  <div className="pt-3 sm:pt-4 flex items-center justify-between border-t border-[#2a3830]">
+                  <div className="pt-3 sm:pt-4 flex items-center justify-between border-t border-night-border">
                     <button
                       onClick={() => {
                         const prevIdx = chapters.findIndex((c) => c.number === activeChapter.number) - 1;
                         if (prevIdx >= 0) handleChapterClick(chapters[prevIdx]);
                       }}
                       disabled={chapters.findIndex((c) => c.number === activeChapter.number) === 0}
-                      className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-[#1e2a22] hover:bg-[#28382d] text-white text-xs font-bold disabled:opacity-30 cursor-pointer"
+                      className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-emerald-surface hover:bg-emerald-surface text-white text-xs font-bold disabled:opacity-30 cursor-pointer"
                     >
                       ← Prev
                     </button>
-                    <span className="text-xs text-[#8ba295] font-mono">
+                    <span className="text-xs text-emerald-highlight font-mono">
                       {activeChapter.number} / {chapters.length}
                     </span>
                     <button
@@ -735,14 +735,14 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
                       disabled={
                         chapters.findIndex((c) => c.number === activeChapter.number) === chapters.length - 1
                       }
-                      className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-[#cba72f] text-black text-xs font-bold disabled:opacity-30 cursor-pointer"
+                      className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-tertiary-container text-black text-xs font-bold disabled:opacity-30 cursor-pointer"
                     >
                       Next →
                     </button>
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-20 text-[#8ba295]">
+                <div className="text-center py-20 text-emerald-highlight">
                   Select a chapter from the sidebar to inspect its Matn and translation.
                 </div>
               )}
@@ -752,16 +752,16 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
       </div>
 
       {/* Sticky Bottom Indicator Pill */}
-      <div className="bg-[#0b100d] px-3 sm:px-4 py-1.5 sm:py-2 border-t border-[#25332a] flex items-center justify-between text-xs text-[#8ba295] font-mono select-none">
+      <div className="bg-night-canvas px-3 sm:px-4 py-1.5 sm:py-2 border-t border-night-border flex items-center justify-between text-xs text-emerald-highlight font-mono select-none">
         <div className="flex items-center gap-1.5 truncate max-w-[50%]">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-          <span className="text-[#cba72f] font-bold truncate text-[11px] sm:text-xs">
+          <span className="text-tertiary font-bold truncate text-label-sm sm:text-xs">
             {activeChapter ? `${activeChapter.number}. ${activeChapter.title}` : 'Codex Stream'}
           </span>
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-          <span className="text-white font-bold bg-[#17221c] px-2 py-0.5 rounded border border-[#27372d] text-[11px]">
+          <span className="text-white font-bold bg-night-card px-2 py-0.5 rounded border border-emerald-border text-label-sm">
             p.{currentPage} / {totalPages}
           </span>
         </div>

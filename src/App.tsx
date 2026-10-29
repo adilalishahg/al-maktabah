@@ -31,7 +31,7 @@ const MorphologyModal = lazy(() => import('./components/MorphologyModal').then((
 // Loading spinner for async views
 const ViewLoadingFallback = () => (
   <div className="min-h-[55vh] flex flex-col items-center justify-center p-8 text-center animate-pulse">
-    <div className="w-14 h-14 rounded-2xl bg-[#0f382c]/10 dark:bg-[#0f382c]/30 flex items-center justify-center mb-3 text-[#0f382c] dark:text-[#a2b7ad]">
+    <div className="w-14 h-14 rounded-2xl bg-primary-container/10 dark:bg-primary-container/30 flex items-center justify-center mb-3 text-primary-container dark:text-emerald-highlight">
       <span className="material-symbols-outlined text-3xl animate-spin">menu_book</span>
     </div>
     <div className="text-sm font-semibold tracking-wide text-gray-700 dark:text-gray-300 font-serif">
@@ -225,10 +225,10 @@ export default function App() {
 
   return (
     <div className={`min-h-screen flex flex-col transition-colors duration-300 ${currentTheme === 'night'
-        ? 'bg-[#0a1410] text-[#e5ede9]'
+        ? 'bg-night-canvas text-night-text'
         : currentTheme === 'sepia'
-          ? 'bg-[#f5ede1] text-[#26211a]'
-          : 'bg-[#fbf9f5] text-[#1b1c1a]'
+          ? 'bg-sepia-canvas text-sepia-text'
+          : 'bg-parchment-canvas text-on-surface'
       }`}>
       {/* Fixed Sticky Header */}
       <Header
@@ -248,7 +248,7 @@ export default function App() {
           currentPath === 'book-viewer' ? 'pt-0' : 'pt-20 sm:pt-24'
         }`}
       >
-        <div className="w-full max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] mx-auto px-2 sm:px-6 lg:px-8">
+        <div className="w-full max-w-7xl xl:max-w-archive-xl 2xl:max-w-archive-2xl mx-auto px-2 sm:px-6 lg:px-8">
           {currentPath === 'home' && (
             <HomeView
               books={publicBooks}

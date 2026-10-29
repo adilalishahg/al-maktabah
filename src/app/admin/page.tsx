@@ -706,11 +706,11 @@ export default function AdminPortalPage() {
   // Render Reader Fullscreen Preview if requested
   if (viewingReaderBook) {
     return (
-      <div className="min-h-screen bg-[#fbf9f5] p-4 sm:p-8">
-        <div className="max-w-[1560px] mx-auto">
+      <div className="min-h-screen bg-parchment-canvas p-4 sm:p-8">
+        <div className="max-max-w-archive-2xl mx-auto">
           <Suspense
             fallback={
-              <div className="h-[80vh] flex flex-col items-center justify-center gap-3 text-[#0f382c] animate-pulse">
+              <div className="h-[80vh] flex flex-col items-center justify-center gap-3 text-primary-container animate-pulse">
                 <span className="material-symbols-outlined text-4xl animate-spin">menu_book</span>
                 <span className="font-serif text-sm uppercase tracking-widest font-semibold">
                   Loading Scholarly Codex Reader Preview...
@@ -737,16 +737,16 @@ export default function AdminPortalPage() {
   // LOGIN SCREEN (Authentication Gate)
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#0a1410] text-[#e5ede9] flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-[#13241d] border border-[#21392e] rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6 animate-fade-in">
+      <div className="min-h-screen bg-night-canvas text-night-text flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-emerald-card border border-emerald-border rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6 animate-fade-in">
           <div className="text-center space-y-2">
-            <span className="w-12 h-12 rounded-2xl bg-[#0f382c] border border-[#79a292]/30 text-[#ffe088] inline-flex items-center justify-center shadow-lg">
+            <span className="w-12 h-12 rounded-2xl bg-primary-container border border-emerald-highlight/30 text-tertiary-fixed inline-flex items-center justify-center shadow-lg">
               <span className="material-symbols-outlined text-2xl">admin_panel_settings</span>
             </span>
             <h1 className="font-display text-2xl font-bold text-white tracking-tight">
               Al-Maktabah Admin Gate
             </h1>
-            <p className="text-xs text-[#a2b7ad]">
+            <p className="text-xs text-emerald-highlight">
               Restricted portal for manuscript custodians, chief editors, and archive administrators.
             </p>
           </div>
@@ -760,7 +760,7 @@ export default function AdminPortalPage() {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[#a2b7ad] mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-emerald-highlight mb-1">
                 Admin Email / Username
               </label>
               <input
@@ -769,12 +769,12 @@ export default function AdminPortalPage() {
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
                 placeholder="admin@almaktabah.org"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#0d1a14] border border-[#21392e] text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-[#79a292]"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-night-surface border border-emerald-border text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-highlight"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[#a2b7ad] mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-emerald-highlight mb-1">
                 Security Password
               </label>
               <input
@@ -783,19 +783,19 @@ export default function AdminPortalPage() {
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#0d1a14] border border-[#21392e] text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-[#79a292]"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-night-surface border border-emerald-border text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-emerald-highlight"
               />
             </div>
 
-            <div className="p-3 rounded-lg bg-[#0d1a14]/60 border border-[#21392e] text-[11px] text-[#79a292] space-y-0.5">
+            <div className="p-3 rounded-lg bg-night-surface/60 border border-emerald-border text-label-sm text-on-primary-container space-y-0.5">
               <span className="font-semibold block text-white">Default Admin Credentials:</span>
-              <div>Username: <code className="bg-[#192e25] px-1 rounded text-white">admin@almaktabah.org</code></div>
-              <div>Password: <code className="bg-[#192e25] px-1 rounded text-white">maktabah1445</code></div>
+              <div>Username: <code className="bg-surface-container px-1 rounded text-white">admin@almaktabah.org</code></div>
+              <div>Password: <code className="bg-surface-container px-1 rounded text-white">maktabah1445</code></div>
             </div>
 
             <button
               type="submit"
-              className="w-full py-3 px-4 rounded-xl bg-[#0f382c] hover:bg-[#154e3d] text-white font-semibold text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border border-[#79a292]/30"
+              className="w-full py-3 px-4 rounded-xl bg-primary-container hover:bg-emerald-surface text-white font-semibold text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border border-emerald-highlight/30"
             >
               <span className="material-symbols-outlined text-lg">lock_open</span>
               <span>Authenticate &amp; Access Dashboard</span>
@@ -805,7 +805,7 @@ export default function AdminPortalPage() {
           <div className="pt-2 text-center">
             <a
               href="/"
-              className="text-xs text-[#a2b7ad] hover:text-white transition-colors inline-flex items-center gap-1"
+              className="text-xs text-emerald-highlight hover:text-white transition-colors inline-flex items-center gap-1"
             >
               <span className="material-symbols-outlined text-sm">arrow_back</span>
               <span>Return to Public Library</span>
@@ -820,31 +820,31 @@ export default function AdminPortalPage() {
   const currentChapter = editingBook?.chapters[activeChapterIndex] || editingBook?.chapters[0];
 
   return (
-    <div className="min-h-screen bg-[#fbf9f5] text-[#1b1c1a]">
+    <div className="min-h-screen bg-parchment-canvas text-on-surface">
       {/* Top Admin Navbar */}
-      <header className="sticky top-0 z-50 bg-[#002218] text-white shadow-md border-b border-[#0f382c]">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-50 bg-primary text-white shadow-md border-b border-primary-container">
+        <div className="max-max-w-archive-2xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <span className="w-8 h-8 rounded-lg bg-[#0f382c] border border-[#79a292]/40 text-[#ffe088] flex items-center justify-center">
+            <span className="w-8 h-8 rounded-lg bg-primary-container border border-emerald-highlight/40 text-tertiary-fixed flex items-center justify-center">
               <span className="material-symbols-outlined text-lg">shield_person</span>
             </span>
             <div>
               <div className="flex items-baseline gap-1.5">
                 <span className="font-display font-bold text-base tracking-tight text-white">Al-Maktabah</span>
-                <span className="font-arabic font-bold text-sm text-[#ffe088]">لوحة الإدارة</span>
+                <span className="font-arabic font-bold text-sm text-tertiary-fixed">لوحة الإدارة</span>
               </div>
-              <span className="text-[10px] text-[#79a292] font-semibold uppercase tracking-wider block">
+              <span className="text-label-xs text-on-primary-container font-semibold uppercase tracking-wider block">
                 Authenticated Admin System
               </span>
             </div>
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex items-center bg-[#0d1a14] rounded-xl p-1 border border-[#21392e]">
+          <div className="flex items-center bg-night-surface rounded-xl p-1 border border-emerald-border">
             <button
               onClick={() => setActiveTab('analytics')}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
-                activeTab === 'analytics' ? 'bg-[#0f382c] text-white shadow-xs' : 'text-[#a2b7ad] hover:text-white'
+                activeTab === 'analytics' ? 'bg-primary-container text-white shadow-xs' : 'text-emerald-highlight hover:text-white'
               }`}
             >
               <span className="material-symbols-outlined text-sm">analytics</span>
@@ -853,31 +853,31 @@ export default function AdminPortalPage() {
             <button
               onClick={() => setActiveTab('books')}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
-                activeTab === 'books' ? 'bg-[#0f382c] text-white shadow-xs' : 'text-[#a2b7ad] hover:text-white'
+                activeTab === 'books' ? 'bg-primary-container text-white shadow-xs' : 'text-emerald-highlight hover:text-white'
               }`}
             >
               <span className="material-symbols-outlined text-sm">library_books</span>
               <span className="hidden sm:inline">Book Manager</span>
-              <span className="bg-[#192e25] px-1.5 py-0.2 rounded-full text-[10px] text-white">
+              <span className="bg-surface-container px-1.5 py-0.2 rounded-full text-label-xs text-white">
                 {books.length}
               </span>
             </button>
             <button
               onClick={() => setActiveTab('categories')}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
-                activeTab === 'categories' ? 'bg-[#0f382c] text-white shadow-xs' : 'text-[#a2b7ad] hover:text-white'
+                activeTab === 'categories' ? 'bg-primary-container text-white shadow-xs' : 'text-emerald-highlight hover:text-white'
               }`}
             >
               <span className="material-symbols-outlined text-sm">category</span>
               <span className="hidden sm:inline">Disciplines</span>
-              <span className="bg-[#192e25] px-1.5 py-0.2 rounded-full text-[10px] text-white">
+              <span className="bg-surface-container px-1.5 py-0.2 rounded-full text-label-xs text-white">
                 {categories.length}
               </span>
             </button>
             <button
               onClick={() => setActiveTab('homepage')}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
-                activeTab === 'homepage' ? 'bg-[#0f382c] text-white shadow-xs' : 'text-[#a2b7ad] hover:text-white'
+                activeTab === 'homepage' ? 'bg-primary-container text-white shadow-xs' : 'text-emerald-highlight hover:text-white'
               }`}
             >
               <span className="material-symbols-outlined text-sm">tune</span>
@@ -889,7 +889,7 @@ export default function AdminPortalPage() {
             <button
               onClick={handleStartNewBook}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
-                activeTab === 'editor' ? 'bg-[#0f382c] text-white shadow-xs' : 'text-[#a2b7ad] hover:text-white'
+                activeTab === 'editor' ? 'bg-primary-container text-white shadow-xs' : 'text-emerald-highlight hover:text-white'
               }`}
             >
               <span className="material-symbols-outlined text-sm">add_circle</span>
@@ -901,12 +901,11 @@ export default function AdminPortalPage() {
           {/* Right Tools: DB Status, Public Site & Logout */}
           <div className="flex items-center gap-2 sm:gap-3">
             <div
-              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border"
-              style={{
-                backgroundColor: dbSyncStatus === 'online' ? '#0b261b' : '#29200e',
-                borderColor: dbSyncStatus === 'online' ? '#1f6547' : '#6b4f17',
-                color: dbSyncStatus === 'online' ? '#5de2a5' : '#f5be4f',
-              }}
+              className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-semibold border ${
+                dbSyncStatus === 'online'
+                  ? 'bg-emerald-surface border-emerald-glow text-emerald-300'
+                  : 'bg-tertiary-container/20 border-tertiary/40 text-gold-bright'
+              }`}
               title={
                 dbSyncStatus === 'online'
                   ? 'Connected to MongoDB Atlas / Server Database'
@@ -927,14 +926,14 @@ export default function AdminPortalPage() {
 
             <a
               href="/"
-              className="px-3 py-1.5 rounded-lg bg-[#0f382c] hover:bg-[#154e3d] text-white text-xs font-semibold transition-colors flex items-center gap-1"
+              className="px-3 py-1.5 rounded-lg bg-primary-container hover:bg-emerald-surface text-white text-xs font-semibold transition-colors flex items-center gap-1"
             >
               <span className="material-symbols-outlined text-sm">open_in_new</span>
               <span className="hidden md:inline">Public Site</span>
             </a>
             <button
               onClick={handleLogout}
-              className="p-1.5 rounded-lg text-[#a2b7ad] hover:text-red-400 hover:bg-[#13241d] transition-colors"
+              className="p-1.5 rounded-lg text-emerald-highlight hover:text-red-400 hover:bg-emerald-card transition-colors"
               title="Logout from Admin"
             >
               <span className="material-symbols-outlined text-xl">logout</span>
@@ -944,7 +943,7 @@ export default function AdminPortalPage() {
       </header>
 
       {/* Main Container */}
-      <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <main className="max-max-w-archive-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* TAB 1: ANALYTICS DASHBOARD */}
         {activeTab === 'analytics' && (
           <div className="space-y-8 animate-fade-in">
@@ -1077,15 +1076,15 @@ export default function AdminPortalPage() {
                   <div className="space-y-2 text-xs text-on-surface-variant">
                     <div className="p-2.5 rounded-lg bg-surface-container-low flex items-center justify-between">
                       <span>Indexed: Ṣaḥīḥ al-Bukhārī (3 chapters)</span>
-                      <span className="text-[10px] text-primary font-bold">● Published</span>
+                      <span className="text-label-xs text-primary font-bold">● Published</span>
                     </div>
                     <div className="p-2.5 rounded-lg bg-surface-container-low flex items-center justify-between">
                       <span>Indexed: Riyāḍ aṣ-Ṣāliḥīn (2 chapters)</span>
-                      <span className="text-[10px] text-primary font-bold">● Published</span>
+                      <span className="text-label-xs text-primary font-bold">● Published</span>
                     </div>
                     <div className="p-2.5 rounded-lg bg-surface-container-low flex items-center justify-between">
                       <span>Indexed: Al-‘Aqīdah al-Wāsiṭiyyah</span>
-                      <span className="text-[10px] text-primary font-bold">● Published</span>
+                      <span className="text-label-xs text-primary font-bold">● Published</span>
                     </div>
                   </div>
                 </div>
@@ -1129,12 +1128,12 @@ export default function AdminPortalPage() {
                       />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between gap-1">
-                          <span className="text-[10px] font-bold uppercase text-tertiary truncate">
+                          <span className="text-label-xs font-bold uppercase text-tertiary truncate">
                             {book.disciplineName}
                           </span>
                           <button
                             onClick={() => handleTogglePublish(book)}
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold transition-colors ${
+                            className={`px-2 py-0.5 rounded-full text-label-xs font-bold transition-colors ${
                               book.published
                                 ? 'bg-primary-container/15 text-primary'
                                 : 'bg-surface-container text-on-surface-variant'
@@ -1149,7 +1148,7 @@ export default function AdminPortalPage() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-1 pt-2 border-t border-surface-container text-center text-[11px] text-on-surface-variant">
+                    <div className="grid grid-cols-3 gap-1 pt-2 border-t border-surface-container text-center text-label-sm text-on-surface-variant">
                       <div className="p-1 rounded bg-surface-container-low">
                         <span className="font-semibold text-primary block">{book.chapters?.length || 1}</span>
                         <span>Chapters</span>
@@ -1180,7 +1179,7 @@ export default function AdminPortalPage() {
                         className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all border cursor-pointer ${
                           homeSettings.readerSection?.bookId === book.id
                             ? 'bg-emerald-600 text-white border-emerald-500 shadow-xs'
-                            : 'bg-[#cba72f]/10 text-tertiary border-[#cba72f]/40 hover:bg-[#cba72f]/25'
+                            : 'bg-tertiary-container/10 text-tertiary border-tertiary/40 hover:bg-tertiary-container/25'
                         }`}
                         title="Set this uploaded book as the live Featured Reader on the Homepage"
                       >
@@ -1256,10 +1255,10 @@ export default function AdminPortalPage() {
                       <div>
                         <h3 className="font-bold text-base text-primary">{cat.name}</h3>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-[11px] font-mono text-tertiary bg-surface-container px-1.5 py-0.5 rounded">
+                          <span className="text-label-sm font-mono text-tertiary bg-surface-container px-1.5 py-0.5 rounded">
                             slug: {cat.id}
                           </span>
-                          <span className="text-[11px] text-on-surface-variant font-medium">
+                          <span className="text-label-sm text-on-surface-variant font-medium">
                             • {linkedCount} Treatises
                           </span>
                         </div>
@@ -1271,7 +1270,7 @@ export default function AdminPortalPage() {
                     </div>
 
                     <div className="pt-3 mt-4 border-t border-surface-container flex items-center justify-between">
-                      <span className="text-[11px] text-on-surface-variant">
+                      <span className="text-label-sm text-on-surface-variant">
                         {cat.subBranches?.length || 0} sub-branches
                       </span>
 
@@ -1313,7 +1312,7 @@ export default function AdminPortalPage() {
           <div className="animate-fade-in">
             <Suspense
               fallback={
-                <div className="py-20 flex flex-col items-center justify-center gap-2 text-[#79a292] animate-pulse">
+                <div className="py-20 flex flex-col items-center justify-center gap-2 text-on-primary-container animate-pulse">
                   <span className="material-symbols-outlined text-3xl animate-spin">tune</span>
                   <span className="text-xs uppercase tracking-wider font-semibold">Loading Homepage Configuration Panel...</span>
                 </div>
@@ -1426,7 +1425,7 @@ export default function AdminPortalPage() {
                     <button
                       type="button"
                       onClick={() => setActiveTab('categories')}
-                      className="text-[10px] text-tertiary hover:underline"
+                      className="text-label-xs text-tertiary hover:underline"
                     >
                       + Manage Disciplines
                     </button>
@@ -1481,7 +1480,7 @@ export default function AdminPortalPage() {
                       Cover / Manuscript Image
                     </label>
                     {editingBook.coverImage && (
-                      <a href={editingBook.coverImage} target="_blank" rel="noreferrer" className="text-[10px] text-tertiary underline">
+                      <a href={editingBook.coverImage} target="_blank" rel="noreferrer" className="text-label-xs text-tertiary underline">
                         Preview URL
                       </a>
                     )}
@@ -1500,7 +1499,7 @@ export default function AdminPortalPage() {
                       <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
                     </label>
                   </div>
-                  {uploadSuccess && <span className="text-[11px] text-primary font-medium mt-1 block">✓ {uploadSuccess}</span>}
+                  {uploadSuccess && <span className="text-label-sm text-primary font-medium mt-1 block">✓ {uploadSuccess}</span>}
                 </div>
 
                 {/* PDF Manuscript Upload (Cloudinary / CDN) */}
@@ -1510,7 +1509,7 @@ export default function AdminPortalPage() {
                       PDF Critical Edition / Manuscript
                     </label>
                     {editingBook.pdfUrl && (
-                      <span className="text-[10px] text-emerald-400 font-mono">Attached ✓</span>
+                      <span className="text-label-xs text-emerald-400 font-mono">Attached ✓</span>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
@@ -1521,7 +1520,7 @@ export default function AdminPortalPage() {
                       placeholder="https://.../manuscript.pdf (Cloudinary Auto CDN)"
                       className="flex-1 px-3 py-2 rounded-lg bg-surface-container-low border border-surface-container text-xs text-on-surface truncate"
                     />
-                    <label className="px-3 py-2 bg-[#0f382c] border border-[#79a292]/30 hover:bg-[#154e3d] text-white rounded-lg text-xs font-semibold cursor-pointer shrink-0 flex items-center gap-1 transition-colors">
+                    <label className="px-3 py-2 bg-primary-container border border-emerald-highlight/30 hover:bg-emerald-surface text-white rounded-lg text-xs font-semibold cursor-pointer shrink-0 flex items-center gap-1 transition-colors">
                       <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
                       <span>{isUploadingPdf ? 'Analyzing PDF...' : 'Upload PDF'}</span>
                       <input type="file" accept=".pdf" onChange={handlePdfUpload} className="hidden" />
@@ -1533,8 +1532,8 @@ export default function AdminPortalPage() {
                       <span>{pdfAnalysisStatus}</span>
                     </div>
                   )}
-                  {pdfUploadSuccess && <span className="text-[11px] text-emerald-400 font-medium mt-1 block">✓ {pdfUploadSuccess}</span>}
-                  <p className="text-[11px] text-on-surface-variant/80 mt-1.5 flex items-center gap-1">
+                  {pdfUploadSuccess && <span className="text-label-sm text-emerald-400 font-medium mt-1 block">✓ {pdfUploadSuccess}</span>}
+                  <p className="text-label-sm text-on-surface-variant/80 mt-1.5 flex items-center gap-1">
                     <span className="material-symbols-outlined text-xs text-tertiary shrink-0">auto_stories</span>
                     <span>Smart PDF Ingest: Uploading a PDF automatically extracts total pages, book details, and populates chapters with authentic Matn & translation below!</span>
                   </p>
@@ -1554,7 +1553,7 @@ export default function AdminPortalPage() {
                     <button
                       type="button"
                       onClick={() => setShowCodexModal(true)}
-                      className="px-3 py-1.5 rounded-lg bg-[#14261d] border border-[#234b39] text-[#7ce2b1] hover:bg-[#1a3427] text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg bg-emerald-card border border-emerald-border text-emerald-highlight hover:bg-emerald-surface text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
                       title="Open continuous facsimile viewer with chapters sidebar"
                     >
                       <span className="material-symbols-outlined text-sm">auto_stories</span>
@@ -1563,7 +1562,7 @@ export default function AdminPortalPage() {
                     <button
                       type="button"
                       onClick={() => setShowBulkModal(true)}
-                      className="px-3 py-1.5 rounded-lg bg-[#29200e] border border-[#6b4f17] text-[#f5be4f] hover:bg-[#3d2f14] text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                      className="px-3 py-1.5 rounded-lg bg-tertiary-container/20 border border-tertiary/40 text-gold-bright hover:bg-tertiary-container/30 text-xs font-semibold flex items-center gap-1.5 transition-colors"
                       title="Paste full treatise text and auto-generate structured chapters"
                     >
                       <span className="material-symbols-outlined text-sm">bolt</span>
@@ -1593,7 +1592,7 @@ export default function AdminPortalPage() {
                       }`}
                     >
                       <span>{ch.number}. {ch.title}</span>
-                      <span className="text-[10px] opacity-75 font-mono">p.{ch.startPage}</span>
+                      <span className="text-label-xs opacity-75 font-mono">p.{ch.startPage}</span>
                       {editingBook.chapters.length > 1 && (
                         <span onClick={(e) => { e.stopPropagation(); handleRemoveChapter(idx); }} className="hover:text-red-300 ml-1">×</span>
                       )}
@@ -1650,7 +1649,7 @@ export default function AdminPortalPage() {
                     <div>
                       <div className="flex items-center justify-between mb-1">
                         <label className="text-xs font-bold text-primary">Arabic Matn Text (النص الأصلي بالتشكيل)</label>
-                        <span className="text-[11px] font-mono text-on-surface-variant">
+                        <span className="text-label-sm font-mono text-on-surface-variant">
                           Words: {currentChapter.content ? currentChapter.content.split(/\s+/).filter(Boolean).length : 0}
                         </span>
                       </div>
@@ -1699,10 +1698,10 @@ export default function AdminPortalPage() {
                   </div>
                 ) : (
                   /* Formatted Continuous Codex Reader Preview */
-                  <div className="rounded-2xl overflow-hidden border border-[#cba72f]/40 shadow-xl">
+                  <div className="rounded-2xl overflow-hidden border border-tertiary/40 shadow-xl">
                     <Suspense
                       fallback={
-                        <div className="h-96 flex flex-col items-center justify-center gap-2 text-emerald-800 bg-[#fbf9f5] animate-pulse">
+                        <div className="h-96 flex flex-col items-center justify-center gap-2 text-emerald-800 bg-parchment-canvas animate-pulse">
                           <span className="material-symbols-outlined text-3xl animate-spin">menu_book</span>
                           <span className="text-xs uppercase tracking-wider font-semibold">Loading Codex Facsimile Engine...</span>
                         </div>
@@ -1756,30 +1755,30 @@ export default function AdminPortalPage() {
         {/* BULK CHAPTER IMPORT / SMART SPLITTER MODAL */}
         {showBulkModal && (
           <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="w-full max-w-3xl bg-[#13241d] border border-[#21392e] rounded-2xl shadow-2xl p-6 space-y-4 animate-fade-in text-white">
-              <div className="flex items-center justify-between border-b border-[#21392e] pb-3">
+            <div className="w-full max-w-3xl bg-emerald-card border border-emerald-border rounded-2xl shadow-2xl p-6 space-y-4 animate-fade-in text-white">
+              <div className="flex items-center justify-between border-b border-emerald-border pb-3">
                 <div className="flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-[#0f382c] border border-[#79a292]/30 text-[#ffe088] flex items-center justify-center">
+                  <span className="w-8 h-8 rounded-lg bg-primary-container border border-emerald-highlight/30 text-tertiary-fixed flex items-center justify-center">
                     <span className="material-symbols-outlined text-base">bolt</span>
                   </span>
                   <div>
                     <h3 className="font-bold text-sm text-white">Bulk Chapter Ingest &amp; Auto-Splitter</h3>
-                    <p className="text-[11px] text-[#a2b7ad]">
-                      Paste entire book text. Use <code className="bg-[#192e25] px-1 rounded text-primary">### Chapter Title</code> or <code className="bg-[#192e25] px-1 rounded text-primary">Bab 1:</code> or <code className="bg-[#192e25] px-1 rounded text-primary">باب ...</code> to auto-split into chapters.
+                    <p className="text-label-sm text-emerald-highlight">
+                      Paste entire book text. Use <code className="bg-surface-container px-1 rounded text-primary">### Chapter Title</code> or <code className="bg-surface-container px-1 rounded text-primary">Bab 1:</code> or <code className="bg-surface-container px-1 rounded text-primary">باب ...</code> to auto-split into chapters.
                     </p>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowBulkModal(false)}
-                  className="p-1 rounded-lg text-gray-400 hover:text-white hover:bg-[#192e25]"
+                  className="p-1 rounded-lg text-gray-400 hover:text-white hover:bg-surface-container"
                 >
                   ✕
                 </button>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#a2b7ad] mb-1">
+                <label className="block text-xs font-semibold text-emerald-highlight mb-1">
                   Full Raw Text (Arabic / English with chapter markers):
                 </label>
                 <textarea
@@ -1791,12 +1790,12 @@ export default function AdminPortalPage() {
 
 ### Bab 2: Kitab al-Salah
 عن عبد الله بن مسعود رضي الله عنه قال: سألت النبي صلى الله عليه وسلم: أي العمل أحب إلى الله؟ قال: الصلاة على وقتها...`}
-                  className="w-full p-3.5 rounded-xl bg-[#0d1a14] border border-[#21392e] text-xs font-mono text-[#e5ede9] placeholder:text-gray-600 focus:outline-none focus:border-[#79a292] leading-relaxed"
+                  className="w-full p-3.5 rounded-xl bg-night-surface border border-emerald-border text-xs font-mono text-night-text placeholder:text-gray-600 focus:outline-none focus:border-emerald-highlight leading-relaxed"
                 />
               </div>
 
               <div className="flex items-center justify-between pt-2">
-                <div className="text-[11px] text-[#79a292]">
+                <div className="text-label-sm text-on-primary-container">
                   Lines: {bulkRawText ? bulkRawText.split('\n').length : 0} | Estimated Chapters: {bulkRawText ? (bulkRawText.match(/(###|Bab |Chapter |باب)/gi) || []).length : 0}
                 </div>
                 <div className="flex items-center gap-2">
@@ -1806,14 +1805,14 @@ export default function AdminPortalPage() {
                       setShowBulkModal(false);
                       setBulkRawText('');
                     }}
-                    className="px-4 py-2 rounded-xl bg-[#192e25] hover:bg-[#21392e] text-xs font-semibold text-gray-300"
+                    className="px-4 py-2 rounded-xl bg-surface-container hover:bg-emerald-border text-xs font-semibold text-gray-300"
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
                     onClick={handleBulkChapterImport}
-                    className="px-5 py-2 rounded-xl bg-[#0f382c] hover:bg-[#154e3d] text-white border border-[#79a292]/30 text-xs font-semibold shadow-md flex items-center gap-1.5"
+                    className="px-5 py-2 rounded-xl bg-primary-container hover:bg-emerald-surface text-white border border-emerald-highlight/30 text-xs font-semibold shadow-md flex items-center gap-1.5"
                   >
                     <span className="material-symbols-outlined text-sm">auto_fix_high</span>
                     <span>Parse &amp; Populate Chapters</span>
@@ -1827,10 +1826,10 @@ export default function AdminPortalPage() {
         {/* CATEGORY & DISCIPLINE CREATE/EDIT MODAL */}
         {showCategoryModal && editingCategory && (
           <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="w-full max-w-lg bg-[#13241d] border border-[#21392e] rounded-2xl shadow-2xl p-6 space-y-4 animate-fade-in text-white">
-              <div className="flex items-center justify-between border-b border-[#21392e] pb-3">
+            <div className="w-full max-w-lg bg-emerald-card border border-emerald-border rounded-2xl shadow-2xl p-6 space-y-4 animate-fade-in text-white">
+              <div className="flex items-center justify-between border-b border-emerald-border pb-3">
                 <div className="flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-lg bg-[#0f382c] border border-[#79a292]/30 text-[#ffe088] flex items-center justify-center">
+                  <span className="w-8 h-8 rounded-lg bg-primary-container border border-emerald-highlight/30 text-tertiary-fixed flex items-center justify-center">
                     <span className="material-symbols-outlined text-base">category</span>
                   </span>
                   <div>
@@ -1839,7 +1838,7 @@ export default function AdminPortalPage() {
                         ? 'Edit Discipline'
                         : 'New Discipline Classification'}
                     </h3>
-                    <p className="text-[11px] text-[#a2b7ad]">
+                    <p className="text-label-sm text-emerald-highlight">
                       Configures canonical discipline name, Arabic title, and taxonomy.
                     </p>
                   </div>
@@ -1850,7 +1849,7 @@ export default function AdminPortalPage() {
                     setShowCategoryModal(false);
                     setEditingCategory(null);
                   }}
-                  className="p-1 rounded-lg text-gray-400 hover:text-white hover:bg-[#192e25]"
+                  className="p-1 rounded-lg text-gray-400 hover:text-white hover:bg-surface-container"
                 >
                   ✕
                 </button>
@@ -1859,7 +1858,7 @@ export default function AdminPortalPage() {
               <form onSubmit={handleSaveCategory} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-[#a2b7ad] mb-1">
+                    <label className="block text-xs font-semibold text-emerald-highlight mb-1">
                       Discipline Name (EN) *
                     </label>
                     <input
@@ -1872,12 +1871,12 @@ export default function AdminPortalPage() {
                         setEditingCategory({ ...editingCategory, name, id: slug });
                       }}
                       placeholder="e.g. Arabic Grammar"
-                      className="w-full px-3 py-2 rounded-xl bg-[#0d1a14] border border-[#21392e] text-xs text-white focus:outline-none focus:border-[#79a292]"
+                      className="w-full px-3 py-2 rounded-xl bg-night-surface border border-emerald-border text-xs text-white focus:outline-none focus:border-emerald-highlight"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-[#a2b7ad] mb-1">
+                    <label className="block text-xs font-semibold text-emerald-highlight mb-1">
                       Arabic Title (بالتشكيل)
                     </label>
                     <input
@@ -1886,14 +1885,14 @@ export default function AdminPortalPage() {
                       value={editingCategory.arabicName}
                       onChange={(e) => setEditingCategory({ ...editingCategory, arabicName: e.target.value })}
                       placeholder="النحو والصرف"
-                      className="w-full px-3 py-2 rounded-xl bg-[#0d1a14] border border-[#21392e] text-sm font-arabic text-[#ffe088] focus:outline-none focus:border-[#79a292]"
+                      className="w-full px-3 py-2 rounded-xl bg-night-surface border border-emerald-border text-sm font-arabic text-tertiary-fixed focus:outline-none focus:border-emerald-highlight"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-[#a2b7ad] mb-1">
+                    <label className="block text-xs font-semibold text-emerald-highlight mb-1">
                       Unique Slug / ID *
                     </label>
                     <input
@@ -1902,12 +1901,12 @@ export default function AdminPortalPage() {
                       value={editingCategory.id}
                       onChange={(e) => setEditingCategory({ ...editingCategory, id: e.target.value.toLowerCase().trim() })}
                       placeholder="e.g. nahw"
-                      className="w-full px-3 py-2 rounded-xl bg-[#0d1a14] border border-[#21392e] text-xs font-mono text-tertiary focus:outline-none focus:border-[#79a292]"
+                      className="w-full px-3 py-2 rounded-xl bg-night-surface border border-emerald-border text-xs font-mono text-tertiary focus:outline-none focus:border-emerald-highlight"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-[#a2b7ad] mb-1">
+                    <label className="block text-xs font-semibold text-emerald-highlight mb-1">
                       Material Icon Key
                     </label>
                     <div className="flex items-center gap-2">
@@ -1916,9 +1915,9 @@ export default function AdminPortalPage() {
                         value={editingCategory.icon}
                         onChange={(e) => setEditingCategory({ ...editingCategory, icon: e.target.value })}
                         placeholder="category / translate / school"
-                        className="flex-1 px-3 py-2 rounded-xl bg-[#0d1a14] border border-[#21392e] text-xs text-white focus:outline-none focus:border-[#79a292]"
+                        className="flex-1 px-3 py-2 rounded-xl bg-night-surface border border-emerald-border text-xs text-white focus:outline-none focus:border-emerald-highlight"
                       />
-                      <span className="w-8 h-8 rounded-lg bg-[#0d1a14] border border-[#21392e] flex items-center justify-center text-primary">
+                      <span className="w-8 h-8 rounded-lg bg-night-surface border border-emerald-border flex items-center justify-center text-primary">
                         <span className="material-symbols-outlined text-base">{editingCategory.icon || 'category'}</span>
                       </span>
                     </div>
@@ -1926,7 +1925,7 @@ export default function AdminPortalPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#a2b7ad] mb-1">
+                  <label className="block text-xs font-semibold text-emerald-highlight mb-1">
                     Academic Scope / Description
                   </label>
                   <textarea
@@ -1934,25 +1933,25 @@ export default function AdminPortalPage() {
                     value={editingCategory.description}
                     onChange={(e) => setEditingCategory({ ...editingCategory, description: e.target.value })}
                     placeholder="Classical linguistic treatises, grammatical rules, inflection, and syntax."
-                    className="w-full p-2.5 rounded-xl bg-[#0d1a14] border border-[#21392e] text-xs text-[#e5ede9] focus:outline-none focus:border-[#79a292]"
+                    className="w-full p-2.5 rounded-xl bg-night-surface border border-emerald-border text-xs text-night-text focus:outline-none focus:border-emerald-highlight"
                   />
                 </div>
 
-                <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#21392e]">
+                <div className="flex items-center justify-end gap-2 pt-2 border-t border-emerald-border">
                   <button
                     type="button"
                     onClick={() => {
                       setShowCategoryModal(false);
                       setEditingCategory(null);
                     }}
-                    className="px-4 py-2 rounded-xl bg-[#192e25] hover:bg-[#21392e] text-xs font-semibold text-gray-300"
+                    className="px-4 py-2 rounded-xl bg-surface-container hover:bg-emerald-border text-xs font-semibold text-gray-300"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isSavingCategory}
-                    className="px-5 py-2 rounded-xl bg-[#0f382c] hover:bg-[#154e3d] text-white border border-[#79a292]/30 text-xs font-semibold shadow-md flex items-center gap-1.5 disabled:opacity-50"
+                    className="px-5 py-2 rounded-xl bg-primary-container hover:bg-emerald-surface text-white border border-emerald-highlight/30 text-xs font-semibold shadow-md flex items-center gap-1.5 disabled:opacity-50"
                   >
                     {isSavingCategory && <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />}
                     <span>{isSavingCategory ? 'Saving...' : 'Save Discipline'}</span>

@@ -78,14 +78,14 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({
 
                   {/* Sub-branches list */}
                   <div className="space-y-2 pt-2 border-t border-surface-container">
-                    <span className="font-label-sm text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold block">
+                    <span className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold block">
                       Sub-Disciplines &amp; Branches
                     </span>
                     <div className="space-y-1.5">
                       {cat.subBranches.map((sub, i) => (
                         <div key={i} className="p-2 rounded-lg bg-surface-container-low text-xs flex items-center justify-between">
                           <span className="font-medium text-on-surface">{sub.title}</span>
-                          <span className="text-[11px] text-tertiary font-semibold">{sub.count} works</span>
+                          <span className="text-label-sm text-tertiary font-semibold">{sub.count} works</span>
                         </div>
                       ))}
                     </div>
@@ -93,19 +93,19 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({
 
                   {/* Foundational texts / Live Treatises */}
                   <div className="pt-2">
-                    <span className="font-label-sm text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold block mb-1">
+                    <span className="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold block mb-1">
                       {books.filter(b => b.discipline === cat.id).length > 0 ? 'Digital Treatises in Archive' : 'Canonical Texts (Matn)'}
                     </span>
                     <div className="flex flex-wrap gap-1">
                       {books.filter(b => b.discipline === cat.id).length > 0 ? (
                         books.filter(b => b.discipline === cat.id).map((b) => (
-                          <span key={b.id} className="px-2 py-0.5 rounded bg-primary-container/20 text-primary border border-primary/20 text-[11px] font-medium truncate max-w-[200px]" title={b.title}>
+                          <span key={b.id} className="px-2 py-0.5 rounded bg-primary-container/20 text-primary border border-primary/20 text-label-sm font-medium truncate max-w-52" title={b.title}>
                             {b.title}
                           </span>
                         ))
                       ) : (
                         cat.foundationTreatises.map((treatise, idx) => (
-                          <span key={idx} className="px-2 py-0.5 rounded bg-surface-container text-[11px] text-on-surface">
+                          <span key={idx} className="px-2 py-0.5 rounded bg-surface-container text-label-sm text-on-surface">
                             {treatise}
                           </span>
                         ))
@@ -119,7 +119,7 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({
                     <span className="font-bold text-primary block">
                       {books.filter(b => b.discipline === cat.id).length} Active Treatises
                     </span>
-                    <span className="text-[10px] text-on-surface-variant">
+                    <span className="text-label-xs text-on-surface-variant">
                       {cat.volumeCount.toLocaleString()} Classical Records
                     </span>
                   </div>

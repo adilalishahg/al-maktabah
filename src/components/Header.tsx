@@ -65,9 +65,9 @@ export const Header: React.FC<HeaderProps> = ({
     <header ref={headerRef} className="fixed top-0 inset-x-0 z-50 bg-surface/95 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-surface-container">
       {/* Top Banner: Daily Insight Calligraphy & Hijri Date */}
       <div className="w-full bg-primary-container text-on-primary py-1 sm:py-1.5 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] mx-auto flex items-center justify-between font-body-sm text-xs sm:text-body-sm">
+        <div className="w-full max-w-7xl xl:max-w-archive-xl 2xl:max-w-archive-2xl mx-auto flex items-center justify-between font-body-sm text-xs sm:text-body-sm">
           <div className="flex items-center gap-2 sm:gap-space-md min-w-0 truncate">
-            <span className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg bg-tertiary-container text-on-primary font-label-sm text-[10px] sm:text-label-sm font-semibold tracking-wide uppercase shrink-0">
+            <span className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg bg-tertiary-container text-on-primary font-label-sm text-label-xs sm:text-label-sm font-semibold tracking-wide uppercase shrink-0">
               Daily Insight
             </span>
             <span className="font-arabic text-tertiary-fixed font-medium truncate text-xs sm:text-base">
@@ -92,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Main App Navigation Bar */}
-      <div className="h-16 sm:h-20 w-full max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2 xl:gap-3 2xl:gap-6">
+      <div className="h-16 sm:h-20 w-full max-w-7xl xl:max-w-archive-xl 2xl:max-w-archive-2xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2 xl:gap-3 2xl:gap-6">
         {/* Brand Logo & Name */}
         <div
           onClick={() => onNavigate('home')}
@@ -113,7 +113,7 @@ export const Header: React.FC<HeaderProps> = ({
                 المكتبة
               </span>
             </div>
-            <span className="hidden 2xl:block font-label-sm text-[10px] 2xl:text-label-sm text-on-surface-variant tracking-wider uppercase">
+            <span className="hidden 2xl:block font-label-sm text-label-xs 2xl:text-label-sm text-on-surface-variant tracking-wider uppercase">
               Knowledge Hub &amp; Digital Archives
             </span>
           </div>
@@ -149,7 +149,7 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="w-full font-body-sm text-xs text-outline truncate select-none">
               Search treatises, isnāds...
             </span>
-            <kbd className="hidden xl:inline-flex items-center px-1.5 py-0.5 text-[10px] font-label-sm text-on-surface-variant bg-surface-container rounded ml-1">
+            <kbd className="hidden xl:inline-flex items-center px-1.5 py-0.5 text-label-xs font-label-sm text-on-surface-variant bg-surface-container rounded ml-1">
               ⌘K
             </kbd>
           </div>
@@ -232,7 +232,7 @@ export const Header: React.FC<HeaderProps> = ({
               decoding="async"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuCp6hjwy-OtUiOFhXULVfc39TXd10KeuRXfFUG5sIqXVsYPcK5Q3_sXBUEWdWMQiSBlB-RSNxE5NSOG1gAp2qrAfJdN9ukCek7BibNabA20PebeMtnMMzmI8puJlGt9eWVf06upC4lVHJo3seg2JriFqz6XknjL28boYGcDkKgVHJ7UJLGLIr5O_cfctFnbYX28zDj5WwUvVllMUdmi0tkU4ok2-XSiS14eZeUo7chnLI3iQWQdDkYf"
             />
-            <span className="hidden lg:inline text-[11px] font-bold text-tertiary px-1.5 py-0.5 rounded-md bg-tertiary-container/15 border border-tertiary/20">
+            <span className="hidden lg:inline text-label-sm font-bold text-tertiary px-1.5 py-0.5 rounded-md bg-tertiary-container/15 border border-tertiary/20">
               Admin
             </span>
           </a>
@@ -262,7 +262,7 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <span className="material-symbols-outlined text-tertiary text-lg">search</span>
             <span className="text-xs text-outline font-body-sm flex-1">Search 14,280+ treatises, authors, isnāds...</span>
-            <kbd className="px-1.5 py-0.5 rounded bg-surface-container text-[10px] font-mono">⌘K</kbd>
+            <kbd className="px-1.5 py-0.5 rounded bg-surface-container text-label-xs font-mono">⌘K</kbd>
           </div>
 
           {/* Navigation Links Grid */}
@@ -312,13 +312,13 @@ export const Header: React.FC<HeaderProps> = ({
                 </button>
                 <button
                   onClick={() => onThemeChange('sepia')}
-                  className={`px-2 py-1 rounded text-xs font-semibold ${currentTheme === 'sepia' ? 'bg-[#ded1c1] text-[#26211a] shadow-xs' : 'text-on-surface-variant'}`}
+                  className={`px-2 py-1 rounded text-xs font-semibold ${currentTheme === 'sepia' ? 'bg-sepia-border text-sepia-text shadow-xs' : 'text-on-surface-variant'}`}
                 >
                   Sepia
                 </button>
                 <button
                   onClick={() => onThemeChange('night')}
-                  className={`px-2 py-1 rounded text-xs font-semibold ${currentTheme === 'night' ? 'bg-[#192e25] text-white shadow-xs' : 'text-on-surface-variant'}`}
+                  className={`px-2 py-1 rounded text-xs font-semibold ${currentTheme === 'night' ? 'bg-surface-container text-white shadow-xs' : 'text-on-surface-variant'}`}
                 >
                   Night
                 </button>

@@ -81,11 +81,11 @@ export const LatestReleasesView: React.FC<LatestReleasesViewProps> = ({
               />
               <div className="space-y-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-2 py-0.5 rounded bg-primary-container text-on-primary font-label-sm text-[11px] font-semibold">
+                  <span className="px-2 py-0.5 rounded bg-primary-container text-on-primary font-label-sm text-label-sm font-semibold">
                     {item.releaseType}
                   </span>
                   <span className="text-xs text-tertiary font-semibold">{item.dateHijri}</span>
-                  <span className="text-[11px] font-mono text-outline">{item.batchCode}</span>
+                  <span className="text-label-sm font-mono text-outline">{item.batchCode}</span>
                 </div>
                 <h3 
                   onClick={() => onSelectBook(item.book)}

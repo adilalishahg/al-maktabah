@@ -99,13 +99,13 @@ export const ReaderStudioView: React.FC<ReaderStudioViewProps> = ({
             </button>
             <button
               onClick={() => setReaderTheme('sepia')}
-              className={`px-2 py-1 rounded text-xs transition-colors ${readerTheme === 'sepia' ? 'bg-[#ded1c1] text-[#26211a] font-semibold shadow-xs' : 'text-on-surface-variant'}`}
+              className={`px-2 py-1 rounded text-xs transition-colors ${readerTheme === 'sepia' ? 'bg-sepia-border text-sepia-text font-semibold shadow-xs' : 'text-on-surface-variant'}`}
             >
               Sepia
             </button>
             <button
               onClick={() => setReaderTheme('night')}
-              className={`px-2 py-1 rounded text-xs transition-colors ${readerTheme === 'night' ? 'bg-[#192e25] text-white font-semibold shadow-xs' : 'text-on-surface-variant'}`}
+              className={`px-2 py-1 rounded text-xs transition-colors ${readerTheme === 'night' ? 'bg-surface-container text-white font-semibold shadow-xs' : 'text-on-surface-variant'}`}
             >
               Night
             </button>
@@ -194,16 +194,16 @@ export const ReaderStudioView: React.FC<ReaderStudioViewProps> = ({
           <div>
             <div className="text-xs font-semibold text-primary flex items-center gap-1.5">
               <span>Reciter: <strong>Sheikh Mishary Rashid Alafasy</strong></span>
-              <span className="px-1.5 py-0.2 rounded bg-primary-container/10 text-primary text-[10px]">Murattal</span>
+              <span className="px-1.5 py-0.2 rounded bg-primary-container/10 text-primary text-label-xs">Murattal</span>
             </div>
-            <div className="text-[11px] text-on-surface-variant">
+            <div className="text-label-sm text-on-surface-variant">
               Kitāb Bad’ al-Waḥy • Hadīth #1 of 7,563
             </div>
           </div>
         </div>
 
         {/* Progress Bar */}
-        <div className="flex-1 max-w-md mx-4 hidden sm:flex items-center gap-2 text-[11px] text-on-surface-variant">
+        <div className="flex-1 max-w-md mx-4 hidden sm:flex items-center gap-2 text-label-sm text-on-surface-variant">
           <span className="font-mono">00:18</span>
           <div className="flex-1 h-1.5 bg-surface-container rounded-full overflow-hidden">
             <div 
@@ -215,12 +215,12 @@ export const ReaderStudioView: React.FC<ReaderStudioViewProps> = ({
 
         {/* Audio Speed Options */}
         <div className="flex items-center gap-1 text-xs">
-          <span className="text-[11px] text-on-surface-variant">Speed:</span>
+          <span className="text-label-sm text-on-surface-variant">Speed:</span>
           {(['1.0x', '1.25x', '1.5x'] as const).map((spd) => (
             <button
               key={spd}
               onClick={() => setPlaybackSpeed(spd)}
-              className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-colors ${
+              className={`px-2 py-0.5 rounded text-label-sm font-semibold transition-colors ${
                 playbackSpeed === spd ? 'bg-primary-container text-on-primary' : 'bg-surface-container text-on-surface-variant'
               }`}
             >
@@ -233,9 +233,9 @@ export const ReaderStudioView: React.FC<ReaderStudioViewProps> = ({
       {/* Main Reader Studio Dual Canvas */}
       <div className={`rounded-2xl shadow-xl overflow-hidden border border-surface-container transition-colors ${
         readerTheme === 'night' 
-          ? 'bg-[#0a1410] text-[#e5ede9]' 
+          ? 'bg-night-canvas text-night-text' 
           : readerTheme === 'sepia' 
-            ? 'bg-[#fbf5eb] text-[#26211a]' 
+            ? 'bg-sepia-canvas text-sepia-text' 
             : 'bg-surface-container-lowest text-on-surface'
       }`}>
         {/* Mobile & Tablet Sidebar Accordion / Drawer */}
@@ -255,7 +255,7 @@ export const ReaderStudioView: React.FC<ReaderStudioViewProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <span className="font-label-sm text-[11px] text-on-surface-variant block mb-1">Chapters in Book:</span>
+                <span className="font-label-sm text-label-sm text-on-surface-variant block mb-1">Chapters in Book:</span>
                 <div className="space-y-1 text-xs max-h-40 overflow-y-auto">
                   <div className="p-2 rounded bg-surface-container-lowest text-primary font-bold shadow-xs">
                     1. How Revelation Began
@@ -266,7 +266,7 @@ export const ReaderStudioView: React.FC<ReaderStudioViewProps> = ({
               </div>
 
               <div>
-                <span className="font-label-sm text-[11px] text-tertiary block mb-1">Transmitter Isnād Nodes:</span>
+                <span className="font-label-sm text-label-sm text-tertiary block mb-1">Transmitter Isnād Nodes:</span>
                 <div className="space-y-1 text-xs max-h-40 overflow-y-auto">
                   {readingSection.isnadChain.map((node) => (
                     <button
@@ -278,7 +278,7 @@ export const ReaderStudioView: React.FC<ReaderStudioViewProps> = ({
                       className="w-full text-left p-1.5 rounded bg-surface-container-lowest text-primary hover:text-tertiary flex items-center justify-between"
                     >
                       <span className="truncate">{node.name}</span>
-                      <span className="text-[10px] text-on-surface-variant shrink-0">{node.rank}</span>
+                      <span className="text-label-xs text-on-surface-variant shrink-0">{node.rank}</span>
                     </button>
                   ))}
                 </div>
@@ -287,7 +287,7 @@ export const ReaderStudioView: React.FC<ReaderStudioViewProps> = ({
           </div>
         )}
 
-        <div className="grid grid-cols-12 min-h-[640px]">
+        <div className="grid grid-cols-12 min-h-reader-max">
           {/* Left Column: TOC & Isnād Tree (Desktop lg+) */}
           <div className="hidden lg:block lg:col-span-3 p-5 bg-surface-container-low/40 border-r border-surface-container space-y-6">
             <div>
@@ -323,9 +323,9 @@ export const ReaderStudioView: React.FC<ReaderStudioViewProps> = ({
                 <span className="font-label-sm uppercase tracking-wider text-xs font-semibold text-tertiary">
                   Transmitter Chain (Isnād)
                 </span>
-                <span className="text-[10px] text-on-surface-variant font-mono">6 Nodes</span>
+                <span className="text-label-xs text-on-surface-variant font-mono">6 Nodes</span>
               </div>
-              <p className="text-[11px] text-on-surface-variant">
+              <p className="text-label-sm text-on-surface-variant">
                 Click any narrator below to inspect classical biographical entries from <em>Tahdhīb al-Kamāl</em>.
               </p>
 
@@ -344,7 +344,7 @@ export const ReaderStudioView: React.FC<ReaderStudioViewProps> = ({
                           <div className="font-semibold text-primary group-hover:text-tertiary text-xs truncate">
                             {node.name}
                           </div>
-                          <div className="text-[10px] text-on-surface-variant">{node.rank} • {node.birthDeathAH}</div>
+                          <div className="text-label-xs text-on-surface-variant">{node.rank} • {node.birthDeathAH}</div>
                         </div>
                       </div>
                       <span className="material-symbols-outlined text-xs text-outline group-hover:text-primary">
@@ -463,7 +463,7 @@ export const ReaderStudioView: React.FC<ReaderStudioViewProps> = ({
                       <span className="material-symbols-outlined text-sm">spellcheck</span>
                       Morphological Grammar Inspector
                     </span>
-                    <span className="text-[11px] text-on-surface-variant">Click word for tri-literal root:</span>
+                    <span className="text-label-sm text-on-surface-variant">Click word for tri-literal root:</span>
                   </div>
 
                   <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-end">
@@ -490,7 +490,7 @@ export const ReaderStudioView: React.FC<ReaderStudioViewProps> = ({
                 <span className="material-symbols-outlined text-sm">chevron_left</span>
                 <span>Previous Hadīth</span>
               </button>
-              <span className="text-center text-[11px] sm:text-xs">Page {readingSection.currentPage} of {readingSection.totalPages} • Ṣaḥīḥ al-Bukhārī (1445 AH)</span>
+              <span className="text-center text-label-sm sm:text-xs">Page {readingSection.currentPage} of {readingSection.totalPages} • Ṣaḥīḥ al-Bukhārī (1445 AH)</span>
               <button 
                 onClick={() => alert("Advancing to Hadīth #2: Revelation via Gabriel...")}
                 className="w-full sm:w-auto px-3 py-2 rounded-lg bg-primary-container text-on-primary hover:bg-primary flex items-center justify-center gap-1 cursor-pointer"

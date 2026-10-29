@@ -98,7 +98,7 @@ export default function RootLayout({
         />
         <ScholarlyJsonLd />
       </head>
-      <body className="antialiased selection:bg-[#cba72f] selection:text-[#002218]" suppressHydrationWarning>
+      <body className="antialiased selection:bg-tertiary-container selection:text-primary" suppressHydrationWarning>
         {children}
       </body>
     </html>

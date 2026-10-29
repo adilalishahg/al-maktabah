@@ -126,10 +126,10 @@ export const AboutView: React.FC = () => {
               </div>
               <div>
                 <h4 className="font-bold text-xs text-primary">{scholar.name}</h4>
-                <p className="text-[11px] text-tertiary font-semibold">{scholar.role}</p>
-                <p className="text-[10px] text-on-surface-variant">{scholar.institution}</p>
+                <p className="text-label-sm text-tertiary font-semibold">{scholar.role}</p>
+                <p className="text-label-xs text-on-surface-variant">{scholar.institution}</p>
               </div>
-              <div className="pt-1 text-[10px] text-outline font-medium border-t border-surface-container">
+              <div className="pt-1 text-label-xs text-outline font-medium border-t border-surface-container">
                 {scholar.spec}
               </div>
             </div>
