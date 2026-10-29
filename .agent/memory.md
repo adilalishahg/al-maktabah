@@ -42,6 +42,7 @@
 
 | Date | Milestone / Component | Architectural Decision & Impact |
 |------|------------------------|---------------------------------|
+| 2026-10 | Reader Toolbar Gap Optimization (1-2px) | Synchronized dynamic header measurement via `--app-header-height` CSS custom property, eliminated extraneous top margin and `space-y` selector bleeding, maintaining exact 2px sticky separation between header border and reader toolbar. |
 | 2026-10 | Phase 5 CI/CD & Testing Hardening | Implemented `/api/health`, consolidated `npm test` runner, multi-stage Alpine Dockerfile, docker-compose, and GitHub Actions CI workflow. |
 | 2026-10 | Phase 4 SEO & Semantic Metadata | Implemented Next.js 16 dynamic `sitemap.ts`, `robots.ts`, OpenGraph/Twitter cards, and Schema.org/Book JSON-LD scholarly metadata. |
 | 2026-10 | Phase 3 Database Optimization | Deployed compound indexes on `BookModel`, text search on `CategoryModel`, lean projections on catalog queries, connection pool resilience, and SWR state hydration. |

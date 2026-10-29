@@ -111,10 +111,14 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
   };
 
   return (
-    <div className="mt-1 sm:mt-2 space-y-3 sm:space-y-4 animate-fade-in pb-16">
+    <>
       <ScholarlyJsonLd book={book} />
-      {/* Sleek Master Reader Toolbar (Device-Responsive: 2-Tier on Mobile, 1-Tier on Desktop) */}
-      <div className="sticky top-[86px] sm:top-[106px] z-30 bg-surface-container-lowest/95 backdrop-blur-md p-2 sm:p-3 rounded-2xl border border-surface-container shadow-md select-none">
+      <div className="space-y-3 sm:space-y-4 animate-fade-in pb-16">
+        {/* Sleek Master Reader Toolbar (Device-Responsive: 2-Tier on Mobile, 1-Tier on Desktop) */}
+        <div
+          style={{ top: 'calc(var(--app-header-height, 108px) + 2px)' }}
+          className="sticky z-30 !mt-0 bg-surface-container-lowest/95 backdrop-blur-md p-2 sm:p-3 rounded-2xl border border-surface-container shadow-md select-none"
+        >
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3">
           {/* Group 1: Navigation, Chapter TOC Drawer Button & Book Title */}
           <div className="flex items-center justify-between md:justify-start gap-1.5 sm:gap-2.5 min-w-0 w-full md:w-auto">
@@ -455,7 +459,7 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
                     onClick={() => {
                       setCurrentChapterIndex(idx);
                       if (window.innerWidth < 1024) setSidebarOpen(false);
-                      window.scrollTo({ top: 120, behavior: 'smooth' });
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                     className={`p-3 rounded-xl cursor-pointer transition-all border flex items-center justify-between gap-3 ${
                       isSelected
@@ -601,5 +605,6 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
         </div>
       )}
     </div>
+    </>
   );
 };

@@ -65,6 +65,7 @@
 }
 
 :root {
+  --app-header-height: 108px;
   --color-surface: #fbf9f5;
   --color-surface-dim: #dbdad6;
   --color-surface-bright: #fbf9f5;

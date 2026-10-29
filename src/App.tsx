@@ -242,7 +242,12 @@ export default function App() {
       />
 
       {/* Main Content Viewport */}
-      <main className="flex-1 w-full pt-20 sm:pt-24 pb-8 sm:pb-12 overflow-x-hidden">
+      <main
+        style={currentPath === 'book-viewer' ? { paddingTop: 'calc(var(--app-header-height, 108px) + 2px)' } : undefined}
+        className={`flex-1 w-full pb-8 sm:pb-12 overflow-x-hidden ${
+          currentPath === 'book-viewer' ? 'pt-0' : 'pt-20 sm:pt-24'
+        }`}
+      >
         <div className="w-full max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] mx-auto px-2 sm:px-6 lg:px-8">
           {currentPath === 'home' && (
             <HomeView
