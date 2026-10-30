@@ -24,6 +24,7 @@
 
 | Date | Milestone / Component | Architectural Decision & Impact |
 |------|------------------------|---------------------------------|
+| 2026-10 | Phase 4 Refactor: Component Decomposition & Strict Limits | Deconstructed all oversized components (`BookReaderView`, `CodexPdfReader`, `AdminDashboardView`, `HomeView`, `AdminHomeSettingsView`, `app/admin/page.tsx`) down into atomic sub-components. 0 files exceed 500 lines across the entire codebase. 100% typecheck pass, 21/21 tests pass. |
 | 2026-10 | Phase 3 Refactor: Logic Decoupling (Custom Hooks) | Extracted side effects, state machines, API queries, and canvas/PDF worker orchestration into 7 dedicated custom hooks (`useBookReader`, `usePdfReader`, `useAdminAuth`, `useAdminBooks`, `useHomeSettings`, `useAppTheme`, `useCatalogSearch`). UI components made strictly presentational. Full tsc & test gate pass. |
 | 2026-10 | Phase 2 Refactor: Types & Model Segregation | Extracted all 24 inline interface declarations across views, components, models, and libraries into dedicated modules (`src/types/views.ts`, `components.ts`, `models.ts`, `utils.ts`, `index.ts`). Zero inline interfaces remain in UI/models. Full tsc & test gate pass. |
 | 2026-10 | Phase 1 Refactor: Zero-Hardcoding Mandate & Design Tokens | Centralized full palette and scale in @theme, created src/lib/tokens.ts, replaced 620+ arbitrary colors & 180+ arbitrary px with semantic tokens across all 23 components. 0 violations remaining. |
@@ -49,11 +50,11 @@
 - [x] **Phase 3: Database & State Architecture Optimization** (Mongoose query lean projections, compound index optimization on codex metadata, connection pool resilience).
 - [x] **Phase 4: SEO, Scholarly Metadata & Semantic Web** (JSON-LD Schema.org/Book, OpenGraph tags, Arabic typography font optimization, sitemap & robots).
 - [x] **Phase 5: Automated Testing & CI/CD Hardening** (Healthcheck probe, consolidated test runner, multi-stage Dockerfile, docker-compose, GitHub Actions).
-- [ ] **Phase 6: Codebase Refactoring & Modularity**
+- [x] **Phase 6: Codebase Refactoring & Modularity**
   - [x] **Phase 6.1 (Phase 1): Token & Theme Extraction** (Zero-Hardcoding Mandate complete — 0 arbitrary tokens across codebase).
   - [x] **Phase 6.2 (Phase 2): Types & Model Segregation** (Centralizing all 24 inline interfaces in `src/types/` — completed).
   - [x] **Phase 6.3 (Phase 3): Logic Decoupling** (Decoupling state & API side effects into `src/hooks/` — completed).
-  - [ ] **Phase 6.4 (Phase 4): Component Decomposition** (Deconstructing oversized views <500 lines).
+  - [x] **Phase 6.4 (Phase 4): Component Decomposition** (Deconstructing oversized views: 0 files > 500 lines — completed).
 
 ---
 

@@ -4,6 +4,8 @@ import React from 'react';
 import type { BookChapter } from '@/types/bookContent';
 import type { CodexPdfReaderProps } from '@/types/components';
 import { usePdfReader } from '@/hooks/usePdfReader';
+import { PdfControlToolbar } from '@/components/pdf/PdfControlToolbar';
+import { PdfThumbnailSidebar } from '@/components/pdf/PdfThumbnailSidebar';
 
 export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
   book,
@@ -79,269 +81,45 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
             : 'h-[calc(100dvh-6.5rem)] sm:h-[86vh] min-h-reader-tall w-full rounded-xl sm:rounded-2xl border border-tertiary/40 shadow-2xl mt-2 sm:mt-4 mb-6'
       }`}
     >
-      {/* Top Header & Navigation Bar (Fully Device-Responsive & Anti-Colliding) */}
+      {/* Top Header & Navigation Bar */}
       {!hideHeader && (
-        <div className="bg-night-surface px-2.5 sm:px-4 py-2 border-b border-night-border flex flex-col md:flex-row md:items-center md:justify-between gap-2 shrink-0 select-none">
-          {/* Top Row on Mobile / Left Group on Desktop */}
-          <div className="flex items-center justify-between md:justify-start gap-2 min-w-0 w-full md:w-auto">
-            <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
-              {onClose && (
-                <button
-                  onClick={onClose}
-                  className="p-1 sm:p-1.5 rounded-lg hover:bg-emerald-surface text-emerald-highlight hover:text-white transition-colors cursor-pointer shrink-0"
-                  title="Back to Catalog"
-                >
-                  <span className="material-symbols-outlined text-lg sm:text-xl">arrow_back</span>
-                </button>
-              )}
-
-              <button
-                onClick={toggleSidebar}
-                className={`px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-semibold shrink-0 ${
-                  isSidebarOpen
-                    ? 'bg-tertiary-container text-black font-bold shadow-md shadow-tertiary/20'
-                    : 'bg-emerald-card hover:bg-emerald-surface text-emerald-highlight border border-emerald-border'
-                }`}
-                title="Toggle Chapters / Table of Contents"
-              >
-                <span className="material-symbols-outlined text-base">format_list_bulleted</span>
-                <span className="hidden sm:inline">Index &amp; Chapters</span>
-                <span className="px-1.5 py-0.2 bg-black/30 rounded-full text-label-xs font-mono font-bold">
-                  {chapters.length}
-                </span>
-              </button>
-
-              {/* Vertical Divider on Desktop */}
-              <div className="hidden lg:block w-px h-5 bg-night-border mx-1 shrink-0" />
-
-              {/* Book Title with Safe Margin */}
-              <div className="min-w-0 truncate max-w-36 sm:max-w-xs md:max-w-sm lg:max-w-md">
-                <h3 className="font-display text-xs sm:text-sm font-bold text-white truncate">
-                  {book.title}
-                </h3>
-                <p className="font-arabic text-label-xs sm:text-label-sm text-tertiary truncate leading-tight">
-                  {book.arabicTitle}
-                </p>
-              </div>
-            </div>
-
-            {/* Mobile-only Fullscreen Toggle button on Top Row */}
-            <div className="flex md:hidden items-center gap-1 shrink-0">
-              <button
-                onClick={() => setIsFullscreen(!isFullscreen)}
-                className="p-1.5 rounded-lg hover:bg-emerald-surface text-emerald-highlight hover:text-white transition-colors cursor-pointer"
-                title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
-              >
-                <span className="material-symbols-outlined text-base">
-                  {isFullscreen ? 'fullscreen_exit' : 'fullscreen'}
-                </span>
-              </button>
-            </div>
-          </div>
-
-          {/* Bottom Row on Mobile / Right Group on Desktop */}
-          <div className="flex items-center justify-between md:justify-end gap-1.5 sm:gap-2.5 w-full md:w-auto pt-1.5 md:pt-0 border-t md:border-t-0 border-night-border/70">
-            {/* Dynamic Page Number & Quick Navigation Box */}
-            <div className="flex items-center gap-0.5 sm:gap-1 bg-night-card px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-xl border border-emerald-border shadow-inner shrink-0">
-              <button
-                onClick={() => scrollToPage(currentPage - 1)}
-                disabled={currentPage <= 1}
-                className="p-1 rounded hover:bg-emerald-surface disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer text-emerald-highlight"
-                title="Previous Page"
-              >
-                <span className="material-symbols-outlined text-sm sm:text-base">chevron_left</span>
-              </button>
-
-              <form onSubmit={handlePageInputSubmit} className="flex items-center gap-1 text-xs font-mono">
-                <input
-                  type="text"
-                  value={pageInputValue}
-                  onChange={(e) => setPageInputValue(e.target.value)}
-                  className="w-9 sm:w-12 text-center py-0.5 px-0.5 bg-night-canvas border border-emerald-border rounded text-tertiary-fixed font-bold text-xs focus:outline-none focus:border-tertiary"
-                />
-                <span className="text-emerald-highlight text-label-sm sm:text-xs">/ {totalPages}</span>
-                <button
-                  type="submit"
-                  className="hidden sm:inline px-1.5 py-0.5 bg-tertiary-container/20 hover:bg-tertiary-container/40 text-tertiary-fixed rounded text-label-xs font-bold cursor-pointer"
-                >
-                  Go
-                </button>
-              </form>
-
-              <button
-                onClick={() => scrollToPage(currentPage + 1)}
-                disabled={currentPage >= totalPages}
-                className="p-1 rounded hover:bg-emerald-surface disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer text-emerald-highlight"
-                title="Next Page"
-              >
-                <span className="material-symbols-outlined text-sm sm:text-base">chevron_right</span>
-              </button>
-            </div>
-
-            {/* View Mode Switcher Toggle */}
-            <div className="flex items-center bg-night-card p-0.5 rounded-lg border border-emerald-border text-xs shrink-0">
-              <button
-                onClick={() => setViewMode('pdf')}
-                className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 cursor-pointer ${
-                  viewMode === 'pdf'
-                    ? 'bg-tertiary-container text-black font-bold shadow-xs'
-                    : 'text-emerald-highlight hover:text-white'
-                }`}
-                title="Facsimile Manuscript Pages"
-              >
-                <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
-                <span className="hidden sm:inline">Codex ({totalPages})</span>
-              </button>
-              <button
-                onClick={() => {
-                  if (onSwitchToMatn) {
-                    onSwitchToMatn();
-                  } else {
-                    setViewMode('text');
-                  }
-                }}
-                className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 cursor-pointer ${
-                  viewMode === 'text'
-                    ? 'bg-tertiary-container text-black font-bold shadow-xs'
-                    : 'text-emerald-highlight hover:text-white'
-                }`}
-                title="Arabic Matn & Translation"
-              >
-                <span className="material-symbols-outlined text-sm">auto_stories</span>
-                <span className="hidden sm:inline">Matn</span>
-              </button>
-            </div>
-
-            {/* Interactive Zoom Controls (Always visible on mobile & desktop!) */}
-            {viewMode === 'pdf' && (
-              <div className="flex items-center bg-night-card p-0.5 rounded-lg border border-emerald-border text-xs shrink-0">
-                <button
-                  onClick={() => setInternalScale((s) => Math.max(0.6, Number((s - 0.15).toFixed(2))))}
-                  className="p-1 text-emerald-highlight hover:text-white cursor-pointer"
-                  title="Zoom Out (-)"
-                >
-                  <span className="material-symbols-outlined text-sm">remove</span>
-                </button>
-                <span
-                  onClick={() => setInternalScale(1.0)}
-                  className="text-label-sm font-mono px-1 sm:px-1.5 text-white font-bold cursor-pointer hover:underline"
-                  title="Click to Reset Zoom (100%)"
-                >
-                  {Math.round(activeScale * 100)}%
-                </span>
-                <button
-                  onClick={() => setInternalScale((s) => Math.min(2.5, Number((s + 0.15).toFixed(2))))}
-                  className="p-1 text-emerald-highlight hover:text-white cursor-pointer"
-                  title="Zoom In (+)"
-                >
-                  <span className="material-symbols-outlined text-sm">add</span>
-                </button>
-              </div>
-            )}
-
-            {/* Desktop Fullscreen Mode Toggle */}
-            <button
-              onClick={() => setIsFullscreen(!isFullscreen)}
-              className="hidden md:flex p-1.5 rounded-lg hover:bg-emerald-surface text-emerald-highlight hover:text-white transition-colors cursor-pointer shrink-0"
-              title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen Reader Studio'}
-            >
-              <span className="material-symbols-outlined text-base">
-                {isFullscreen ? 'fullscreen_exit' : 'fullscreen'}
-              </span>
-            </button>
-          </div>
-        </div>
+        <PdfControlToolbar
+          book={book}
+          chaptersCount={chapters.length}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          pageInputValue={pageInputValue}
+          setPageInputValue={setPageInputValue}
+          handlePageInputSubmit={handlePageInputSubmit}
+          scrollToPage={scrollToPage}
+          isSidebarOpen={isSidebarOpen}
+          toggleSidebar={toggleSidebar}
+          viewMode={viewMode}
+          setViewMode={setViewMode}
+          activeScale={activeScale}
+          setInternalScale={setInternalScale}
+          isFullscreen={isFullscreen}
+          setIsFullscreen={setIsFullscreen}
+          onClose={onClose}
+          onSwitchToMatn={onSwitchToMatn}
+        />
       )}
 
       {/* Main Dual Area: Sidebar Drawer + Reading Canvas */}
       <div className="flex-1 flex overflow-hidden relative">
-        {/* Mobile Backdrop */}
-        {isSidebarOpen && (
-          <div
-            className="md:hidden fixed inset-0 bg-black/75 backdrop-blur-xs z-30 animate-fade-in"
-            onClick={toggleSidebar}
-          />
-        )}
+        <PdfThumbnailSidebar
+          chapters={chapters}
+          filteredChapters={filteredChapters}
+          activeChapter={activeChapter}
+          chapterFilter={chapterFilter}
+          setChapterFilter={setChapterFilter}
+          isSidebarOpen={isSidebarOpen}
+          toggleSidebar={toggleSidebar}
+          totalPages={totalPages}
+          handleChapterClick={handleChapterClick}
+        />
 
-        {/* Left Table of Contents / Chapters Sidebar Drawer */}
-        <aside
-          className={`
-            fixed inset-y-0 left-0 z-40 w-4/5 max-w-xs md:max-w-sm md:static md:w-80 md:z-20
-            bg-night-surface border-r border-night-border flex flex-col shrink-0 transition-transform duration-300 ease-in-out shadow-2xl
-            ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:hidden'}
-          `}
-        >
-          {/* Sidebar Header */}
-          <div className="p-3 border-b border-night-border space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-tertiary flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-sm">menu_book</span>
-                Treatise Chapters ({chapters.length})
-              </span>
-              <div className="flex items-center gap-2">
-                <span className="text-label-xs text-emerald-highlight font-mono">1–{totalPages} Pgs</span>
-                <button
-                  onClick={toggleSidebar}
-                  className="p-1 rounded-lg hover:bg-emerald-surface text-emerald-highlight hover:text-white md:hidden cursor-pointer"
-                  title="Close Chapters Drawer"
-                >
-                  <span className="material-symbols-outlined text-base">close</span>
-                </button>
-              </div>
-            </div>
-            <div className="relative">
-              <span className="material-symbols-outlined absolute left-2.5 top-2 text-outline text-sm">
-                search
-              </span>
-              <input
-                type="text"
-                placeholder="Filter chapters or abwāb..."
-                value={chapterFilter}
-                onChange={(e) => setChapterFilter(e.target.value)}
-                className="w-full pl-8 pr-2.5 py-1 rounded-lg bg-night-canvas border border-night-border text-xs text-white placeholder:text-outline focus:outline-none focus:border-tertiary"
-              />
-            </div>
-          </div>
-
-          <div className="flex-1 overflow-y-auto p-2 space-y-1.5 scrollbar-thin">
-            {filteredChapters.length === 0 ? (
-              <div className="text-center py-8 text-xs text-outline">
-                No matching chapters found.
-              </div>
-            ) : (
-              filteredChapters.map((ch, idx) => {
-                const isActive = activeChapter?.number === ch.number;
-                return (
-                  <div
-                    key={ch.id || idx}
-                    onClick={() => handleChapterClick(ch)}
-                    className={`p-2.5 rounded-xl text-xs transition-all cursor-pointer flex flex-col gap-1 border ${
-                      isActive
-                        ? 'bg-gradient-to-r from-emerald-dark to-emerald-surface text-white border-tertiary shadow-md shadow-emerald-950/40 ring-1 ring-tertiary/40'
-                        : 'bg-night-surface text-night-text border-night-border hover:bg-emerald-surface hover:text-white'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="font-bold text-tertiary-fixed truncate">
-                        {ch.number}. {ch.title}
-                      </span>
-                      <span className="text-label-xs font-mono px-1.5 py-0.5 rounded bg-black/40 text-tertiary shrink-0">
-                        p.{ch.startPage}
-                      </span>
-                    </div>
-                    {ch.arabicTitle && (
-                      <p className="font-arabic text-right text-xs text-emerald-highlight leading-tight truncate">
-                        {ch.arabicTitle}
-                      </p>
-                    )}
-                  </div>
-                );
-              })
-            )}
-          </div>
-        </aside>
-
-        {/* Main Canvas Area (Full Width on Mobile with Pan & Zoom support) */}
+        {/* Main Canvas Area */}
         <main
           ref={containerRef}
           className="flex-1 overflow-x-auto overflow-y-auto bg-night-canvas p-1 sm:p-4 md:p-6 relative scroll-smooth w-full"
@@ -366,159 +144,98 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
                       if (onSwitchToMatn) onSwitchToMatn();
                       else setViewMode('text');
                     }}
-                    className="mt-2 px-4 py-2 bg-tertiary-container text-black rounded-lg text-xs font-bold cursor-pointer"
+                    className="mt-3 px-4 py-2 bg-tertiary text-black font-bold text-xs rounded-xl shadow-lg hover:bg-tertiary-fixed cursor-pointer"
                   >
-                    Read Extracted Matn & Chapters Instead
+                    Switch to Arabic Matn Text View
                   </button>
                 </div>
               )}
 
-              {(!loadingDoc || isCloudinary) && (
-                <>
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                    <div
-                      key={pageNum}
-                      id={`pdf-page-slot-${pageNum}`}
-                      data-page-num={pageNum}
-                      className="pdf-page-slot relative bg-surface-container-lowest text-black rounded-lg sm:rounded-xl shadow-lg overflow-hidden min-h-88 flex flex-col items-center border border-sepia-border transition-transform w-full mx-auto"
-                      style={{ maxWidth: `${820 * activeScale}px` }}
-                    >
-                      {/* Page Header Ribbon */}
-                      <div className="w-full bg-sepia-canvas text-sepia-text px-2.5 sm:px-4 py-1 text-label-xs sm:text-label-sm font-mono flex items-center justify-between border-b border-sepia-border select-none">
-                        <span className="font-semibold truncate max-w-44 sm:max-w-filter-panel">
-                          {book.title}
-                        </span>
-                        <span className="font-bold bg-sepia-border px-1.5 py-0.2 rounded text-sepia-text">
-                          p.{pageNum} / {totalPages}
-                        </span>
-                      </div>
+              {/* Render Every Page Slot */}
+              {Array.from({ length: totalPages }, (_, idx) => {
+                const pageNum = idx + 1;
+                const isCurrent = pageNum === currentPage;
 
-                      {/* Continuous Surface: High-Res Cloudinary CDN Image OR Canvas */}
-                      {isCloudinary ? (
-                        <div className="w-full relative flex items-center justify-center bg-white min-h-88 overflow-hidden">
-                          <img
-                            src={getCloudinaryPageUrl(effectivePdfUrl, pageNum)}
-                            alt={`Page ${pageNum} - ${book.title}`}
-                            loading="lazy"
-                            className="w-full h-auto object-contain block select-none"
-                            style={{
-                              transform: activeScale > 1.0 ? `scale(${activeScale})` : undefined,
-                              transformOrigin: 'top center',
-                            }}
-                          />
-                        </div>
-                      ) : (
-                        <canvas className="w-full h-auto object-contain block bg-white" />
-                      )}
+                return (
+                  <div
+                    key={pageNum}
+                    id={`pdf-page-slot-${pageNum}`}
+                    data-page-num={pageNum}
+                    className={`pdf-page-slot transition-all duration-200 relative bg-night-card shadow-2xl rounded-sm overflow-hidden flex flex-col items-center border ${
+                      isCurrent ? 'ring-2 ring-tertiary border-tertiary' : 'border-emerald-border'
+                    }`}
+                    style={{
+                      width: `${Math.round(800 * activeScale)}px`,
+                      minHeight: `${Math.round(1100 * activeScale)}px`,
+                    }}
+                  >
+                    {/* Page Number Watermark Badge */}
+                    <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-xs text-label-xs font-mono text-tertiary-fixed border border-emerald-border z-10">
+                      {pageNum} / {totalPages}
                     </div>
-                  ))}
-                </>
-              )}
+
+                    {/* High-Performance Cloudinary Auto-Streaming Image */}
+                    {isCloudinary ? (
+                      <img
+                        src={getCloudinaryPageUrl(effectivePdfUrl, pageNum)}
+                        alt={`Page ${pageNum} of ${book.title}`}
+                        loading="lazy"
+                        className="w-full h-auto object-contain select-none"
+                      />
+                    ) : (
+                      /* Fallback PDF.js HTML5 Canvas */
+                      <canvas
+                        className={`w-full h-auto block ${!renderedPages.has(pageNum) ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </div>
           ) : (
-            /* Structured Matn & Parallel Text View */
-            <div className="max-w-3xl mx-auto space-y-4 sm:space-y-6">
-              {activeChapter ? (
-                <div className="bg-night-card rounded-2xl p-4 sm:p-8 border border-night-border shadow-xl space-y-4 sm:space-y-6">
-                  {/* Chapter Header */}
-                  <div className="text-center pb-4 sm:pb-6 border-b border-night-border space-y-1.5">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-tertiary-container/15 text-tertiary font-mono text-label-sm font-bold border border-tertiary/30">
-                      Chapter {activeChapter.number} • Starting on Page {activeChapter.startPage}
+            /* Digital Matn Text Transcript View */
+            <div className="max-w-3xl mx-auto py-8 px-4 space-y-6">
+              <div className="bg-night-surface p-6 sm:p-8 rounded-3xl border border-emerald-border space-y-4">
+                <div className="flex items-center justify-between pb-4 border-b border-night-border">
+                  <div>
+                    <span className="text-label-xs font-mono text-tertiary uppercase">
+                      Chapter {activeChapter?.number || 1} • Page {activeChapter?.startPage || 1}
                     </span>
-                    <h2 className="font-arabic text-2xl sm:text-3xl font-bold text-tertiary-fixed mt-1">
-                      {activeChapter.arabicTitle}
+                    <h2 className="font-arabic text-2xl font-bold text-tertiary-fixed mt-1">
+                      {activeChapter?.arabicTitle || activeChapter?.title}
                     </h2>
-                    <h3 className="font-display text-sm sm:text-lg font-bold text-white">
-                      {activeChapter.title}
-                    </h3>
                   </div>
+                  {onSwitchToMatn && (
+                    <button
+                      onClick={onSwitchToMatn}
+                      className="px-3 py-1.5 rounded-xl bg-tertiary text-black font-bold text-xs hover:bg-tertiary-fixed transition-colors cursor-pointer"
+                    >
+                      Open Full Matn Studio
+                    </button>
+                  )}
+                </div>
 
-                  {/* Arabic Matn Box */}
-                  <div
-                    className="p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-emerald-surface to-night-surface border-2 border-tertiary/40 shadow-lg text-right"
-                    dir="rtl"
-                  >
-                    <span className="block text-xs font-bold text-tertiary mb-2 sm:mb-3 font-sans">
-                      النص الأصلي بالتشكيل الكامل
+                <div
+                  dir="rtl"
+                  className="font-arabic text-night-text leading-[2.6] text-right p-4 rounded-xl bg-night-canvas border border-night-border text-base whitespace-pre-line"
+                >
+                  {activeChapter?.content || 'لا يوجد نص مدخل لهذا الباب.'}
+                </div>
+
+                {activeChapter?.translation && (
+                  <div className="p-4 rounded-xl bg-emerald-dark/30 border border-emerald-border space-y-1">
+                    <span className="text-label-xs font-bold uppercase tracking-wider text-tertiary">
+                      English Translation
                     </span>
-                    <p className="font-arabic text-lg sm:text-2xl text-night-text leading-loose whitespace-pre-line font-medium">
-                      {activeChapter.content || 'لا يوجد نص مدخل'}
+                    <p className="text-xs sm:text-sm text-night-text leading-relaxed whitespace-pre-line">
+                      {activeChapter.translation}
                     </p>
                   </div>
-
-                  {/* Urdu / English Translation */}
-                  {activeChapter.translation && (
-                    <div className="p-4 sm:p-5 rounded-xl bg-night-surface border border-night-border space-y-2">
-                      <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider block">
-                        Translation / ترجمہ
-                      </span>
-                      <p className="text-xs sm:text-base text-night-text leading-relaxed whitespace-pre-line">
-                        {activeChapter.translation}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Scholarly Commentary & Notes */}
-                  {activeChapter.notes && (
-                    <div className="p-3.5 sm:p-4 rounded-xl bg-night-canvas border border-night-border text-xs text-emerald-highlight space-y-1">
-                      <span className="font-bold text-tertiary block">Scholarly Notes / حواشی:</span>
-                      <p>{activeChapter.notes}</p>
-                    </div>
-                  )}
-
-                  {/* Chapter Navigation Buttons */}
-                  <div className="pt-3 sm:pt-4 flex items-center justify-between border-t border-night-border">
-                    <button
-                      onClick={() => {
-                        const prevIdx = chapters.findIndex((c) => c.number === activeChapter.number) - 1;
-                        if (prevIdx >= 0) handleChapterClick(chapters[prevIdx]);
-                      }}
-                      disabled={chapters.findIndex((c) => c.number === activeChapter.number) === 0}
-                      className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-emerald-surface hover:bg-emerald-surface text-white text-xs font-bold disabled:opacity-30 cursor-pointer"
-                    >
-                      ← Prev
-                    </button>
-                    <span className="text-xs text-emerald-highlight font-mono">
-                      {activeChapter.number} / {chapters.length}
-                    </span>
-                    <button
-                      onClick={() => {
-                        const nextIdx = chapters.findIndex((c) => c.number === activeChapter.number) + 1;
-                        if (nextIdx < chapters.length) handleChapterClick(chapters[nextIdx]);
-                      }}
-                      disabled={
-                        chapters.findIndex((c) => c.number === activeChapter.number) === chapters.length - 1
-                      }
-                      className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-tertiary-container text-black text-xs font-bold disabled:opacity-30 cursor-pointer"
-                    >
-                      Next →
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center py-20 text-emerald-highlight">
-                  Select a chapter from the sidebar to inspect its Matn and translation.
-                </div>
-              )}
+                )}
+              </div>
             </div>
           )}
         </main>
-      </div>
-
-      {/* Sticky Bottom Indicator Pill */}
-      <div className="bg-night-canvas px-3 sm:px-4 py-1.5 sm:py-2 border-t border-night-border flex items-center justify-between text-xs text-emerald-highlight font-mono select-none">
-        <div className="flex items-center gap-1.5 truncate max-w-[50%]">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-          <span className="text-tertiary font-bold truncate text-label-sm sm:text-xs">
-            {activeChapter ? `${activeChapter.number}. ${activeChapter.title}` : 'Codex Stream'}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-          <span className="text-white font-bold bg-night-card px-2 py-0.5 rounded border border-emerald-border text-label-sm">
-            p.{currentPage} / {totalPages}
-          </span>
-        </div>
       </div>
     </div>
   );

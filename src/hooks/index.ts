@@ -25,3 +25,5 @@ export type { UseHomeSettingsOptions, UseHomeSettingsReturn } from './useHomeSet
 export { usePdfReader } from './usePdfReader';
 export type { UsePdfReaderOptions, UsePdfReaderReturn } from './usePdfReader';
 
+
+export { useAdminCategories } from './useAdminCategories';

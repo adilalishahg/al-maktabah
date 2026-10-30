@@ -192,60 +192,63 @@ flowchart TD
 
 ---
 
-### Phase 4: Component Decomposition & Verification
+### Phase 4: Component Decomposition & Verification (COMPLETED ✅)
 
 **Goal:** Deconstruct all 6 critical oversized components (>500 lines) into compact, single-responsibility atomic components strictly under 200–500 lines. Verify with typecheck and automated tests.
 
-#### 1. `src/app/admin/page.tsx` (1,991 lines -> Target: ~250 lines)
-Decompose into:
-- `src/components/admin/AdminLoginCard.tsx` (~120 lines): Authentication login form and credentials handler.
-- `src/components/admin/AdminHeaderBar.tsx` (~100 lines): Admin navigation bar with signout, quick stats, and tab switches.
-- `src/components/admin/AdminUploadCodexModal.tsx` (~280 lines): PDF upload drag-and-drop, automated chapter splitting, and preview.
-- `src/components/admin/AdminCategoryModal.tsx` (~150 lines): Category creation and discipline tagging dialog.
-- `src/app/admin/page.tsx` (Reduced to ~200 lines): Shell coordinator consuming `useAdminAuth` and rendering active tabs.
+**Status:** ✅ Fully completed and verified across all views and components. Not a single `.ts` or `.tsx` file in the entire codebase exceeds 500 lines. Full TypeScript check passes with 0 errors (`npm run lint`), and 21/21 automated test assertions pass (`npm test`).
 
-#### 2. `src/components/admin/AdminHomeSettingsView.tsx` (1,510 lines -> Target: ~220 lines)
-Decompose into 7 atomic section editors:
-- `src/components/admin/sections/DailyBannerEditor.tsx` (~180 lines)
-- `src/components/admin/sections/HeroSectionEditor.tsx` (~220 lines)
-- `src/components/admin/sections/CategoriesGridEditor.tsx` (~200 lines)
-- `src/components/admin/sections/FeaturedShelfEditor.tsx` (~240 lines)
-- `src/components/admin/sections/ReaderPreviewEditor.tsx` (~250 lines)
-- `src/components/admin/sections/ManuscriptsSectionEditor.tsx` (~180 lines)
-- `src/components/admin/sections/WaqfMissionEditor.tsx` (~160 lines)
-- `src/components/admin/AdminHomeSettingsView.tsx` (Reduced to ~200 lines): Tabbed navigation linking the 7 atomic editors.
+#### 1. `src/views/BookReaderView.tsx` (Reduced from 546 to 131 lines):
+- `src/components/reader/ReaderMasterToolbar.tsx` (329 lines): 2-tier sticky toolbar with zoom, reading mode, format toggles, and theme selector.
+- `src/components/reader/ReaderTocDrawer.tsx` (102 lines): Slide-out Table of Contents and chapter selector.
+- `src/components/reader/ReaderMatnContentPane.tsx` (143 lines): Diacritized Arabic text display with side-by-side translation and footnotes.
+- `src/views/BookReaderView.tsx` (131 lines): Clean root reader orchestrator.
 
-#### 3. `src/views/HomeView.tsx` (1,172 lines -> Target: ~180 lines)
-Decompose into 7 presentational section components:
-- `src/components/home/HomeDailyBanner.tsx` (~80 lines)
-- `src/components/home/HomeHeroSection.tsx` (~220 lines)
-- `src/components/home/HomeFeaturedShelf.tsx` (~240 lines)
-- `src/components/home/HomeCategoriesGrid.tsx` (~190 lines)
-- `src/components/home/HomeReaderSpotlight.tsx` (~230 lines)
-- `src/components/home/HomeManuscriptsSection.tsx` (~160 lines)
-- `src/components/home/HomeWaqfMission.tsx` (~100 lines)
-- `src/views/HomeView.tsx` (Reduced to ~150 lines): Clean compositional layout rendering the sub-sections.
+#### 2. `src/components/CodexPdfReader.tsx` (Reduced from 526 to 243 lines):
+- `src/components/pdf/PdfControlToolbar.tsx` (227 lines): Header toolbar with page number input, zoom, jump, and fullscreen toggle.
+- `src/components/pdf/PdfThumbnailSidebar.tsx` (119 lines): TOC drawer with chapter filter and jump navigation.
+- `src/components/CodexPdfReader.tsx` (243 lines): Main dual-page facsimile orchestrator.
 
-#### 4. `src/views/AdminDashboardView.tsx` (801 lines -> Target: ~220 lines)
-Decompose into:
-- `src/components/admin/DashboardMetricsBar.tsx` (~120 lines): Total books, pages, disciplines, and storage volume badges.
-- `src/components/admin/DashboardBooksTable.tsx` (~260 lines): Paginated book list with status toggles, edit buttons, and deletion triggers.
-- `src/components/admin/DashboardQuickActions.tsx` (~140 lines): Action cards to open uploads, add categories, or visit public library.
-- `src/views/AdminDashboardView.tsx` (Reduced to ~180 lines): Orchestrates metrics and table views.
+#### 3. `src/views/AdminDashboardView.tsx` (Reduced from 799 to 286 lines):
+- `src/components/admin/DashboardMetricsBar.tsx` (56 lines): 4 metrics cards (Total Catalog, Verified Works, Pages, Edge CDN Storage).
+- `src/components/admin/DashboardBooksTable.tsx` (133 lines): Cataloged treatises table with publish/draft toggles and actions.
+- `src/components/admin/DashboardBookEditorModal.tsx` (340 lines): Full treatise metadata form, chapter pill navigation, and Arabic matn editor.
+- `src/views/AdminDashboardView.tsx` (286 lines): Main dashboard orchestrator.
 
-#### 5. `src/components/CodexPdfReader.tsx` (772 lines -> Target: ~280 lines)
-Decompose into:
-- `src/components/pdf/PdfControlToolbar.tsx` (~180 lines): Zoom controls, dual/single page toggles, page jumper, and bookmark button.
-- `src/components/pdf/PdfThumbnailSidebar.tsx` (~160 lines): Rendered page thumbnails drawer.
-- `src/components/pdf/PdfCanvasViewport.tsx` (~240 lines): Pure canvas rendering component consuming `usePdfReader`.
-- `src/components/CodexPdfReader.tsx` (Reduced to ~220 lines): Orchestrator shell.
+#### 4. `src/views/HomeView.tsx` (Reduced from 1,159 to 109 lines):
+- `src/components/home/HomeDailyBanner.tsx` (39 lines): Top Daily Ayah and calligraphy ticker.
+- `src/components/home/HomeHeroSection.tsx` (201 lines): Primary hero column, metrics strip, and 3D floating codices stack.
+- `src/components/home/HomeCategoriesGrid.tsx` (123 lines): 28 Islamic sciences classification cards grid.
+- `src/components/home/HomeFeaturedShelf.tsx` (217 lines): Curated 4-card interactive book carousel with filter tabs.
+- `src/components/home/HomeReaderSpotlight.tsx` (370 lines): Excerpt reading canvas with audio player, theme toggle, and word morphology inspector.
+- `src/components/home/HomeManuscriptsSection.tsx` (108 lines): Classical preservation mission and academic licensing matrix.
+- `src/components/home/HomeWaqfMission.tsx` (79 lines): Digital waqf declaration and monthly newsletter dispatch.
+- `src/components/home/index.ts`: Barrel export.
+- `src/views/HomeView.tsx` (109 lines): High-level composition shell.
 
-#### 6. `src/views/BookReaderView.tsx` (611 lines -> Target: ~220 lines)
-Decompose into:
-- `src/components/reader/ReaderMasterToolbar.tsx` (~190 lines): Sticky 2px-clearance toolbar with page input, view format toggle, and theme switch.
-- `src/components/reader/ReaderTocDrawer.tsx` (~160 lines): Slide-out Table of Contents and chapter selector.
-- `src/components/reader/ReaderMatnContentPane.tsx` (~180 lines): Diacritized Arabic text display with side-by-side translation and footnotes.
-- `src/views/BookReaderView.tsx` (Reduced to ~180 lines): Root reader layout.
+#### 5. `src/components/admin/AdminHomeSettingsView.tsx` (Reduced from 1,501 to 289 lines):
+- `src/components/admin/settings/HomeSectionsTab.tsx` (283 lines): Homepage view sections visibility and master toggles.
+- `src/components/admin/settings/HomeReaderEditorTab.tsx` (294 lines): Featured reader content, book loader, chapter metadata, and audio recorder.
+- `src/components/admin/settings/IsnadEditorList.tsx` (108 lines): Isnād transmission chain node manager.
+- `src/components/admin/settings/FootnotesEditorList.tsx` (99 lines): Scholarly commentary and footnotes manager.
+- `src/components/admin/settings/HomePreviewTab.tsx` (283 lines): Live high-fidelity reader preview with theme switcher.
+- `src/components/admin/settings/index.ts`: Barrel export.
+- `src/components/admin/AdminHomeSettingsView.tsx` (289 lines): Multi-tab settings orchestrator.
+
+#### 6. `src/app/admin/page.tsx` (Reduced from 1,807 to 495 lines):
+- `src/components/admin/AdminLoginCard.tsx` (88 lines): Authentication login form and credentials handler.
+- `src/components/admin/AdminHeaderBar.tsx` (162 lines): Admin navigation bar with signout, quick stats, and tab switches.
+- `src/components/admin/tabs/AdminAnalyticsTab.tsx` (146 lines): Analytics dashboard and repository intelligence.
+- `src/components/admin/tabs/AdminBooksTab.tsx` (144 lines): Books catalog manager.
+- `src/components/admin/tabs/AdminCategoriesTab.tsx` (95 lines): Disciplines & category manager.
+- `src/components/admin/tabs/AdminEditorTab.tsx` (406 lines): Treatise metadata, Cloudinary upload, and chapter editor.
+- `src/components/admin/tabs/AdminCategoryModal.tsx` (144 lines): Category create and edit modal.
+- `src/components/admin/tabs/AdminBulkChapterModal.tsx` (87 lines): Bulk chapter text ingest & auto-splitter.
+- `src/components/admin/tabs/AdminCodexReaderModal.tsx` (45 lines): Continuous facsimile viewer modal.
+- `src/hooks/useAdminCategories.ts` (134 lines): Encapsulated category state machine and mutations.
+- `src/utils/adminUpload.ts` (107 lines): Cloudinary edge upload and serverless fallback handler.
+- `src/utils/chapterSplitter.ts` (54 lines): Pure regex parser for chapter text splitting.
+- `src/app/admin/page.tsx` (495 lines): Master portal coordinator.
 
 ---
 

@@ -12,6 +12,9 @@ export interface HeroSectionConfig {
   centerBookId?: string;
   leftBookId?: string;
   rightBookId?: string;
+  headline?: string;
+  subheadline?: string;
+  description?: string;
 }
 
 export interface CategoriesGridConfig {
