@@ -34,27 +34,24 @@ export const HomePreviewTab: React.FC<HomePreviewTabProps> = ({
             <button
               type="button"
               onClick={() => setPreviewTheme('parchment')}
-              className={`px-2.5 py-1 rounded text-xs transition-colors cursor-pointer ${
-                previewTheme === 'parchment' ? 'bg-parchment-canvas text-on-surface font-bold' : 'text-emerald-highlight'
-              }`}
+              className={`px-2.5 py-1 rounded text-xs transition-colors cursor-pointer ${previewTheme === 'parchment' ? 'bg-parchment-canvas text-on-surface font-bold' : 'text-emerald-highlight'
+                }`}
             >
               Parchment
             </button>
             <button
               type="button"
               onClick={() => setPreviewTheme('night')}
-              className={`px-2.5 py-1 rounded text-xs transition-colors cursor-pointer ${
-                previewTheme === 'night' ? 'bg-surface-container text-white font-bold' : 'text-emerald-highlight'
-              }`}
+              className={`px-2.5 py-1 rounded text-xs transition-colors cursor-pointer ${previewTheme === 'night' ? 'bg-surface-container text-white font-bold' : 'text-emerald-highlight'
+                }`}
             >
               Night
             </button>
             <button
               type="button"
               onClick={() => setPreviewTheme('sepia')}
-              className={`px-2.5 py-1 rounded text-xs transition-colors cursor-pointer ${
-                previewTheme === 'sepia' ? 'bg-sepia-border text-sepia-text font-bold' : 'text-emerald-highlight'
-              }`}
+              className={`px-2.5 py-1 rounded text-xs transition-colors cursor-pointer ${previewTheme === 'sepia' ? 'bg-sepia-border text-sepia-text font-bold' : 'text-emerald-highlight'
+                }`}
             >
               Sepia
             </button>
@@ -74,13 +71,12 @@ export const HomePreviewTab: React.FC<HomePreviewTabProps> = ({
 
       {/* Render the Reader exact container matching HomeView */}
       <div
-        className={`rounded-2xl sm:rounded-3xl shadow-xl border overflow-hidden transition-all duration-300 ${
-          previewTheme === 'night'
+        className={`rounded-2xl sm:rounded-3xl shadow-xl border overflow-hidden transition-all duration-300 ${previewTheme === 'night'
             ? 'bg-night-surface text-night-text border-emerald-border'
             : previewTheme === 'sepia'
-            ? 'bg-parchment-canvas text-sepia-text border-sepia-border'
-            : 'bg-surface-container-lowest text-on-surface border-surface-container-high'
-        }`}
+              ? 'bg-parchment-canvas text-sepia-text border-sepia-border'
+              : 'bg-surface-container-lowest text-on-surface border-surface-container-high'
+          }`}
       >
         {/* Window title bar */}
         <div className="px-4 sm:px-6 py-3 border-b border-surface-container flex items-center justify-between gap-3 bg-surface-container-low/60">
@@ -99,9 +95,8 @@ export const HomePreviewTab: React.FC<HomePreviewTabProps> = ({
             <button
               type="button"
               onClick={() => setShowParallel(!showParallel)}
-              className={`p-1.5 rounded-lg transition-all ${
-                showParallel ? 'bg-primary-container text-white shadow-xs' : 'hover:bg-surface-container'
-              }`}
+              className={`p-1.5 rounded-lg transition-all ${showParallel ? 'bg-primary-container text-white shadow-xs' : 'hover:bg-surface-container'
+                }`}
               title="Toggle Parallel Translation"
             >
               <span className="material-symbols-outlined text-base">vertical_split</span>
@@ -146,9 +141,8 @@ export const HomePreviewTab: React.FC<HomePreviewTabProps> = ({
                   <div key={node.id || i}>
                     <div className="flex items-center gap-2 py-0.5">
                       <span
-                        className={`w-2 h-2 rounded-full ${
-                          i === 0 ? 'bg-tertiary-container' : 'bg-primary'
-                        }`}
+                        className={`w-2 h-2 rounded-full ${i === 0 ? 'bg-tertiary-container' : 'bg-primary'
+                          }`}
                       ></span>
                       <span className="truncate max-w-44 text-label-sm font-medium">{node.name}</span>
                     </div>
@@ -295,3 +289,4 @@ export const HomePreviewTab: React.FC<HomePreviewTabProps> = ({
     </div>
   );
 };
+

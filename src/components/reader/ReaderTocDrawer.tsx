@@ -20,9 +20,8 @@ export const ReaderTocDrawer: React.FC<ReaderTocDrawerProps> = ({
 }) => {
   return (
     <aside
-      className={`lg:col-span-4 bg-surface-container-lowest border border-surface-container rounded-2xl p-4 shadow-sm space-y-3 transition-all ${
-        sidebarOpen ? 'block' : 'hidden lg:block'
-      }`}
+      className={`lg:col-span-4 bg-surface-container-lowest border border-surface-container rounded-2xl p-4 shadow-sm space-y-3 transition-all ${sidebarOpen ? 'block' : 'hidden lg:block'
+        }`}
     >
       <div className="flex items-center justify-between pb-3 border-b border-surface-container">
         <div className="flex items-center gap-2">
@@ -51,25 +50,22 @@ export const ReaderTocDrawer: React.FC<ReaderTocDrawerProps> = ({
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
               }}
-              className={`p-3 rounded-xl cursor-pointer transition-all border flex items-center justify-between gap-3 ${
-                isSelected
+              className={`p-3 rounded-xl cursor-pointer transition-all border flex items-center justify-between gap-3 ${isSelected
                   ? 'bg-primary-container text-on-primary border-primary shadow-xs'
                   : 'bg-surface-container-low/40 hover:bg-surface-container border-surface-container text-on-surface'
-              }`}
+                }`}
             >
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <span
-                    className={`text-label-xs font-bold uppercase ${
-                      isSelected ? 'text-tertiary-fixed' : 'text-tertiary'
-                    }`}
+                    className={`text-label-xs font-bold uppercase ${isSelected ? 'text-tertiary-fixed' : 'text-tertiary'
+                      }`}
                   >
                     Ch. {ch.number}
                   </span>
                   <span
-                    className={`text-label-xs font-mono ${
-                      isSelected ? 'text-on-primary/70' : 'text-on-surface-variant'
-                    }`}
+                    className={`text-label-xs font-mono ${isSelected ? 'text-on-primary/70' : 'text-on-surface-variant'
+                      }`}
                   >
                     p.{ch.startPage}
                   </span>
@@ -78,17 +74,15 @@ export const ReaderTocDrawer: React.FC<ReaderTocDrawerProps> = ({
                   {ch.title}
                 </div>
                 <div
-                  className={`font-arabic text-sm font-semibold truncate ${
-                    isSelected ? 'text-on-primary' : 'text-primary'
-                  }`}
+                  className={`font-arabic text-sm font-semibold truncate ${isSelected ? 'text-on-primary' : 'text-primary'
+                    }`}
                 >
                   {ch.arabicTitle}
                 </div>
               </div>
               <span
-                className={`material-symbols-outlined text-sm shrink-0 ${
-                  isSelected ? 'text-on-primary' : 'text-on-surface-variant'
-                }`}
+                className={`material-symbols-outlined text-sm shrink-0 ${isSelected ? 'text-on-primary' : 'text-on-surface-variant'
+                  }`}
               >
                 chevron_right
               </span>

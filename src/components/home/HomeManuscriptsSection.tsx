@@ -95,3 +95,4 @@ export const HomeManuscriptsSection: React.FC<HomeManuscriptsSectionProps> = ({ 
     </section>
   );
 };
+

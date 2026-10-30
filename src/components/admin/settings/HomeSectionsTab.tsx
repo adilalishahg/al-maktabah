@@ -438,3 +438,4 @@ export const HomeSectionsTab: React.FC<HomeSectionsTabProps> = ({
     </div>
   );
 };
+

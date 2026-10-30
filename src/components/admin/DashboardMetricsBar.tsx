@@ -56,3 +56,4 @@ export const DashboardMetricsBar: React.FC<DashboardMetricsBarProps> = ({ books 
     </div>
   );
 };
+

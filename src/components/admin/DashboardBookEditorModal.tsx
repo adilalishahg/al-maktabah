@@ -248,11 +248,10 @@ export const DashboardBookEditorModal: React.FC<DashboardBookEditorModalProps> =
               <div
                 key={ch.id || idx}
                 onClick={() => setActiveChapterIndex(idx)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer flex items-center gap-2 transition-all ${
-                  activeChapterIndex === idx
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer flex items-center gap-2 transition-all ${activeChapterIndex === idx
                     ? 'bg-primary-container text-on-primary font-semibold shadow-xs'
                     : 'bg-surface-container-low hover:bg-surface-container text-on-surface-variant border border-surface-container'
-                }`}
+                  }`}
               >
                 <span>{ch.number}. {ch.title}</span>
                 <span className="text-label-xs opacity-75 font-mono">p.{ch.startPage}</span>

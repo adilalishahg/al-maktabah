@@ -116,3 +116,4 @@ export const PdfThumbnailSidebar: React.FC<PdfThumbnailSidebarProps> = ({
     </>
   );
 };
+

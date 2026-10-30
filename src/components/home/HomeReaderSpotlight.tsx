@@ -299,19 +299,21 @@ export const HomeReaderSpotlight: React.FC<HomeReaderSpotlightProps> = ({
                       >
                         <span className="flex items-center gap-1.5">
                           <span className="material-symbols-outlined text-base">notes</span>
-                          <span>{activeReader.footnotes[0].code} — {activeReader.footnotes[0].title}</span>
+                          Scholarly Footnotes ({activeReader.footnotes.length})
                         </span>
-                        <span className="font-label-sm text-xs text-on-surface-variant flex items-center gap-1">
-                          <span>{activeReader.footnotes[0].scholar} ({activeReader.footnotes[0].scholarDeathAH})</span>
-                          <span className="material-symbols-outlined text-xs">
-                            {activeFootnoteOpen ? 'expand_less' : 'expand_more'}
-                          </span>
+                        <span className="material-symbols-outlined text-sm">
+                          {activeFootnoteOpen ? 'expand_less' : 'expand_more'}
                         </span>
                       </div>
                       {activeFootnoteOpen && (
-                        <p className="font-body-sm text-xs text-on-surface-variant pt-1 leading-relaxed border-t border-surface-container-high/60">
-                          {activeReader.footnotes[0].text}
-                        </p>
+                        <div className="space-y-2 pt-2 border-t border-surface-container text-xs text-on-surface-variant">
+                          {activeReader.footnotes.map((fn) => (
+                            <div key={fn.id} className="flex gap-2">
+                              <span className="font-mono text-tertiary font-bold shrink-0">{fn.number}.</span>
+                              <p>{fn.text}</p>
+                            </div>
+                          ))}
+                        </div>
                       )}
                     </div>
                   )}
@@ -320,46 +322,34 @@ export const HomeReaderSpotlight: React.FC<HomeReaderSpotlightProps> = ({
 
               {/* Right Pane: Arabic Sacred Matn */}
               <div className="space-y-4" dir="rtl">
-                {activeReader.arabicLead && (
-                  <p
-                    className="font-arabic text-primary leading-loose font-medium"
-                    style={{ fontSize: `${Math.round(readerFontSize * 1.35)}px` }}
-                  >
-                    {activeReader.arabicLead}
-                  </p>
-                )}
-
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-tertiary-container/15 to-transparent text-right border-2 border-tertiary/40 shadow-xs">
-                  <p
-                    className="font-arabic font-bold text-primary leading-relaxed"
-                    style={{ fontSize: `${Math.round(readerFontSize * 1.45)}px` }}
-                  >
-                    {activeReader.arabicMatn}
-                  </p>
+                <div className="flex items-center justify-between">
+                  <span className="font-arabic text-sm text-tertiary font-bold">
+                    {activeReader.chapterTitleAr}
+                  </span>
+                  <span className="text-label-xs text-on-surface-variant font-mono">
+                    باب رقم {activeReader.chapterNumber}
+                  </span>
                 </div>
 
-                {/* Interactive Word Inspector strip */}
-                {activeReader.wordAnalyses && activeReader.wordAnalyses.length > 0 && (
-                  <div className="p-3 rounded-xl bg-surface-container-low text-xs text-on-surface-variant space-y-1.5 border border-surface-container" dir="ltr">
-                    <div className="flex items-center justify-between text-tertiary font-bold">
-                      <span className="flex items-center gap-1.5">
-                        <span className="material-symbols-outlined text-sm">spellcheck</span>
-                        Click Word for Root Morphology:
+                <div
+                  className="font-arabic leading-[2.6] text-right font-medium tracking-wide p-4 sm:p-6 rounded-2xl bg-surface-container-low/30 border border-surface-container"
+                  style={{ fontSize: `${readerFontSize + 6}px` }}
+                >
+                  {activeReader.arabicWords && activeReader.arabicWords.length > 0 ? (
+                    activeReader.arabicWords.map((w, idx) => (
+                      <span
+                        key={idx}
+                        onClick={() => onOpenWordAnalysis(w)}
+                        className="inline-block px-1 rounded-sm hover:bg-tertiary-container/30 hover:text-tertiary cursor-pointer transition-colors"
+                        title="Click for morphology breakdown"
+                      >
+                        {w.word}{' '}
                       </span>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5 pt-1">
-                      {activeReader.wordAnalyses.map((w, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => onOpenWordAnalysis(w)}
-                          className="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-primary hover:text-white text-primary font-arabic text-sm transition-all cursor-pointer border border-surface-container-high shadow-2xs hover:scale-105"
-                        >
-                          {w.arabic}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                    ))
+                  ) : (
+                    <span>{activeReader.arabicText}</span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -368,3 +358,4 @@ export const HomeReaderSpotlight: React.FC<HomeReaderSpotlightProps> = ({
     </section>
   );
 };
+

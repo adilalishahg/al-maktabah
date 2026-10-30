@@ -314,11 +314,10 @@ export const AdminEditorTab: React.FC<AdminEditorTabProps> = ({
               <div
                 key={ch.id || idx}
                 onClick={() => setActiveChapterIndex(idx)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer flex items-center gap-2 ${
-                  activeChapterIndex === idx
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer flex items-center gap-2 ${activeChapterIndex === idx
                     ? 'bg-primary-container text-on-primary font-semibold'
                     : 'bg-surface-container-low border border-surface-container text-on-surface'
-                }`}
+                  }`}
               >
                 <span>{ch.number}. {ch.title}</span>
                 <span className="text-label-xs opacity-75 font-mono">p.{ch.startPage}</span>

@@ -90,3 +90,4 @@ export async function uploadAsset(
 
   throw new Error(data.message || 'Upload failed');
 }
+

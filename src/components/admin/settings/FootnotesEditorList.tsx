@@ -87,3 +87,4 @@ export const FootnotesEditorList: React.FC<FootnotesEditorListProps> = ({
     </div>
   );
 };
+

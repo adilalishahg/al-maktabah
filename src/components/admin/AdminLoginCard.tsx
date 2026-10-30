@@ -96,3 +96,4 @@ export const AdminLoginCard: React.FC<AdminLoginCardProps> = ({
     </div>
   );
 };
+

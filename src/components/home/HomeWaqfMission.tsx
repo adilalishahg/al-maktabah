@@ -79,3 +79,4 @@ export const HomeWaqfMission: React.FC<HomeWaqfMissionProps> = ({
     </section>
   );
 };
+

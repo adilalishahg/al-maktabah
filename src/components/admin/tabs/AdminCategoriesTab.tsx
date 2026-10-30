@@ -113,3 +113,4 @@ export const AdminCategoriesTab: React.FC<AdminCategoriesTabProps> = ({
     </div>
   );
 };
+

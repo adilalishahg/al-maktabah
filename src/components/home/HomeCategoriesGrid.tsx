@@ -121,3 +121,4 @@ export const HomeCategoriesGrid: React.FC<HomeCategoriesGridProps> = ({
     </section>
   );
 };
+

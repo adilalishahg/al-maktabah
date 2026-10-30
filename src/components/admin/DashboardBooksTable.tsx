@@ -49,11 +49,10 @@ export const DashboardBooksTable: React.FC<DashboardBooksTableProps> = ({
                     </span>
                     <button
                       onClick={() => onTogglePublish(book)}
-                      className={`px-2 py-0.5 rounded-full text-label-xs font-bold transition-colors cursor-pointer ${
-                        book.published
+                      className={`px-2 py-0.5 rounded-full text-label-xs font-bold transition-colors cursor-pointer ${book.published
                           ? 'bg-primary-container/15 text-primary'
                           : 'bg-surface-container text-on-surface-variant'
-                      }`}
+                        }`}
                     >
                       {book.published ? '● Live' : '○ Draft'}
                     </button>

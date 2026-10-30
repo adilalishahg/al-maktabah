@@ -37,3 +37,4 @@ export const HomeDailyBanner: React.FC<HomeDailyBannerProps> = ({ banner }) => {
     </div>
   );
 };
+

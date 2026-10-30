@@ -70,3 +70,4 @@ export const MANUSCRIPTS: ManuscriptCodex[] = [
     historicalSignificance: 'Endowed to the Sultan Hasan Madrasa-Mosque complex in Cairo with imperial waqf seals.'
   }
 ];
+

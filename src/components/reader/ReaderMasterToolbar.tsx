@@ -62,11 +62,10 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
 
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className={`px-2 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs shrink-0 cursor-pointer ${
-                sidebarOpen
+              className={`px-2 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs shrink-0 cursor-pointer ${sidebarOpen
                   ? 'bg-primary text-on-primary ring-2 ring-primary/20'
                   : 'bg-surface-container hover:bg-surface-container-high text-primary'
-              }`}
+                }`}
               title="Table of Contents (Chapters)"
             >
               <span className="material-symbols-outlined text-sm sm:text-base">menu_book</span>
@@ -92,11 +91,10 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
           <div className="flex md:hidden items-center bg-surface-container-low rounded-xl p-0.5 border border-surface-container shrink-0">
             <button
               onClick={() => setReadingFormat('facsimile')}
-              className={`px-2 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
-                readingFormat === 'facsimile'
+              className={`px-2 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${readingFormat === 'facsimile'
                   ? 'bg-primary text-on-primary shadow-xs'
                   : 'text-on-surface-variant hover:text-on-surface'
-              }`}
+                }`}
               title="Facsimile Continuous Manuscript"
             >
               <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
@@ -104,11 +102,10 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
             </button>
             <button
               onClick={() => setReadingFormat('matn')}
-              className={`px-2 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
-                readingFormat === 'matn'
+              className={`px-2 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${readingFormat === 'matn'
                   ? 'bg-primary text-on-primary shadow-xs'
                   : 'text-on-surface-variant hover:text-on-surface'
-              }`}
+                }`}
               title="Digitized Arabic Matn & Translation"
             >
               <span className="material-symbols-outlined text-sm">auto_stories</span>
@@ -207,11 +204,10 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
           <div className="hidden md:flex items-center bg-surface-container-low rounded-xl p-0.5 border border-surface-container shrink-0">
             <button
               onClick={() => setReadingFormat('facsimile')}
-              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
-                readingFormat === 'facsimile'
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${readingFormat === 'facsimile'
                   ? 'bg-primary text-on-primary shadow-xs'
                   : 'text-on-surface-variant hover:text-on-surface'
-              }`}
+                }`}
               title="Facsimile Continuous Manuscript"
             >
               <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
@@ -219,11 +215,10 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
             </button>
             <button
               onClick={() => setReadingFormat('matn')}
-              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
-                readingFormat === 'matn'
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${readingFormat === 'matn'
                   ? 'bg-primary text-on-primary shadow-xs'
                   : 'text-on-surface-variant hover:text-on-surface'
-              }`}
+                }`}
               title="Digitized Arabic Matn & Translation"
             >
               <span className="material-symbols-outlined text-sm">auto_stories</span>
@@ -283,27 +278,24 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
             <div className="flex items-center bg-surface-container-low rounded-xl p-0.5 border border-surface-container shrink-0">
               <button
                 onClick={() => onThemeChange('parchment')}
-                className={`p-1 rounded-lg transition-colors cursor-pointer ${
-                  theme === 'parchment' ? 'bg-surface-container-lowest shadow-xs text-primary' : 'text-on-surface-variant'
-                }`}
+                className={`p-1 rounded-lg transition-colors cursor-pointer ${theme === 'parchment' ? 'bg-surface-container-lowest shadow-xs text-primary' : 'text-on-surface-variant'
+                  }`}
                 title="Light Theme"
               >
                 <span className="material-symbols-outlined text-sm text-tertiary">light_mode</span>
               </button>
               <button
                 onClick={() => onThemeChange('sepia')}
-                className={`p-1 rounded-lg transition-colors cursor-pointer ${
-                  theme === 'sepia' ? 'bg-surface-container-lowest shadow-xs text-primary' : 'text-on-surface-variant'
-                }`}
+                className={`p-1 rounded-lg transition-colors cursor-pointer ${theme === 'sepia' ? 'bg-surface-container-lowest shadow-xs text-primary' : 'text-on-surface-variant'
+                  }`}
                 title="Sepia Paper"
               >
                 <span className="material-symbols-outlined text-sm text-tertiary">auto_stories</span>
               </button>
               <button
                 onClick={() => onThemeChange('night')}
-                className={`p-1 rounded-lg transition-colors cursor-pointer ${
-                  theme === 'night' ? 'bg-surface-container-lowest shadow-xs text-primary' : 'text-on-surface-variant'
-                }`}
+                className={`p-1 rounded-lg transition-colors cursor-pointer ${theme === 'night' ? 'bg-surface-container-lowest shadow-xs text-primary' : 'text-on-surface-variant'
+                  }`}
                 title="Dark Emerald"
               >
                 <span className="material-symbols-outlined text-sm text-primary">dark_mode</span>

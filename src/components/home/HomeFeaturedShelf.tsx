@@ -215,3 +215,4 @@ export const HomeFeaturedShelf: React.FC<HomeFeaturedShelfProps> = ({
     </section>
   );
 };
+

@@ -110,11 +110,10 @@ export const ReaderMatnContentPane: React.FC<ReaderMatnContentPaneProps> = ({
         <button
           onClick={handlePrevChapter}
           disabled={currentChapterIndex === 0}
-          className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
-            currentChapterIndex === 0
+          className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${currentChapterIndex === 0
               ? 'opacity-40 cursor-not-allowed bg-surface-container text-on-surface-variant'
               : 'bg-surface-container hover:bg-surface-container-high text-primary cursor-pointer'
-          }`}
+            }`}
         >
           <span className="material-symbols-outlined text-base">arrow_back</span>
           <span>Previous Chapter</span>
@@ -127,11 +126,10 @@ export const ReaderMatnContentPane: React.FC<ReaderMatnContentPaneProps> = ({
         <button
           onClick={handleNextChapter}
           disabled={currentChapterIndex === totalChapters - 1}
-          className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
-            currentChapterIndex === totalChapters - 1
+          className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${currentChapterIndex === totalChapters - 1
               ? 'opacity-40 cursor-not-allowed bg-surface-container text-on-surface-variant'
               : 'bg-primary-container hover:bg-primary text-on-primary cursor-pointer'
-          }`}
+            }`}
         >
           <span>Next Chapter</span>
           <span className="material-symbols-outlined text-base">arrow_forward</span>

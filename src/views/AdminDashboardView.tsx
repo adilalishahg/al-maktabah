@@ -131,10 +131,10 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
       data.append('file', file);
       data.append('upload_preset', 'ml_default');
 
-      const res = await fetch('https://api.cloudinary.com/v1_1/demo/image/upload', {
-        method: 'POST',
-        body: data,
-      });
+        const res = await fetch('https://api.cloudinary.com/v1_1/demo/image/upload', {
+          method: 'POST',
+          body: data,
+        });
 
       if (res.ok) {
         const json = await res.json();
@@ -194,79 +194,79 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
     setActiveChapterIndex(formData.chapters.length);
   };
 
-  const handleRemoveChapter = (indexToRemove: number) => {
-    if (formData.chapters.length <= 1) return;
-    const updated = formData.chapters.filter((_, idx) => idx !== indexToRemove);
-    setFormData((prev) => ({ ...prev, chapters: updated }));
-    if (activeChapterIndex >= updated.length) {
-      setActiveChapterIndex(updated.length - 1);
-    }
-  };
+    const handleRemoveChapter = (indexToRemove: number) => {
+      if (formData.chapters.length <= 1) return;
+      const updated = formData.chapters.filter((_, idx) => idx !== indexToRemove);
+      setFormData((prev) => ({ ...prev, chapters: updated }));
+      if (activeChapterIndex >= updated.length) {
+        setActiveChapterIndex(updated.length - 1);
+      }
+    };
 
-  const updateCurrentChapter = (fields: Partial<BookChapter>) => {
-    setFormData((prev) => {
-      const updated = [...prev.chapters];
-      updated[activeChapterIndex] = {
-        ...updated[activeChapterIndex],
-        ...fields,
-      };
-      return { ...prev, chapters: updated };
-    });
-  };
+    const updateCurrentChapter = (fields: Partial<BookChapter>) => {
+      setFormData((prev) => {
+        const updated = [...prev.chapters];
+        updated[activeChapterIndex] = {
+          ...updated[activeChapterIndex],
+          ...fields,
+        };
+        return { ...prev, chapters: updated };
+      });
+    };
 
-  const handleSaveBook = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.title || !formData.arabicTitle || !formData.author) {
-      alert('Please fill out the English Title, Arabic Title, and Author fields.');
-      return;
-    }
+    const handleSaveBook = (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!formData.title || !formData.arabicTitle || !formData.author) {
+        alert('Please fill out the English Title, Arabic Title, and Author fields.');
+        return;
+      }
 
-    saveBookMutation(formData);
-    setIsEditing(false);
-    setSelectedBook(formData);
-    alert(`Book "${formData.title}" has been saved and published to the site!`);
-  };
+      saveBookMutation(formData);
+      setIsEditing(false);
+      setSelectedBook(formData);
+      alert(`Book "${formData.title}" has been saved and published to the site!`);
+    };
 
-  return (
-    <div className="space-y-6 sm:space-y-8 animate-fade-in pb-16">
-      {/* Top Header & Breadcrumb */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-container pb-6">
-        <div>
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-tertiary mb-1">
-            <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
-            <span>Digital Custodian &amp; Waqf Archive Center</span>
+    return (
+        <div className="space-y-6 sm:space-y-8 animate-fade-in pb-16">
+          {/* Top Header & Breadcrumb */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-container pb-6">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-tertiary mb-1">
+                <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
+                <span>Digital Custodian &amp; Waqf Archive Center</span>
+              </div>
+              <h1 className="font-display text-2xl sm:text-3xl font-bold text-primary">
+                Admin Library Dashboard
+              </h1>
+              <p className="font-body-md text-xs sm:text-sm text-on-surface-variant mt-1">
+                Upload new treatises, manage chapters, edit Arabic texts in real-time, and publish directly to the live reader.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => onNavigate('home')}
+                className="px-3 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-on-surface transition-colors flex items-center gap-1.5 cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-base">visibility</span>
+                <span>View Public Site</span>
+              </button>
+              <button
+                onClick={handleCreateNew}
+                className="px-4 py-2 rounded-lg bg-primary-container hover:bg-primary text-on-primary text-xs sm:text-sm font-semibold flex items-center gap-2 shadow-sm transition-all cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-base">add_circle</span>
+                <span>+ Upload &amp; Catalog Book</span>
+              </button>
+            </div>
           </div>
-          <h1 className="font-display text-2xl sm:text-3xl font-bold text-primary">
-            Admin Library Dashboard
-          </h1>
-          <p className="font-body-md text-xs sm:text-sm text-on-surface-variant mt-1">
-            Upload new treatises, manage chapters, edit Arabic texts in real-time, and publish directly to the live reader.
-          </p>
-        </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => onNavigate('home')}
-            className="px-3 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-on-surface transition-colors flex items-center gap-1.5 cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-base">visibility</span>
-            <span>View Public Site</span>
-          </button>
-          <button
-            onClick={handleCreateNew}
-            className="px-4 py-2 rounded-lg bg-primary-container hover:bg-primary text-on-primary text-xs sm:text-sm font-semibold flex items-center gap-2 shadow-sm transition-all cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-base">add_circle</span>
-            <span>+ Upload &amp; Catalog Book</span>
-          </button>
-        </div>
-      </div>
+          {/* Stats Ribbon */}
+          <DashboardMetricsBar books={books} />
 
-      {/* Stats Ribbon */}
-      <DashboardMetricsBar books={books} />
-
-      {/* Editor Modal / Panel */}
-      {isEditing && (
+          {/* Editor Modal / Panel */}
+          {isEditing && (
         <DashboardBookEditorModal
           formData={formData}
           setFormData={setFormData}
@@ -284,16 +284,16 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
           updateCurrentChapter={updateCurrentChapter}
           onClose={() => setIsEditing(false)}
         />
-      )}
+          )}
 
-      {/* Cataloged Books Table / Cards */}
-      <DashboardBooksTable
-        books={books}
-        onOpenReader={onOpenReader}
-        onEditBook={handleEditBook}
-        onDeleteBook={handleDeleteBook}
-        onTogglePublish={handleTogglePublish}
-      />
-    </div>
-  );
+          {/* Cataloged Books Table / Cards */}
+          <DashboardBooksTable
+            books={books}
+            onOpenReader={onOpenReader}
+            onEditBook={handleEditBook}
+            onDeleteBook={handleDeleteBook}
+            onTogglePublish={handleTogglePublish}
+          />
+        </div>
+        );
 };
