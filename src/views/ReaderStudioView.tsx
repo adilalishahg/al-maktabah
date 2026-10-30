@@ -1,14 +1,6 @@
 import React, { useState } from 'react';
-import { Book, IsnadNode, ReaderTheme, ReadingSection, WordAnalysis } from '../types/library';
-
-interface ReaderStudioViewProps {
-  initialBook?: Book;
-  allBooks: Book[];
-  readingSection: ReadingSection;
-  onOpenNarrator: (narrator: IsnadNode) => void;
-  onOpenWordAnalysis: (word: WordAnalysis) => void;
-  onNavigateHome: () => void;
-}
+import type { Book, IsnadNode, ReaderTheme, ReadingSection, WordAnalysis } from '../types/library';
+import type { ReaderStudioViewProps } from '../types/views';
 
 export const ReaderStudioView: React.FC<ReaderStudioViewProps> = ({
   initialBook,

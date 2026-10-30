@@ -137,23 +137,24 @@ flowchart TD
 
 ---
 
-### Phase 2: Types & Model Segregation
+### Phase 2: Types & Model Segregation (COMPLETED ✅)
 
 **Goal:** Move all 24 inline interface declarations out of JSX and library files into dedicated, cleanly exported type modules in `src/types/`.
 
-#### Actionable Steps:
-1. **Create `src/types/views.ts`:**
-   - Centralize all View props: `HomeViewProps`, `BookReaderViewProps`, `BrowseLibraryViewProps`, `CategoriesViewProps`, `AdminDashboardViewProps`, `LatestReleasesViewProps`, `ManuscriptsViewProps`, `ReaderStudioViewProps`.
-2. **Create `src/types/components.ts`:**
-   - Centralize all Component props: `HeaderProps`, `FooterProps`, `BookDetailModalProps`, `CommandPaletteProps`, `DownloadModalProps`, `MorphologyModalProps`, `NarratorBiographyModalProps`, `ScholarlyJsonLdProps`, `CodexPdfReaderProps`, `AdminHomeSettingsViewProps`.
-3. **Create `src/types/models.ts`:**
-   - Centralize Mongoose document interfaces: `IBookDocument`, `IChapter`, `ICategoryDocument`, `ISubBranch`, `ISettingsDocument`.
-4. **Update Imports in All 24 Consumer Files:**
-   - Replace inline interface declarations with explicit named imports:
-     ```tsx
-     import type { BookReaderViewProps } from '@/types/views';
-     import type { HeaderProps } from '@/types/components';
-     ```
+**Status:** ✅ Fully completed and verified across all 24 consumer files. 0 inline interfaces remain across `src/views/`, `src/components/`, `src/models/`, and `src/lib/`. 21/21 test assertions passing.
+
+#### Actionable Steps Completed:
+1. **Created `src/types/views.ts`:**
+   - Centralized all View props: `HomeViewProps`, `BookReaderViewProps`, `BrowseLibraryViewProps`, `CategoriesViewProps`, `AdminDashboardViewProps`, `LatestReleasesViewProps`, `ManuscriptsViewProps`, `ReaderStudioViewProps`.
+2. **Created `src/types/components.ts`:**
+   - Centralized all Component props: `HeaderProps`, `FooterProps`, `BookDetailModalProps`, `CommandPaletteProps`, `DownloadModalProps`, `MorphologyModalProps`, `NarratorBiographyModalProps`, `ScholarlyJsonLdProps`, `CodexPdfReaderProps`, `AdminHomeSettingsViewProps`.
+3. **Created `src/types/models.ts` & `src/types/utils.ts`:**
+   - Centralized Mongoose document interfaces: `IBookDocument`, `IChapter`, `ICategoryDocument`, `ISubBranch`, `ISettingsDocument`, `MongooseCache`.
+   - Centralized utility interfaces: `FileValidationResult`, `ExtractedBookData`.
+4. **Created `src/types/index.ts` Barrel Export:**
+   - Unified master export for all application types.
+5. **Updated Imports in All 24 Consumer Files:**
+   - Replaced all inline interfaces with explicit named imports from `@/types/...` (with re-exports on models/lib for backwards compatibility).
 
 ---
 
@@ -167,7 +168,7 @@ flowchart TD
    - Encapsulates: Chapter pagination, page jumping calculations, zoom scaling, font size persistence, TOC drawer toggle, and clipboard citation formatting.
    - Consumers: `src/views/BookReaderView.tsx`.
 2. **`src/hooks/usePdfReader.ts`:**
-   - Encapsulates: PDF.js worker canvas initialization, dual-page layout coordinate math, zoom scale, jump-to-page, and resize observer.
+   - Encapsulates: PDF.js canvas worker initialization, dual-page layout coordinate math, zoom scale, jump-to-page, and resize observer.
    - Consumers: `src/components/CodexPdfReader.tsx`.
 3. **`src/hooks/useAdminAuth.ts`:**
    - Encapsulates: Login authentication submission, HMAC token persistence in session/localStorage, token verification, logout handshake.

@@ -1,10 +1,6 @@
 import React from 'react';
-import { WordAnalysis } from '../types/library';
-
-interface MorphologyModalProps {
-  word: WordAnalysis | null;
-  onClose: () => void;
-}
+import type { WordAnalysis } from '../types/library';
+import type { MorphologyModalProps } from '../types/components';
 
 export const MorphologyModal: React.FC<MorphologyModalProps> = ({ word, onClose }) => {
   if (!word) return null;

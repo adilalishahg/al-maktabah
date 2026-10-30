@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-
-interface FooterProps {
-  onNavigate: (path: string) => void;
-}
+import type { FooterProps } from '../types/components';
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   const [email, setEmail] = useState('');

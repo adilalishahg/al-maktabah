@@ -1,38 +1,7 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema, Model } from 'mongoose';
+import type { IChapter, IBookDocument } from '@/types/models';
 
-export interface IChapter {
-  id: string;
-  number: number;
-  title: string;
-  arabicTitle: string;
-  startPage: number;
-  content: string;
-  translation: string;
-  notes: string;
-}
-
-export interface IBookDocument extends Document {
-  id: string;
-  title: string;
-  arabicTitle: string;
-  author: string;
-  authorHijriYear: string;
-  discipline: string;
-  disciplineName: string;
-  coverImage: string;
-  pdfUrl?: string;
-  description: string;
-  pages: number;
-  sizeMb: number;
-  edition: string;
-  volumes: number;
-  verified: boolean;
-  published: boolean;
-  formats: string[];
-  chapters: IChapter[];
-  createdAt: string;
-  updatedAt: string;
-}
+export type { IChapter, IBookDocument };
 
 const ChapterSchema = new Schema<IChapter>(
   {

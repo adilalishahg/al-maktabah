@@ -1,13 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { DetailedBook, BookChapter } from '../types/bookContent';
+import type { DetailedBook, BookChapter } from '../types/bookContent';
+import type { AdminDashboardViewProps } from '../types/views';
 import { getStoredBooks, saveBook, deleteBook } from '../data/bookStore';
-
-interface AdminDashboardViewProps {
-  onOpenReader: (book: DetailedBook, chapterId?: string) => void;
-  onNavigate: (path: string) => void;
-}
 
 export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
   onOpenReader,

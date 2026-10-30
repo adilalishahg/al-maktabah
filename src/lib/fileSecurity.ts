@@ -3,14 +3,11 @@
  * Validates codices, manuscripts, and asset uploads against spoofing and malicious payloads.
  */
 
-export const MAX_UPLOAD_SIZE_BYTES = 50 * 1024 * 1024; // 50 Megabytes
+import type { FileValidationResult } from '@/types/utils';
 
-export interface FileValidationResult {
-  valid: boolean;
-  mimeType?: string;
-  detectedType?: string;
-  error?: string;
-}
+export type { FileValidationResult };
+
+export const MAX_UPLOAD_SIZE_BYTES = 50 * 1024 * 1024; // 50 Megabytes
 
 const ALLOWED_EXTENSIONS = new Set(['pdf', 'epub', 'jpg', 'jpeg', 'png', 'webp']);
 

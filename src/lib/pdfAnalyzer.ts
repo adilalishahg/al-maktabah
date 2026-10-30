@@ -1,18 +1,7 @@
-import { BookChapter } from '@/types/bookContent';
+import type { BookChapter } from '@/types/bookContent';
+import type { ExtractedBookData } from '@/types/utils';
 
-export interface ExtractedBookData {
-  title: string;
-  arabicTitle: string;
-  author: string;
-  authorHijriYear: string;
-  discipline: string;
-  disciplineName: string;
-  pages: number;
-  sizeMb: number;
-  description: string;
-  coverImage: string;
-  chapters: BookChapter[];
-}
+export type { ExtractedBookData };
 
 // Dynamically load PDF.js in the browser without server dependency
 async function getPdfJs(): Promise<any> {

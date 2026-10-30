@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-import { ManuscriptCodex } from '../types/library';
-
-interface ManuscriptsViewProps {
-  manuscripts: ManuscriptCodex[];
-}
+import type { ManuscriptCodex } from '../types/library';
+import type { ManuscriptsViewProps } from '../types/views';
 
 export const ManuscriptsView: React.FC<ManuscriptsViewProps> = ({ manuscripts }) => {
   const [selectedCodex, setSelectedCodex] = useState<ManuscriptCodex>(manuscripts[0]);

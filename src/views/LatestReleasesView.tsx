@@ -1,12 +1,6 @@
 import React from 'react';
-import { Book } from '../types/library';
-
-interface LatestReleasesViewProps {
-  books: Book[];
-  onSelectBook: (book: Book) => void;
-  onOpenReader: (book: Book) => void;
-  onOpenDownload: (book: Book) => void;
-}
+import type { Book } from '../types/library';
+import type { LatestReleasesViewProps } from '../types/views';
 
 export const LatestReleasesView: React.FC<LatestReleasesViewProps> = ({
   books,

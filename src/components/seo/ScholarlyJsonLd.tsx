@@ -1,11 +1,7 @@
 import React from 'react';
-import { DetailedBook } from '@/types/bookContent';
-import { Book } from '@/types/library';
-
-interface ScholarlyJsonLdProps {
-  book?: DetailedBook | Book;
-  baseUrl?: string;
-}
+import type { DetailedBook } from '@/types/bookContent';
+import type { Book } from '@/types/library';
+import type { ScholarlyJsonLdProps } from '@/types/components';
 
 /**
  * Injects Schema.org scholarly semantic metadata for Google Academic & Search crawlers.

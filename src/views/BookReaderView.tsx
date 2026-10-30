@@ -1,23 +1,15 @@
 'use client';
 
 import React, { useState, useEffect, Suspense, lazy } from 'react';
-import { DetailedBook, BookChapter } from '../types/bookContent';
-import { ReaderTheme } from '../types/library';
+import type { DetailedBook, BookChapter } from '../types/bookContent';
+import type { ReaderTheme } from '../types/library';
+import type { BookReaderViewProps } from '../types/views';
 import { ScholarlyJsonLd } from '@/components/seo/ScholarlyJsonLd';
 
 // Lazy-load the heavy PDF rendering engine & canvas worker
 const CodexPdfReader = lazy(() =>
   import('@/components/CodexPdfReader').then((m) => ({ default: m.CodexPdfReader }))
 );
-
-interface BookReaderViewProps {
-  book: DetailedBook;
-  initialChapterId?: string;
-  onNavigate: (path: string) => void;
-  onOpenAdminEdit?: (book: DetailedBook) => void;
-  theme: ReaderTheme;
-  onThemeChange: (theme: ReaderTheme) => void;
-}
 
 export const BookReaderView: React.FC<BookReaderViewProps> = ({
   book,
@@ -113,10 +105,10 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
   return (
     <>
       <ScholarlyJsonLd book={book} />
-      <div className="space-y-1.5 sm:space-y-2 animate-fade-in pb-6 pt-1 sm:pt-1.5">
+      <div className="space-y-1.5 sm:space-y-2 animate-fade-in pb-6 pt-0.5">
         {/* Sleek Master Reader Toolbar (Device-Responsive: 2-Tier on Mobile, 1-Tier on Desktop) */}
         <div
-          style={{ top: 'calc(var(--app-header-height, 108px) + 4px)' }}
+          style={{ top: 'calc(var(--app-header-height, 108px) + 2px)' }}
           className="sticky z-30 !mt-0 bg-surface-container-lowest/95 backdrop-blur-md p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-surface-container shadow-xs select-none"
         >
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3">

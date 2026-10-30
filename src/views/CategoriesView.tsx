@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
-import { Book, CategoryScience } from '../types/library';
-
-interface CategoriesViewProps {
-  categories: CategoryScience[];
-  books?: Book[];
-  onSelectCategory: (categoryId: string) => void;
-  onNavigate: (path: string) => void;
-}
+import type { Book, CategoryScience } from '../types/library';
+import type { CategoriesViewProps } from '../types/views';
 
 export const CategoriesView: React.FC<CategoriesViewProps> = ({
   categories,

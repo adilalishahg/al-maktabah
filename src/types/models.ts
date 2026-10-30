@@ -1,5 +1,14 @@
 import type { Document } from 'mongoose';
+import type mongoose from 'mongoose';
 import type { HomeSettings } from './homeSettings';
+
+/**
+ * Global cache interface for Mongoose in serverless / hot-reload environments.
+ */
+export interface MongooseCache {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
+}
 
 /**
  * Chapter sub-document schema shape.

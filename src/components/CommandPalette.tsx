@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Book, CategoryScience } from '../types/library';
-
-interface CommandPaletteProps {
-  isOpen: boolean;
-  onClose: () => void;
-  books: Book[];
-  categories: CategoryScience[];
-  onSelectBook: (book: Book) => void;
-  onNavigate: (path: string) => void;
-}
+import type { Book, CategoryScience } from '../types/library';
+import type { CommandPaletteProps } from '../types/components';
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
   isOpen,

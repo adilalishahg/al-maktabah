@@ -1,22 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { DetailedBook, BookChapter } from '@/types/bookContent';
-
-interface CodexPdfReaderProps {
-  book: DetailedBook;
-  pdfUrl?: string;
-  initialPage?: number;
-  externalPage?: number;
-  externalScale?: number;
-  hideHeader?: boolean;
-  sidebarOpenExternal?: boolean;
-  onToggleSidebarExternal?: () => void;
-  onPageChange?: (page: number) => void;
-  onClose?: () => void;
-  onJumpToChapter?: (chapter: BookChapter) => void;
-  onSwitchToMatn?: () => void;
-}
+import type { DetailedBook, BookChapter } from '@/types/bookContent';
+import type { CodexPdfReaderProps } from '@/types/components';
 
 // Dynamically load PDF.js from CDN
 async function getPdfJs(): Promise<any> {

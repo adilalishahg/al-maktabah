@@ -1,19 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { HomeSettings, HomeSectionsConfig } from '@/types/homeSettings';
-import { DetailedBook } from '@/types/bookContent';
-import { CategoryScience, IsnadNode, Footnote, ReadingSection } from '@/types/library';
+import type { HomeSettings, HomeSectionsConfig } from '@/types/homeSettings';
+import type { DetailedBook } from '@/types/bookContent';
+import type { CategoryScience, IsnadNode, Footnote, ReadingSection } from '@/types/library';
+import type { AdminHomeSettingsViewProps } from '@/types/components';
 import { buildReadingSectionFromBook } from '@/data/homeSettingsStore';
-
-interface AdminHomeSettingsViewProps {
-  settings: HomeSettings;
-  onSaveSettings: (updated: HomeSettings) => Promise<void>;
-  isSaving: boolean;
-  successMessage: string;
-  books: DetailedBook[];
-  categories: CategoryScience[];
-}
 
 export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
   settings,

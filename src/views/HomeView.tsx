@@ -1,21 +1,8 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { Book, CategoryScience, IsnadNode, ReaderTheme, ReadingSection, WordAnalysis } from '../types/library';
-import { HomeSettings } from '../types/homeSettings';
+import type { Book, CategoryScience, IsnadNode, ReaderTheme, ReadingSection, WordAnalysis } from '../types/library';
+import type { HomeSettings } from '../types/homeSettings';
+import type { HomeViewProps } from '../types/views';
 import { DEFAULT_HOME_SETTINGS } from '../data/homeSettingsStore';
-
-interface HomeViewProps {
-  books: Book[];
-  categories: CategoryScience[];
-  readingSection: ReadingSection;
-  homeSettings?: HomeSettings;
-  onSelectBook: (book: Book) => void;
-  onOpenReader: (book?: Book) => void;
-  onOpenDownload: (book: Book) => void;
-  onOpenNarrator: (narrator: IsnadNode) => void;
-  onOpenWordAnalysis: (word: WordAnalysis) => void;
-  onNavigate: (path: string) => void;
-  onSearchQuery: (query: string) => void;
-}
 
 export const HomeView: React.FC<HomeViewProps> = ({
   books,

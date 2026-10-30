@@ -1,15 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ReaderTheme } from '../types/library';
-
-interface HeaderProps {
-  currentPath: string;
-  onNavigate: (path: string) => void;
-  onOpenSearch: () => void;
-  currentTheme: ReaderTheme;
-  onThemeChange: (theme: ReaderTheme) => void;
-  currentLang: 'EN' | 'AR';
-  onLangChange: (lang: 'EN' | 'AR') => void;
-}
+import type { ReaderTheme } from '../types/library';
+import type { HeaderProps } from '../types/components';
 
 export const Header: React.FC<HeaderProps> = ({
   currentPath,

@@ -1,10 +1,6 @@
 import React from 'react';
-import { IsnadNode } from '../types/library';
-
-interface NarratorBiographyModalProps {
-  narrator: IsnadNode | null;
-  onClose: () => void;
-}
+import type { IsnadNode } from '../types/library';
+import type { NarratorBiographyModalProps } from '../types/components';
 
 export const NarratorBiographyModal: React.FC<NarratorBiographyModalProps> = ({ narrator, onClose }) => {
   if (!narrator) return null;

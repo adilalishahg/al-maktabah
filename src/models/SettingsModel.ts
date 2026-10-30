@@ -1,10 +1,7 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema, Model } from 'mongoose';
+import type { ISettingsDocument } from '@/types/models';
 
-export interface ISettingsDocument extends Document {
-  key: string;
-  data: any;
-  updatedAt: string;
-}
+export type { ISettingsDocument };
 
 const SettingsSchema = new Schema<ISettingsDocument>(
   {

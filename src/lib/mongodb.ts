@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 import dns from 'dns';
+import type { MongooseCache } from '@/types/models';
+
+export type { MongooseCache };
 
 // Ensure Node.js resolves MongoDB Atlas SRV records reliably across all Windows/ISP networks
 if (typeof dns.setServers === 'function') {
@@ -10,14 +13,7 @@ if (typeof dns.setServers === 'function') {
   }
 }
 
-/**
- * Global cache for Mongoose connection in Next.js to prevent multiple
- * connections during development hot-reloading and serverless invocations.
- */
-interface MongooseCache {
-  conn: typeof mongoose | null;
-  promise: Promise<typeof mongoose> | null;
-}
+
 
 declare global {
   // eslint-disable-next-line no-var

@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
-import { Book } from '../types/library';
-
-interface BookDetailModalProps {
-  book: Book | null;
-  onClose: () => void;
-  onOpenReader: (book: Book) => void;
-  onDownload: (book: Book) => void;
-}
+import type { Book } from '../types/library';
+import type { BookDetailModalProps } from '../types/components';
 
 export const BookDetailModal: React.FC<BookDetailModalProps> = ({
   book,

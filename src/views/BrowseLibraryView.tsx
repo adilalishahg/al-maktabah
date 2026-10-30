@@ -1,16 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Book, CategoryScience, Discipline } from '../types/library';
-
-interface BrowseLibraryViewProps {
-  books: Book[];
-  categories?: CategoryScience[];
-  onSelectBook: (book: Book) => void;
-  onOpenReader: (book: Book) => void;
-  onOpenDownload: (book: Book) => void;
-  initialQuery?: string;
-  isLoading?: boolean;
-  onRefresh?: () => void;
-}
+import type { Book, CategoryScience, Discipline } from '../types/library';
+import type { BrowseLibraryViewProps } from '../types/views';
 
 export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
   books,

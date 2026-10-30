@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
-import { Book } from '../types/library';
-
-interface DownloadModalProps {
-  book: Book | null;
-  onClose: () => void;
-}
+import type { Book } from '../types/library';
+import type { DownloadModalProps } from '../types/components';
 
 export const DownloadModal: React.FC<DownloadModalProps> = ({ book, onClose }) => {
   const [downloadingFormat, setDownloadingFormat] = useState<string | null>(null);

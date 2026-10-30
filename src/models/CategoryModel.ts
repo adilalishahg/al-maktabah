@@ -1,24 +1,7 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema, Model } from 'mongoose';
+import type { ISubBranch, ICategoryDocument } from '@/types/models';
 
-export interface ISubBranch {
-  title: string;
-  description: string;
-  count: number;
-}
-
-export interface ICategoryDocument extends Document {
-  id: string;
-  name: string;
-  arabicName: string;
-  icon: string;
-  description: string;
-  volumeCount: number;
-  tags: string[];
-  subBranches: ISubBranch[];
-  foundationTreatises: string[];
-  createdAt: string;
-  updatedAt: string;
-}
+export type { ISubBranch, ICategoryDocument };
 
 const SubBranchSchema = new Schema<ISubBranch>(
   {

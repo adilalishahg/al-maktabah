@@ -6,6 +6,7 @@ import type { BookChapter } from './bookContent';
 export interface FileValidationResult {
   valid: boolean;
   mimeType?: string;
+  detectedType?: string;
   error?: string;
 }
 
@@ -19,7 +20,9 @@ export interface ExtractedBookData {
   authorHijriYear: string;
   discipline: string;
   disciplineName: string;
+  pages: number;
+  sizeMb: number;
   description: string;
-  totalPages: number;
+  coverImage: string;
   chapters: BookChapter[];
 }
