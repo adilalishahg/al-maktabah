@@ -3,13 +3,19 @@
 import React, { useState } from 'react';
 import type { DetailedBook, BookChapter } from '../types/bookContent';
 import type { AdminDashboardViewProps } from '../types/views';
-import { getStoredBooks, saveBook, deleteBook } from '../data/bookStore';
+import { useAdminBooks } from '@/hooks/useAdminBooks';
 
 export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
   onOpenReader,
   onNavigate,
 }) => {
-  const [books, setBooks] = useState<DetailedBook[]>(() => getStoredBooks());
+  const {
+    books,
+    setBooks,
+    saveBookMutation,
+    deleteBookMutation,
+    togglePublishMutation,
+  } = useAdminBooks();
   const [selectedBook, setSelectedBook] = useState<DetailedBook | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [activeChapterIndex, setActiveChapterIndex] = useState(0);
@@ -97,10 +103,9 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
     setIsEditing(true);
   };
 
-  const handleDeleteBook = (id: string) => {
+  const handleDeleteBook = async (id: string) => {
     if (confirm('Are you sure you want to delete this book from the digital archives?')) {
-      const updated = deleteBook(id);
-      setBooks(updated);
+      await deleteBookMutation(id);
       if (selectedBook?.id === id) {
         setIsEditing(false);
         setSelectedBook(null);
@@ -109,9 +114,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
   };
 
   const handleTogglePublish = (book: DetailedBook) => {
-    const updatedBook = { ...book, published: !book.published };
-    const updatedList = saveBook(updatedBook);
-    setBooks(updatedList);
+    togglePublishMutation(book);
   };
 
   // Upload handler with Cloudinary support
@@ -203,8 +206,7 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
       return;
     }
 
-    const updatedList = saveBook(formData);
-    setBooks(updatedList);
+    saveBookMutation(formData);
     setIsEditing(false);
     setSelectedBook(formData);
     alert(`Book "${formData.title}" has been saved and published to the site!`);

@@ -8,6 +8,9 @@ import { getStoredCategories, saveCategory, deleteCategory as deleteStoredCatego
 import { analyzeUploadedPdf } from '@/lib/pdfAnalyzer';
 import { HomeSettings } from '@/types/homeSettings';
 import { getHomeSettings, saveHomeSettings, buildReadingSectionFromBook } from '@/data/homeSettingsStore';
+import { useAdminAuth } from '@/hooks/useAdminAuth';
+import { useAdminBooks } from '@/hooks/useAdminBooks';
+import { useHomeSettings } from '@/hooks/useHomeSettings';
 
 // Dynamic lazy imports for heavy readers and controllers
 const BookReaderView = lazy(() => import('@/views/BookReaderView').then((m) => ({ default: m.BookReaderView })));
@@ -15,22 +18,43 @@ const CodexPdfReader = lazy(() => import('@/components/CodexPdfReader').then((m)
 const AdminHomeSettingsView = lazy(() => import('@/components/admin/AdminHomeSettingsView').then((m) => ({ default: m.AdminHomeSettingsView })));
 
 export default function AdminPortalPage() {
-  // Authentication State
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-  const [loginError, setLoginError] = useState('');
+  const {
+    isAuthenticated,
+    loginEmail,
+    setLoginEmail,
+    loginPassword,
+    setLoginPassword,
+    loginError,
+    getAuthHeaders,
+    handleLogin: baseLogin,
+    handleLogout,
+  } = useAdminAuth();
 
   // Admin Navigation Tab
   const [activeTab, setActiveTab] = useState<'analytics' | 'books' | 'categories' | 'editor' | 'homepage'>('analytics');
 
-  // Homepage & Reader Configuration State
-  const [homeSettings, setHomeSettings] = useState<HomeSettings>(() => getHomeSettings());
-  const [isSavingSettings, setIsSavingSettings] = useState(false);
-  const [settingsSavedSuccess, setSettingsSavedSuccess] = useState('');
+  const {
+    books,
+    setBooks,
+    dbSyncStatus,
+    isSaving,
+    loadBooks,
+    saveBookMutation,
+    deleteBookMutation,
+    togglePublishMutation,
+  } = useAdminBooks({ getAuthHeaders });
+
+  const {
+    homeSettings,
+    setHomeSettings,
+    isSavingSettings,
+    settingsSavedSuccess,
+    loadSettings,
+    saveHomeSettingsMutation,
+    setBookAsHomeReader,
+  } = useHomeSettings({ getAuthHeaders });
 
   // Book Management & Editor State
-  const [books, setBooks] = useState<DetailedBook[]>([]);
   const [editingBook, setEditingBook] = useState<DetailedBook | null>(null);
   const [activeChapterIndex, setActiveChapterIndex] = useState(0);
   const [editorPreviewMode, setEditorPreviewMode] = useState<'edit' | 'preview'>('edit');
@@ -39,8 +63,6 @@ export default function AdminPortalPage() {
   const [isUploadingPdf, setIsUploadingPdf] = useState(false);
   const [pdfUploadSuccess, setPdfUploadSuccess] = useState('');
   const [pdfAnalysisStatus, setPdfAnalysisStatus] = useState<string>('');
-  const [isSaving, setIsSaving] = useState(false);
-  const [dbSyncStatus, setDbSyncStatus] = useState<'online' | 'local' | 'connecting'>('connecting');
   const [showBulkModal, setShowBulkModal] = useState(false);
   const [bulkRawText, setBulkRawText] = useState('');
   const [viewingReaderBook, setViewingReaderBook] = useState<DetailedBook | null>(null);
@@ -51,32 +73,6 @@ export default function AdminPortalPage() {
   const [editingCategory, setEditingCategory] = useState<CategoryScience | null>(null);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [isSavingCategory, setIsSavingCategory] = useState(false);
-
-  // Load books from MongoDB Backend API with fallback to localStorage
-  const loadBooks = async () => {
-    setDbSyncStatus('connecting');
-    try {
-      const res = await fetch('/api/books?admin=true');
-      if (res.ok) {
-        const json = await res.json();
-        const data = Array.isArray(json) ? json : (Array.isArray(json?.data) ? json.data : null);
-        if (data !== null) {
-          setBooks(data);
-          saveStoredBooks(data);
-          if (json?.source?.includes('MongoDB')) {
-            setDbSyncStatus('online');
-          } else {
-            setDbSyncStatus('local');
-          }
-          return;
-        }
-      }
-    } catch (err) {
-      console.warn('Backend API fetch fallback to local storage:', err);
-    }
-    setBooks(getStoredBooks());
-    setDbSyncStatus('local');
-  };
 
   // Load categories from MongoDB Backend API with fallback to localStorage
   const loadCategories = async () => {
@@ -96,164 +92,26 @@ export default function AdminPortalPage() {
     setCategories(getStoredCategories());
   };
 
-  // Load home & reader settings from MongoDB Backend API with fallback to localStorage
-  const loadSettings = async () => {
-    try {
-      const res = await fetch('/api/settings');
-      if (res.ok) {
-        const json = await res.json();
-        if (json?.data) {
-          setHomeSettings(json.data);
-          saveHomeSettings(json.data);
-          return;
-        }
-      }
-    } catch (err) {
-      console.warn('Backend API fetch settings fallback:', err);
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    const success = await baseLogin(e);
+    if (success) {
+      loadBooks();
+      loadCategories();
+      loadSettings();
     }
-    setHomeSettings(getHomeSettings());
   };
 
-  // Helper to attach HMAC Authorization & x-admin-token headers
-  const getAuthHeaders = (extraHeaders?: Record<string, string>): Record<string, string> => {
-    const headers: Record<string, string> = { ...extraHeaders };
-    const token = typeof window !== 'undefined' ? sessionStorage.getItem('al_maktabah_admin_token') : null;
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-      headers['x-admin-token'] = token;
-    }
-    return headers;
-  };
-
-  const handleSaveHomeSettings = async (updated: HomeSettings) => {
-    setIsSavingSettings(true);
-    setSettingsSavedSuccess('');
-
-    // 1. Instant local persistence and broadcast
-    saveHomeSettings(updated);
-    setHomeSettings(updated);
-
-    // 2. MongoDB Backend API persistence
-    try {
-      const res = await fetch('/api/settings', {
-        method: 'POST',
-        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(updated),
-      });
-      if (res.ok) {
-        setSettingsSavedSuccess('✓ Saved & Published live to Homepage!');
-      } else {
-        setSettingsSavedSuccess('✓ Saved locally in browser cache.');
-      }
-    } catch (err) {
-      setSettingsSavedSuccess('✓ Saved locally in browser cache.');
-    } finally {
-      setIsSavingSettings(false);
-      setTimeout(() => setSettingsSavedSuccess(''), 4500);
-    }
+  const handleSaveHomeSettings = async (updated: HomeSettings): Promise<void> => {
+    await saveHomeSettingsMutation(updated);
   };
 
   const handleSetBookAsHomeReader = (book: DetailedBook, chapterId?: string) => {
-    const generatedSection = buildReadingSectionFromBook(book, chapterId);
-    const updated: HomeSettings = {
-      ...homeSettings,
-      sections: {
-        ...homeSettings.sections,
-        readerPreview: {
-          ...homeSettings.sections.readerPreview,
-          enabled: true,
-          sourceMode: 'book',
-          selectedBookId: book.id,
-          selectedChapterId: chapterId || book.chapters?.[0]?.id || 'ch-1',
-        },
-      },
-      readerSection: generatedSection,
-    };
-    handleSaveHomeSettings(updated);
+    setBookAsHomeReader(book, chapterId);
     alert(`"${book.title}" is now set as the active live reader on the home page!`);
-  };
-
-  // Check auth on mount & sync data
-  useEffect(() => {
-    const token = sessionStorage.getItem('al_maktabah_admin_token');
-    const authSession = sessionStorage.getItem('al_maktabah_admin_session');
-
-    if (token) {
-      fetch('/api/auth/verify', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'x-admin-token': token,
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.authenticated) {
-            setIsAuthenticated(true);
-          } else {
-            sessionStorage.removeItem('al_maktabah_admin_session');
-            sessionStorage.removeItem('al_maktabah_admin_token');
-            setIsAuthenticated(false);
-          }
-        })
-        .catch(() => {
-          if (authSession === 'authenticated_admin') {
-            setIsAuthenticated(true);
-          }
-        });
-    } else if (authSession === 'authenticated_admin') {
-      setIsAuthenticated(true);
-    }
-
-    loadBooks();
-    loadCategories();
-    loadSettings();
-  }, []);
-
-  // Handle Login via /api/auth/login endpoint
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoginError('');
-
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: loginEmail, password: loginPassword }),
-      });
-      const data = await res.json();
-      if (res.ok && data.success && data.token) {
-        sessionStorage.setItem('al_maktabah_admin_session', 'authenticated_admin');
-        sessionStorage.setItem('al_maktabah_admin_token', data.token);
-        setIsAuthenticated(true);
-        loadBooks();
-        loadCategories();
-        loadSettings();
-      } else {
-        setLoginError(data.message || 'Invalid Administrator credentials. Use admin@almaktabah.org and maktabah1445');
-      }
-    } catch {
-      // Local fallback for offline mode
-      if (
-        (loginEmail.trim().toLowerCase() === 'admin@almaktabah.org' || loginEmail.trim().toLowerCase() === 'admin') &&
-        loginPassword === 'maktabah1445'
-      ) {
-        sessionStorage.setItem('al_maktabah_admin_session', 'authenticated_admin');
-        setIsAuthenticated(true);
-      } else {
-        setLoginError('Invalid Administrator credentials.');
-      }
-    }
-  };
-
-  const handleLogout = () => {
-    sessionStorage.removeItem('al_maktabah_admin_session');
-    sessionStorage.removeItem('al_maktabah_admin_token');
-    if (typeof document !== 'undefined') {
-      document.cookie = 'al_maktabah_admin_token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    }
-    setIsAuthenticated(false);
-    setLoginEmail('');
-    setLoginPassword('');
   };
 
   // Create New Book Template
@@ -303,16 +161,7 @@ export default function AdminPortalPage() {
 
   const handleDeleteBook = async (id: string) => {
     if (confirm('Are you sure you want to delete this book record?')) {
-      const updated = deleteBook(id);
-      setBooks(updated);
-      try {
-        await fetch(`/api/books/${id}`, {
-          method: 'DELETE',
-          headers: getAuthHeaders(),
-        });
-      } catch (err) {
-        console.warn('MongoDB delete sync notice:', err);
-      }
+      await deleteBookMutation(id);
       if (editingBook?.id === id) {
         setEditingBook(null);
         setActiveTab('books');
@@ -321,18 +170,7 @@ export default function AdminPortalPage() {
   };
 
   const handleTogglePublish = async (book: DetailedBook) => {
-    const updated = { ...book, published: !book.published };
-    const list = saveBook(updated);
-    setBooks(list);
-    try {
-      await fetch('/api/books', {
-        method: 'POST',
-        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(updated),
-      });
-    } catch (err) {
-      console.warn('MongoDB publish sync notice:', err);
-    }
+    await togglePublishMutation(book);
   };
 
   // Category & Discipline Management Handlers
@@ -677,28 +515,7 @@ export default function AdminPortalPage() {
       return;
     }
 
-    setIsSaving(true);
-    // 1. Snappy Local Client Save
-    const list = saveBook(editingBook);
-    setBooks(list);
-
-    // 2. Real MongoDB Server Save
-    try {
-      const res = await fetch('/api/books', {
-        method: 'POST',
-        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(editingBook),
-      });
-      const data = await res.json();
-      if (data.source === 'mongodb') {
-        setDbSyncStatus('online');
-      }
-    } catch (err) {
-      console.warn('MongoDB save notice:', err);
-    } finally {
-      setIsSaving(false);
-    }
-
+    await saveBookMutation(editingBook);
     alert(`Book "${editingBook.title}" successfully saved and published!`);
     setActiveTab('books');
   };

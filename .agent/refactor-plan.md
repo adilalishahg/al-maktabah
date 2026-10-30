@@ -158,33 +158,37 @@ flowchart TD
 
 ---
 
-### Phase 3: Logic Decoupling (Custom Hooks & Utilities)
+### Phase 3: Logic Decoupling (Custom Hooks & Utilities) (COMPLETED ✅)
 
 **Goal:** Remove all side effects, state machines, API queries, and heavy algorithms from presentational components into dedicated custom hooks in `src/hooks/`.
 
-#### Custom Hooks to Create:
+**Status:** ✅ Fully completed and wired across all consumer views and components. All 7 custom hooks created and verified with `tsc --noEmit` and all 21 automated test assertions passing.
 
-1. **`src/hooks/useBookReader.ts`:**
+#### Custom Hooks Created & Integrated:
+
+1. **`src/hooks/useBookReader.ts` (166 lines):**
    - Encapsulates: Chapter pagination, page jumping calculations, zoom scaling, font size persistence, TOC drawer toggle, and clipboard citation formatting.
    - Consumers: `src/views/BookReaderView.tsx`.
-2. **`src/hooks/usePdfReader.ts`:**
-   - Encapsulates: PDF.js canvas worker initialization, dual-page layout coordinate math, zoom scale, jump-to-page, and resize observer.
+2. **`src/hooks/usePdfReader.ts` (354 lines):**
+   - Encapsulates: PDF.js canvas worker initialization, dual-page layout coordinate math, zoom scale, jump-to-page, and intersection observer.
    - Consumers: `src/components/CodexPdfReader.tsx`.
-3. **`src/hooks/useAdminAuth.ts`:**
+3. **`src/hooks/useAdminAuth.ts` (151 lines):**
    - Encapsulates: Login authentication submission, HMAC token persistence in session/localStorage, token verification, logout handshake.
    - Consumers: `src/app/admin/page.tsx`.
-4. **`src/hooks/useAdminBooks.ts`:**
+4. **`src/hooks/useAdminBooks.ts` (149 lines):**
    - Encapsulates: Catalog data fetching from `/api/books`, book deletion, book creation, and optimistic state updates.
    - Consumers: `src/app/admin/page.tsx`, `src/views/AdminDashboardView.tsx`.
-5. **`src/hooks/useHomeSettings.ts`:**
+5. **`src/hooks/useHomeSettings.ts` (138 lines):**
    - Encapsulates: Fetching and saving home settings to `/api/settings`, dispatching `al_maktabah_settings_updated` window events, and section toggle handlers.
    - Consumers: `src/components/admin/AdminHomeSettingsView.tsx`, `src/App.tsx`.
-6. **`src/hooks/useAppTheme.ts`:**
+6. **`src/hooks/useAppTheme.ts` (95 lines):**
    - Encapsulates: Theme mode transitions (`parchment`, `sepia`, `night`), updating `document.body.classList`, and persisting theme preference.
    - Consumers: `src/App.tsx`, `src/components/Header.tsx`.
-7. **`src/hooks/useCatalogSearch.ts`:**
+7. **`src/hooks/useCatalogSearch.ts` (144 lines):**
    - Encapsulates: Search query filtering, category discipline matching, and sorting logic.
    - Consumers: `src/views/BrowseLibraryView.tsx`, `src/components/CommandPalette.tsx`.
+8. **`src/hooks/index.ts` (27 lines):**
+   - Master barrel re-exporting all hooks and their TypeScript return types.
 
 ---
 

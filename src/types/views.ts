@@ -91,3 +91,4 @@ export interface ReaderStudioViewProps {
   onOpenWordAnalysis: (word: WordAnalysis) => void;
   onNavigateHome: () => void;
 }
+

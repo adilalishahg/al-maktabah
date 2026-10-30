@@ -105,3 +105,4 @@ export interface AdminHomeSettingsViewProps {
   books: DetailedBook[];
   categories: CategoryScience[];
 }
+

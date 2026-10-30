@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Book, CategoryScience, IsnadNode, ReaderTheme, WordAnalysis } from './types/library';
+import { useAppTheme } from '@/hooks/useAppTheme';
 import { BOOKS, MANUSCRIPTS, PRIMARY_READING_SECTION } from './data/mockLibrary';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -43,8 +44,12 @@ const ViewLoadingFallback = () => (
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState<string>('home');
-  const [currentTheme, setCurrentTheme] = useState<ReaderTheme>('parchment');
-  const [currentLang, setCurrentLang] = useState<'EN' | 'AR'>('EN');
+  const {
+    currentTheme,
+    setTheme: setCurrentTheme,
+    currentLang,
+    setLang: setCurrentLang,
+  } = useAppTheme();
   const [publicBooks, setPublicBooks] = useState<Book[]>(() => getPublicLibraryBooks());
   const [categories, setCategories] = useState<CategoryScience[]>(() => getStoredCategories());
   const [homeSettings, setHomeSettings] = useState<HomeSettings>(() => getHomeSettings());
@@ -121,16 +126,6 @@ export default function App() {
       window.removeEventListener('al_maktabah_settings_updated', syncLibrary);
     };
   }, []);
-
-  // Apply theme to document body
-  useEffect(() => {
-    document.body.classList.remove('theme-sepia', 'theme-night');
-    if (currentTheme === 'sepia') {
-      document.body.classList.add('theme-sepia');
-    } else if (currentTheme === 'night') {
-      document.body.classList.add('theme-night');
-    }
-  }, [currentTheme]);
 
   // Scroll to top on navigation change and refresh books
   const navigateTo = (path: string) => {

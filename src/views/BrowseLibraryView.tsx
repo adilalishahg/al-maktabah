@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import type { Book, CategoryScience, Discipline } from '../types/library';
+import React from 'react';
 import type { BrowseLibraryViewProps } from '../types/views';
+import { useCatalogSearch } from '@/hooks/useCatalogSearch';
 
 export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
   books,
@@ -12,61 +12,21 @@ export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
   isLoading = false,
   onRefresh,
 }) => {
-  const [searchQuery, setSearchQuery] = useState(initialQuery);
-  const [selectedDiscipline, setSelectedDiscipline] = useState<string>('all');
-  const [selectedFormat, setSelectedFormat] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<'rating' | 'pages' | 'title' | 'hijri'>('rating');
-  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
-
-  const disciplines = useMemo(() => {
-    const list: { id: string; label: string; count: number }[] = [
-      { id: 'all', label: 'All Sciences', count: books.length },
-    ];
-    if (categories && categories.length > 0) {
-      categories.forEach((cat) => {
-        const count = books.filter(
-          (b) => b.discipline === cat.id || (cat.id === 'seerah' && b.discipline === 'history')
-        ).length;
-        list.push({ id: String(cat.id), label: cat.name, count });
-      });
-    } else {
-      list.push(
-        { id: 'hadith', label: 'Hadīth & Isnād', count: books.filter((b) => b.discipline === 'hadith').length },
-        { id: 'tafsir', label: 'Tafsīr & Qur’an', count: books.filter((b) => b.discipline === 'tafsir').length },
-        { id: 'fiqh', label: 'Fiqh & Jurisprudence', count: books.filter((b) => b.discipline === 'fiqh').length },
-        { id: 'seerah', label: 'Sīrah & History', count: books.filter((b) => b.discipline === 'seerah' || b.discipline === 'history').length },
-        { id: 'aqeedah', label: '‘Aqīdah & Creed', count: books.filter((b) => b.discipline === 'aqeedah').length },
-        { id: 'tazkiyah', label: 'Tazkiyah & Adab', count: books.filter((b) => b.discipline === 'tazkiyah').length }
-      );
-    }
-    return list;
-  }, [books, categories]);
-
-  const filteredBooks = useMemo(() => {
-    return books
-      .filter((b) => {
-        const matchesQuery =
-          b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          b.arabicTitle.includes(searchQuery) ||
-          b.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          b.description.toLowerCase().includes(searchQuery.toLowerCase());
-
-        const matchesDiscipline = selectedDiscipline === 'all' ||
-          b.discipline === selectedDiscipline ||
-          (selectedDiscipline === 'seerah' && b.discipline === 'history');
-
-        const matchesFormat = selectedFormat === 'all' ||
-          b.formats.some(f => f.toLowerCase().includes(selectedFormat.toLowerCase()));
-
-        return matchesQuery && matchesDiscipline && matchesFormat;
-      })
-      .sort((a, b) => {
-        if (sortBy === 'rating') return b.rating - a.rating;
-        if (sortBy === 'pages') return b.pages - a.pages;
-        if (sortBy === 'title') return a.title.localeCompare(b.title);
-        return 0;
-      });
-  }, [books, searchQuery, selectedDiscipline, selectedFormat, sortBy]);
+  const {
+    searchQuery,
+    setSearchQuery,
+    selectedDiscipline,
+    setSelectedDiscipline,
+    selectedFormat,
+    setSelectedFormat,
+    sortBy,
+    setSortBy,
+    viewMode,
+    setViewMode,
+    disciplines,
+    filteredBooks,
+    clearFilters,
+  } = useCatalogSearch({ books, categories, initialQuery });
 
   return (
     <div className="w-full space-y-space-xl">
@@ -241,11 +201,7 @@ export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
               : 'No treatises found in the selected discipline or format.'}
           </p>
           <button
-            onClick={() => {
-              setSearchQuery('');
-              setSelectedDiscipline('all');
-              setSelectedFormat('all');
-            }}
+            onClick={clearFilters}
             className="mt-2 px-4 py-2 bg-primary-container text-on-primary rounded-xl text-xs font-semibold hover:bg-primary transition-all cursor-pointer"
           >
             Reset All Filters

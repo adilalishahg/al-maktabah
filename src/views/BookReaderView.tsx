@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, Suspense, lazy } from 'react';
-import type { DetailedBook, BookChapter } from '../types/bookContent';
-import type { ReaderTheme } from '../types/library';
+import React, { Suspense, lazy } from 'react';
 import type { BookReaderViewProps } from '../types/views';
 import { ScholarlyJsonLd } from '@/components/seo/ScholarlyJsonLd';
+import { useBookReader } from '@/hooks/useBookReader';
 
 // Lazy-load the heavy PDF rendering engine & canvas worker
 const CodexPdfReader = lazy(() =>
@@ -19,88 +18,32 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
   theme,
   onThemeChange,
 }) => {
-  const chapters = book.chapters || [];
-  const [currentChapterIndex, setCurrentChapterIndex] = useState(() => {
-    if (initialChapterId) {
-      const idx = chapters.findIndex((c) => c.id === initialChapterId);
-      return idx >= 0 ? idx : 0;
-    }
-    return 0;
-  });
-
-  const [readingFormat, setReadingFormat] = useState<'facsimile' | 'matn'>('facsimile');
-  const [zoomScale, setZoomScale] = useState<number>(1.0);
-  const [fontSize, setFontSize] = useState<number>(22);
-  const [showTranslation, setShowTranslation] = useState<boolean>(true);
-  const [showNotes, setShowNotes] = useState<boolean>(true);
-  const [pageInput, setPageInput] = useState<string>('1');
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const [copiedNotification, setCopiedNotification] = useState<boolean>(false);
-
-  const activeChapter: BookChapter = chapters[currentChapterIndex] || {
-    id: 'c1',
-    number: 1,
-    title: 'Chapter 1',
-    arabicTitle: 'الفصل الأول',
-    startPage: 1,
-    content: 'لا يوجد نص مدخل بعد.',
-  };
-
-  useEffect(() => {
-    setPageInput(String(activeChapter.startPage || 1));
-  }, [currentChapterIndex, activeChapter]);
-
-  // Jump to specific page
-  const handleJumpToPage = (e: React.FormEvent) => {
-    e.preventDefault();
-    const targetPage = parseInt(pageInput);
-    if (isNaN(targetPage) || targetPage < 1) return;
-
-    // Find closest chapter that starts at or before targetPage
-    let bestIdx = 0;
-    for (let i = 0; i < chapters.length; i++) {
-      if (chapters[i].startPage <= targetPage) {
-        bestIdx = i;
-      } else {
-        break;
-      }
-    }
-    setCurrentChapterIndex(bestIdx);
-  };
-
-  const handlePageChange = (pageNum: number) => {
-    setPageInput(String(pageNum));
-    let bestIdx = 0;
-    for (let i = 0; i < chapters.length; i++) {
-      if (chapters[i].startPage <= pageNum) {
-        bestIdx = i;
-      } else {
-        break;
-      }
-    }
-    setCurrentChapterIndex(bestIdx);
-  };
-
-  const handleNextChapter = () => {
-    if (currentChapterIndex < chapters.length - 1) {
-      setCurrentChapterIndex(currentChapterIndex + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
-  const handlePrevChapter = () => {
-    if (currentChapterIndex > 0) {
-      setCurrentChapterIndex(currentChapterIndex - 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
-  const handleCopyText = () => {
-    const textToCopy = `${activeChapter.arabicTitle}\n\n${activeChapter.content}\n\n— ${book.title} (p. ${activeChapter.startPage})`;
-    navigator.clipboard?.writeText(textToCopy);
-    setCopiedNotification(true);
-    setTimeout(() => setCopiedNotification(false), 2000);
-  };
+  const {
+    chapters,
+    currentChapterIndex,
+    activeChapter,
+    readingFormat,
+    zoomScale,
+    fontSize,
+    showTranslation,
+    showNotes,
+    pageInput,
+    sidebarOpen,
+    copiedNotification,
+    setCurrentChapterIndex,
+    setReadingFormat,
+    setZoomScale,
+    setFontSize,
+    setShowTranslation,
+    setShowNotes,
+    setPageInput,
+    setSidebarOpen,
+    handleJumpToPage,
+    handlePageChange,
+    handleNextChapter,
+    handlePrevChapter,
+    handleCopyText,
+  } = useBookReader({ book, initialChapterId });
 
   return (
     <>

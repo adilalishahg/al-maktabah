@@ -1,44 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import type { DetailedBook, BookChapter } from '@/types/bookContent';
+import React from 'react';
+import type { BookChapter } from '@/types/bookContent';
 import type { CodexPdfReaderProps } from '@/types/components';
-
-// Dynamically load PDF.js from CDN
-async function getPdfJs(): Promise<any> {
-  if (typeof window === 'undefined') return null;
-  if ((window as any).pdfjsLib) {
-    return (window as any).pdfjsLib;
-  }
-
-  return new Promise((resolve, reject) => {
-    const existing = document.getElementById('pdfjs-cdn-script');
-    if (existing) {
-      if ((window as any).pdfjsLib) {
-        resolve((window as any).pdfjsLib);
-        return;
-      }
-      existing.addEventListener('load', () => resolve((window as any).pdfjsLib));
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.id = 'pdfjs-cdn-script';
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-    script.onload = () => {
-      const pdfjs = (window as any).pdfjsLib;
-      if (pdfjs) {
-        pdfjs.GlobalWorkerOptions.workerSrc =
-          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        resolve(pdfjs);
-      } else {
-        reject(new Error('PDF.js failed to initialize'));
-      }
-    };
-    script.onerror = () => reject(new Error('Failed to load PDF.js from CDN'));
-    document.head.appendChild(script);
-  });
-}
+import { usePdfReader } from '@/hooks/usePdfReader';
 
 export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
   book,
@@ -54,255 +19,52 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
   onJumpToChapter,
   onSwitchToMatn,
 }) => {
-  const [totalPages, setTotalPages] = useState<number>(book.pages || 631);
-  const [currentPage, setCurrentPage] = useState<number>(initialPage);
-  const [pageInputValue, setPageInputValue] = useState<string>(String(initialPage));
-  const [internalScale, setInternalScale] = useState<number>(1.0);
-  const [viewMode, setViewMode] = useState<'pdf' | 'text'>('pdf');
-  const [internalSidebarOpen, setInternalSidebarOpen] = useState<boolean>(false);
-  const [chapterFilter, setChapterFilter] = useState<string>('');
-  const [pdfDoc, setPdfDoc] = useState<any>(null);
-  const [loadingDoc, setLoadingDoc] = useState<boolean>(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
-  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-
-  // Determine active scale and active sidebar state
-  const activeScale = externalScale !== undefined ? externalScale : internalScale;
-  const isSidebarOpen = sidebarOpenExternal !== undefined ? sidebarOpenExternal : internalSidebarOpen;
-  const toggleSidebar = () => {
-    if (onToggleSidebarExternal) {
-      onToggleSidebarExternal();
-    } else {
-      setInternalSidebarOpen((prev) => !prev);
-    }
-  };
-
-  // Set default sidebar open on large desktop only if internal
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024 && sidebarOpenExternal === undefined) {
-      setInternalSidebarOpen(true);
-    }
-  }, [sidebarOpenExternal]);
-
-  // Active rendered pages tracking
-  const [renderedPages, setRenderedPages] = useState<Set<number>>(new Set());
-  const containerRef = useRef<HTMLDivElement>(null);
-  const observerRef = useRef<IntersectionObserver | null>(null);
-
-  const effectivePdfUrl = pdfUrl || book.pdfUrl || '';
-  const chapters = book.chapters || [];
-
-  // Check if PDF URL is hosted on Cloudinary
-  const isCloudinary = Boolean(effectivePdfUrl && effectivePdfUrl.includes('res.cloudinary.com'));
-
-  const getCloudinaryPageUrl = useCallback((url: string, page: number) => {
-    if (!url.includes('res.cloudinary.com')) return url;
-    // Deliver high-res auto-optimized page image from Cloudinary
-    return url
-      .replace('/image/upload/', `/image/upload/w_1400,q_auto,f_auto/pg_${page}/`)
-      .replace(/\.pdf$/i, '.jpg');
-  }, []);
-
-  // Filter chapters in sidebar
-  const filteredChapters = useMemo(() => {
-    if (!chapterFilter.trim()) return chapters;
-    const q = chapterFilter.toLowerCase();
-    return chapters.filter(
-      (c) =>
-        c.title.toLowerCase().includes(q) ||
-        c.arabicTitle.includes(q) ||
-        String(c.startPage).includes(q)
-    );
-  }, [chapters, chapterFilter]);
-
-  // Find active chapter based on current page
-  const activeChapter = useMemo(() => {
-    if (!chapters || chapters.length === 0) return null;
-    let found = chapters[0];
-    for (const ch of chapters) {
-      if (ch.startPage <= currentPage) {
-        found = ch;
-      } else {
-        break;
-      }
-    }
-    return found;
-  }, [chapters, currentPage]);
-
-  // Load PDF Document or initialize Cloudinary streaming
-  useEffect(() => {
-    let isCancelled = false;
-
-    async function loadPdf() {
-      if (!effectivePdfUrl) {
-        setLoadingDoc(false);
-        if (chapters.length > 0) {
-          setViewMode('text');
-        }
-        return;
-      }
-
-      // If on Cloudinary, page images stream instantly without heavy client-side download!
-      if (isCloudinary) {
-        setLoadingDoc(false);
-        setLoadError(null);
-        setTotalPages(book.pages || 631);
-        return;
-      }
-
-      setLoadingDoc(true);
-      setLoadError(null);
-
-      try {
-        const pdfjs = await getPdfJs();
-        if (!pdfjs) throw new Error('PDF.js not available');
-
-        const loadingTask = pdfjs.getDocument({
-          url: effectivePdfUrl,
-          cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
-          cMapPacked: true,
-        });
-
-        const doc = await loadingTask.promise;
-        if (!isCancelled) {
-          setPdfDoc(doc);
-          setTotalPages(doc.numPages);
-          setLoadingDoc(false);
-        }
-      } catch (err: any) {
-        console.warn('PDF document load notice (switching to text view if needed):', err);
-        if (!isCancelled) {
-          setLoadError(err.message || 'Could not load PDF file directly');
-          setLoadingDoc(false);
-          if (chapters.length > 0) {
-            setViewMode('text');
-          }
-        }
-      }
-    }
-
-    loadPdf();
-    return () => {
-      isCancelled = true;
-    };
-  }, [effectivePdfUrl, isCloudinary, book.pages, chapters.length]);
-
-  // Render a specific page canvas (for non-Cloudinary / local blob URLs)
-  const renderPage = useCallback(
-    async (pageNum: number, canvasEl: HTMLCanvasElement) => {
-      if (!pdfDoc || !canvasEl || isCloudinary) return;
-      try {
-        const page = await pdfDoc.getPage(pageNum);
-        const viewport = page.getViewport({ scale: activeScale });
-        canvasEl.width = viewport.width;
-        canvasEl.height = viewport.height;
-        const ctx = canvasEl.getContext('2d');
-        if (!ctx) return;
-
-        const renderContext = {
-          canvasContext: ctx,
-          viewport,
-        };
-        await page.render(renderContext).promise;
-        setRenderedPages((prev) => new Set(prev).add(pageNum));
-      } catch (e) {
-        console.warn(`Render error on page ${pageNum}:`, e);
-      }
-    },
-    [pdfDoc, activeScale, isCloudinary]
-  );
-
-  // Jump to specific page
-  const scrollToPage = useCallback(
-    (pageNum: number) => {
-      const clamped = Math.max(1, Math.min(pageNum, totalPages));
-      setCurrentPage(clamped);
-      setPageInputValue(String(clamped));
-      onPageChange?.(clamped);
-
-      if (viewMode === 'pdf') {
-        const el = document.getElementById(`pdf-page-slot-${clamped}`);
-        if (el && containerRef.current) {
-          const containerRect = containerRef.current.getBoundingClientRect();
-          const elRect = el.getBoundingClientRect();
-          const targetTop = containerRef.current.scrollTop + (elRect.top - containerRect.top) - 8;
-          containerRef.current.scrollTo({
-            top: Math.max(0, targetTop),
-            behavior: 'smooth',
-          });
-        }
-      }
-    },
-    [totalPages, viewMode, onPageChange]
-  );
-
-  // Respond to externalPage changes from parent master bar
-  useEffect(() => {
-    if (externalPage !== undefined && externalPage !== currentPage) {
-      scrollToPage(externalPage);
-    }
-  }, [externalPage, scrollToPage, currentPage]);
-
-  // Set up intersection observer to detect current page as user scrolls
-  useEffect(() => {
-    if (viewMode !== 'pdf' || !containerRef.current) return;
-
-    if (observerRef.current) {
-      observerRef.current.disconnect();
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const pageNum = parseInt(entry.target.getAttribute('data-page-num') || '1');
-            setCurrentPage(pageNum);
-            setPageInputValue(String(pageNum));
-            onPageChange?.(pageNum);
-
-            // If using PDF.js canvas, render when visible
-            if (!isCloudinary && pdfDoc) {
-              const canvas = entry.target.querySelector('canvas');
-              if (canvas && !renderedPages.has(pageNum)) {
-                renderPage(pageNum, canvas);
-              }
-            }
-          }
-        });
-      },
-      {
-        root: containerRef.current,
-        rootMargin: '250px 0px',
-        threshold: 0.15,
-      }
-    );
-
-    observerRef.current = observer;
-
-    // Observe all page slot elements
-    const pageSlots = containerRef.current.querySelectorAll('.pdf-page-slot');
-    pageSlots.forEach((slot) => observer.observe(slot));
-
-    return () => observer.disconnect();
-  }, [viewMode, totalPages, renderPage, renderedPages, isCloudinary, pdfDoc, onPageChange]);
-
-  const handlePageInputSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const num = parseInt(pageInputValue);
-    if (!isNaN(num)) {
-      scrollToPage(num);
-    }
-  };
+  const {
+    totalPages,
+    currentPage,
+    pageInputValue,
+    setInternalScale,
+    activeScale,
+    viewMode,
+    setViewMode,
+    isSidebarOpen,
+    chapterFilter,
+    setChapterFilter,
+    loadingDoc,
+    loadError,
+    isFullscreen,
+    setIsFullscreen,
+    isCloudinary,
+    effectivePdfUrl,
+    chapters,
+    filteredChapters,
+    activeChapter,
+    renderedPages,
+    containerRef,
+    setPageInputValue,
+    toggleSidebar,
+    getCloudinaryPageUrl,
+    scrollToPage,
+    handlePageInputSubmit,
+  } = usePdfReader({
+    book,
+    pdfUrl,
+    initialPage,
+    externalPage,
+    externalScale,
+    sidebarOpenExternal,
+    onToggleSidebarExternal,
+    onPageChange,
+  });
 
   const handleChapterClick = (chapter: BookChapter) => {
     scrollToPage(chapter.startPage);
     onJumpToChapter?.(chapter);
-    // Auto close sidebar on mobile when chapter selected
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
       if (onToggleSidebarExternal && sidebarOpenExternal) {
         onToggleSidebarExternal();
       } else {
-        setInternalSidebarOpen(false);
+        toggleSidebar();
       }
     }
   };
