@@ -92,3 +92,4 @@ export function useAppTheme(): UseAppThemeReturn {
     toggleLang,
   };
 }
+
