@@ -67,11 +67,10 @@ export const AdminHeaderBar: React.FC<AdminHeaderBarProps> = ({
           <button
             type="button"
             onClick={() => goTo('analytics', '/admin/analytics')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
-              activeTab === 'analytics'
-                ? 'bg-primary-container text-white shadow-xs'
-                : 'text-emerald-highlight hover:text-white'
-            }`}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${activeTab === 'analytics'
+              ? 'bg-primary-container text-black shadow-xs'
+              : 'text-emerald-highlight hover:text-white'
+              }`}
           >
             <span className="material-symbols-outlined text-sm">analytics</span>
             <span className="hidden sm:inline">Analytics</span>
@@ -79,41 +78,38 @@ export const AdminHeaderBar: React.FC<AdminHeaderBarProps> = ({
           <button
             type="button"
             onClick={() => goTo('books', '/admin/books')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
-              activeTab === 'books'
-                ? 'bg-primary-container text-white shadow-xs'
-                : 'text-emerald-highlight hover:text-white'
-            }`}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${activeTab === 'books'
+              ? 'bg-primary-container text-white shadow-xs'
+              : 'text-emerald-highlight hover:text-white'
+              }`}
           >
             <span className="material-symbols-outlined text-sm">library_books</span>
             <span className="hidden sm:inline">Book Manager</span>
-            <span className="bg-surface-container px-1.5 py-0.2 rounded-full text-label-xs text-white">
+            <span className=" px-1.5 py-0.2 rounded-full text-label-xs text-white">
               {booksCount}
             </span>
           </button>
           <button
             type="button"
             onClick={() => goTo('categories', '/admin/categories')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
-              activeTab === 'categories'
-                ? 'bg-primary-container text-white shadow-xs'
-                : 'text-emerald-highlight hover:text-white'
-            }`}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${activeTab === 'categories'
+              ? 'bg-primary-container text-white shadow-xs'
+              : 'text-emerald-highlight hover:text-white'
+              }`}
           >
             <span className="material-symbols-outlined text-sm">category</span>
             <span className="hidden sm:inline">Disciplines</span>
-            <span className="bg-surface-container px-1.5 py-0.2 rounded-full text-label-xs text-white">
+            <span className=" px-1.5 py-0.2 rounded-full text-label-xs text-white">
               {categoriesCount}
             </span>
           </button>
           <button
             type="button"
             onClick={() => goTo('homepage', '/admin/sections')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
-              activeTab === 'homepage'
-                ? 'bg-primary-container text-white shadow-xs'
-                : 'text-emerald-highlight hover:text-white'
-            }`}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${activeTab === 'homepage'
+              ? 'bg-primary-container text-white shadow-xs'
+              : 'text-emerald-highlight hover:text-white'
+              }`}
           >
             <span className="material-symbols-outlined text-sm">tune</span>
             <span className="hidden sm:inline">Sections &amp; Reader</span>
@@ -124,11 +120,10 @@ export const AdminHeaderBar: React.FC<AdminHeaderBarProps> = ({
           <button
             type="button"
             onClick={handleStartNewBook}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
-              activeTab === 'editor'
-                ? 'bg-primary-container text-white shadow-xs'
-                : 'text-emerald-highlight hover:text-white'
-            }`}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${activeTab === 'editor'
+              ? 'bg-primary-container text-white shadow-xs'
+              : 'text-emerald-highlight hover:text-white'
+              }`}
           >
             <span className="material-symbols-outlined text-sm">add_circle</span>
             <span>+ New Treatise</span>
@@ -138,11 +133,10 @@ export const AdminHeaderBar: React.FC<AdminHeaderBarProps> = ({
         {/* Right Tools: DB Status, Public Site & Logout */}
         <div className="flex items-center gap-2 sm:gap-3">
           <div
-            className={`hidden sm:flex items-center gap-1.5 px - 2.5 py - 1 rounded - full text - label - sm font - semibold border ${
-    dbSyncStatus === 'online'
-      ? 'bg-emerald-surface border-emerald-glow text-emerald-300'
-      : 'bg-tertiary-container/20 border-tertiary/40 text-gold-bright'
-  } `}
+            className={`hidden sm:flex items-center gap-1.5 px - 2.5 py - 1 rounded - full text - label - sm font - semibold border ${dbSyncStatus === 'online'
+              ? 'bg-emerald-surface border-emerald-glow text-emerald-300'
+              : 'bg-tertiary-container/20 border-tertiary/40 text-gold-bright'
+              } `}
             title={
               dbSyncStatus === 'online'
                 ? 'Connected to MongoDB Atlas / Server Database'
@@ -150,20 +144,19 @@ export const AdminHeaderBar: React.FC<AdminHeaderBarProps> = ({
             }
           >
             <span
-              className={`w - 2 h - 2 rounded - full ${
-    dbSyncStatus === 'online'
-      ? 'bg-emerald-400 animate-pulse'
-      : dbSyncStatus === 'connecting'
-        ? 'bg-amber-400 animate-ping'
-        : 'bg-amber-400'
-  } `}
+              className={`w - 2 h - 2 rounded - full ${dbSyncStatus === 'online'
+                ? 'bg-emerald-400 animate-pulse'
+                : dbSyncStatus === 'connecting'
+                  ? 'bg-amber-400 animate-ping'
+                  : 'bg-amber-400'
+                } `}
             />
             <span>
               {dbSyncStatus === 'online'
                 ? 'MongoDB Synced'
                 : dbSyncStatus === 'connecting'
-                ? 'Connecting...'
-                : 'Local Storage'}
+                  ? 'Connecting...'
+                  : 'Local Storage'}
             </span>
           </div>
 

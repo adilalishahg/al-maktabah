@@ -17,8 +17,8 @@ const FILTER_TABS = [
   'All Works',
   'Most Read',
   'Recently Digitized',
-  'Rare Manuscripts',
-  'Bilingual (Ar/En)',
+  // 'Rare Manuscripts',
+  // 'Bilingual (Ar/En)',
 ];
 
 export const HomeFeaturedShelf: React.FC<HomeFeaturedShelfProps> = ({
@@ -42,15 +42,15 @@ export const HomeFeaturedShelf: React.FC<HomeFeaturedShelfProps> = ({
         return source.filter((b) => b.rating >= 4.9);
       case 'Recently Digitized':
         return source.filter((b) => b.pages > 500);
-      case 'Rare Manuscripts':
-        return source.filter((b) => b.formats.includes('Critical PDF'));
-      case 'Bilingual (Ar/En)':
-        return source.filter(
-          (b) =>
-            b.badge?.includes('English') ||
-            b.badge?.includes('Bilingual') ||
-            b.formats.includes('English Translation')
-        );
+      // case 'Rare Manuscripts':
+      //   return source.filter((b) => b.formats.includes('Critical PDF'));
+      // case 'Bilingual (Ar/En)':
+      //   return source.filter(
+      //     (b) =>
+      //       b.badge?.includes('English') ||
+      //       b.badge?.includes('Bilingual') ||
+      //       b.formats.includes('English Translation')
+      //   );
       default:
         return source.slice(0, 4);
     }
@@ -81,11 +81,10 @@ export const HomeFeaturedShelf: React.FC<HomeFeaturedShelfProps> = ({
             <button
               key={tab}
               onClick={() => setActiveFeaturedTab(tab)}
-              className={`px-3 py-1.5 rounded-lg font-title-md text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${
-                activeFeaturedTab === tab
-                  ? 'bg-surface-container-lowest text-primary font-bold shadow-xs border border-tertiary/30'
-                  : 'text-on-surface-variant hover:text-on-surface'
-              }`}
+              className={`px-3 py-1.5 rounded-lg font-title-md text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer ${activeFeaturedTab === tab
+                ? 'bg-surface-container-lowest text-primary font-bold shadow-xs border border-tertiary/30'
+                : 'text-on-surface-variant hover:text-on-surface'
+                }`}
             >
               {tab}
             </button>
@@ -132,9 +131,8 @@ export const HomeFeaturedShelf: React.FC<HomeFeaturedShelfProps> = ({
 
                 <div className="absolute top-2.5 left-3 flex gap-1.5">
                   <span
-                    className={`px-2.5 py-0.5 rounded-full font-label-sm text-xs font-bold shadow-xs backdrop-blur-xs ${
-                      book.badgeColor || 'bg-primary-container text-on-primary'
-                    }`}
+                    className={`px-2.5 py-0.5 rounded-full font-label-sm text-xs font-bold shadow-xs backdrop-blur-xs ${book.badgeColor || 'bg-primary-container text-on-primary'
+                      }`}
                   >
                     {book.badge || book.disciplineName}
                   </span>

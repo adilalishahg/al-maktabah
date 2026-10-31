@@ -70,8 +70,8 @@ export const AdminLoginCard: React.FC<AdminLoginCardProps> = ({
 
           <div className="p-3 rounded-lg bg-night-surface/60 border border-emerald-border text-label-sm text-on-primary-container space-y-0.5">
             <span className="font-semibold block text-white">Default Admin Credentials:</span>
-            <div>Username: <code className="bg-surface-container px-1 rounded text-white">admin@almaktabah.org</code></div>
-            <div>Password: <code className="bg-surface-container px-1 rounded text-white">maktabah1445</code></div>
+            <div>Username: <code className=" px-1 rounded text-white">admin@almaktabah.org</code></div>
+            <div>Password: <code className=" px-1 rounded text-white">maktabah1445</code></div>
           </div>
 
           <button
