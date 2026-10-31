@@ -1,8 +1,11 @@
+'use client';
+
 import React from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 
 export interface AdminHeaderBarProps {
-  activeTab: 'analytics' | 'books' | 'categories' | 'editor' | 'homepage';
-  setActiveTab: (tab: 'analytics' | 'books' | 'categories' | 'editor' | 'homepage') => void;
+  activeTab?: 'analytics' | 'books' | 'categories' | 'editor' | 'homepage';
+  setActiveTab?: (tab: 'analytics' | 'books' | 'categories' | 'editor' | 'homepage') => void;
   booksCount: number;
   categoriesCount: number;
   readerEnabled: boolean;
@@ -12,8 +15,8 @@ export interface AdminHeaderBarProps {
 }
 
 export const AdminHeaderBar: React.FC<AdminHeaderBarProps> = ({
-  activeTab,
-  setActiveTab,
+  activeTab: propActiveTab,
+  setActiveTab: propSetActiveTab,
   booksCount,
   categoriesCount,
   readerEnabled,
@@ -21,6 +24,25 @@ export const AdminHeaderBar: React.FC<AdminHeaderBarProps> = ({
   dbSyncStatus,
   handleLogout,
 }) => {
+  const router = useRouter();
+  const pathname = usePathname() || '';
+
+  const activeTab = (() => {
+    if (propActiveTab) return propActiveTab;
+    if (pathname.includes('/books')) return 'books';
+    if (pathname.includes('/categories') || pathname.includes('/disciplines')) return 'categories';
+    if (pathname.includes('/sections') || pathname.includes('/homepage')) return 'homepage';
+    if (pathname.includes('/editor')) return 'editor';
+    return 'analytics';
+  })();
+
+  const goTo = (tab: 'analytics' | 'books' | 'categories' | 'editor' | 'homepage', route: string) => {
+    if (propSetActiveTab) {
+      propSetActiveTab(tab);
+    }
+    router.push(route);
+  };
+
   return (
     <header className="sticky top-0 z-50 bg-primary text-white shadow-md border-b border-primary-container">
       <div className="max-max-w-archive-2xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
@@ -43,8 +65,8 @@ export const AdminHeaderBar: React.FC<AdminHeaderBarProps> = ({
         <div className="flex items-center bg-night-surface rounded-xl p-1 border border-emerald-border">
           <button
             type="button"
-            onClick={() => setActiveTab('analytics')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+            onClick={() => goTo('analytics', '/admin')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
               activeTab === 'analytics'
                 ? 'bg-primary-container text-white shadow-xs'
                 : 'text-emerald-highlight hover:text-white'
@@ -55,8 +77,8 @@ export const AdminHeaderBar: React.FC<AdminHeaderBarProps> = ({
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab('books')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+            onClick={() => goTo('books', '/admin/books')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
               activeTab === 'books'
                 ? 'bg-primary-container text-white shadow-xs'
                 : 'text-emerald-highlight hover:text-white'
@@ -70,8 +92,8 @@ export const AdminHeaderBar: React.FC<AdminHeaderBarProps> = ({
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab('categories')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+            onClick={() => goTo('categories', '/admin/categories')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
               activeTab === 'categories'
                 ? 'bg-primary-container text-white shadow-xs'
                 : 'text-emerald-highlight hover:text-white'
@@ -85,7 +107,7 @@ export const AdminHeaderBar: React.FC<AdminHeaderBarProps> = ({
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab('homepage')}
+            onClick={() => goTo('homepage', '/admin/sections')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
               activeTab === 'homepage'
                 ? 'bg-primary-container text-white shadow-xs'
@@ -101,7 +123,7 @@ export const AdminHeaderBar: React.FC<AdminHeaderBarProps> = ({
           <button
             type="button"
             onClick={handleStartNewBook}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
               activeTab === 'editor'
                 ? 'bg-primary-container text-white shadow-xs'
                 : 'text-emerald-highlight hover:text-white'
