@@ -342,7 +342,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         if (!finalPdfUrl) {
           try {
             finalPdfUrl = URL.createObjectURL(file);
-          } catch {}
+          } catch { }
         }
       }
 

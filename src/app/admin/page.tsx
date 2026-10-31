@@ -7,11 +7,11 @@ import { AdminAnalyticsTab } from '@/components/admin/tabs';
 export default function AdminAnalyticsPage() {
   const { books, handleStartNewBook, navigateToTab } = useAdminContext();
 
-  return (
+    return (
     <AdminAnalyticsTab
       books={books}
       handleStartNewBook={handleStartNewBook}
       setActiveTab={navigateToTab}
     />
-  );
-}
+    );
+  }
