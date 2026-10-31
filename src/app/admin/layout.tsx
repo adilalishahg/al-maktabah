@@ -92,10 +92,20 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
       {/* GLOBAL ADMINISTRATIVE MODALS */}
       {showCategoryModal && (
         <AdminCategoryModal
-          showCategoryModal={showCategoryModal}
-          setShowCategoryModal={setShowCategoryModal}
-          editingCategory={editingCategory}
+          editingCategory={
+            editingCategory || {
+              id: '',
+              name: '',
+              arabicName: '',
+              icon: 'category',
+              description: '',
+              volumeCount: 0,
+              tags: [],
+            }
+          }
           setEditingCategory={setEditingCategory}
+          onClose={() => setShowCategoryModal(false)}
+          categories={categories}
           isSavingCategory={isSavingCategory}
           handleSaveCategory={handleSaveCategory}
         />
@@ -114,9 +124,9 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
       {showCodexModal && editingBook && (
         <AdminCodexReaderModal
           showCodexModal={showCodexModal}
-          setShowCodexModal={setShowCodexModal}
           editingBook={editingBook}
-          initialPage={editingBook.chapters[activeChapterIndex]?.startPage || 1}
+          activeChapterIndex={activeChapterIndex}
+          onClose={() => setShowCodexModal(false)}
         />
       )}
 
@@ -142,10 +152,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
                 </div>
               }
             >
-              <BookReaderView
-                book={viewingReaderBook}
-                onBack={() => setViewingReaderBook(null)}
-              />
+              <BookReaderView book={viewingReaderBook} />
             </Suspense>
           </div>
         </div>
