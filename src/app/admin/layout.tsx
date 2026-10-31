@@ -1,9 +1,11 @@
 'use client';
 
 import React, { Suspense, lazy } from 'react';
+import { useRouter } from 'next/navigation';
 import { AdminProvider, useAdminContext } from '@/context/AdminContext';
 import { AdminHeaderBar } from '@/components/admin/AdminHeaderBar';
 import { AdminLoginCard } from '@/components/admin/AdminLoginCard';
+import { useAppTheme } from '@/hooks/useAppTheme';
 import {
   AdminCategoryModal,
   AdminBulkChapterModal,
@@ -48,6 +50,9 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
     setViewingReaderBook,
   } = useAdminContext();
 
+  const router = useRouter();
+  const { currentTheme, setTheme } = useAppTheme();
+
   if (isAuthenticated === null) {
     return (
       <div className="min-h-screen bg-parchment-canvas flex flex-col items-center justify-center gap-3 text-primary">
@@ -90,19 +95,9 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
       </main>
 
       {/* GLOBAL ADMINISTRATIVE MODALS */}
-      {showCategoryModal && (
+      {showCategoryModal && editingCategory && (
         <AdminCategoryModal
-          editingCategory={
-            editingCategory || {
-              id: '',
-              name: '',
-              arabicName: '',
-              icon: 'category',
-              description: '',
-              volumeCount: 0,
-              tags: [],
-            }
-          }
+          editingCategory={editingCategory}
           setEditingCategory={setEditingCategory}
           onClose={() => setShowCategoryModal(false)}
           categories={categories}
@@ -152,7 +147,12 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
                 </div>
               }
             >
-              <BookReaderView book={viewingReaderBook} />
+              <BookReaderView
+                book={viewingReaderBook}
+                onNavigate={(path) => router.push(path)}
+                theme={currentTheme}
+                onThemeChange={setTheme}
+              />
             </Suspense>
           </div>
         </div>
