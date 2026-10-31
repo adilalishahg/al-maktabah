@@ -173,18 +173,19 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Active Tab derived from Current Route
   const activeTab: AdminTab = useMemo(() => {
-    if (pathname.includes('/books')) return 'books';
+    if (pathname.includes('/analytics')) return 'analytics';
     if (pathname.includes('/categories') || pathname.includes('/disciplines')) return 'categories';
     if (pathname.includes('/sections') || pathname.includes('/homepage')) return 'homepage';
     if (pathname.includes('/editor')) return 'editor';
-    return 'analytics';
+    if (pathname.includes('/books') || pathname === '/admin' || pathname === '/admin/') return 'books';
+    return 'books';
   }, [pathname]);
 
   const navigateToTab = useCallback(
     (tab: AdminTab) => {
       switch (tab) {
         case 'analytics':
-          router.push('/admin');
+          router.push('/admin/analytics');
           break;
         case 'books':
           router.push('/admin/books');
@@ -199,7 +200,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           router.push('/admin/editor');
           break;
         default:
-          router.push('/admin');
+          router.push('/admin/books');
       }
     },
     [router]
@@ -211,6 +212,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       loadBooks();
       loadCategories();
       loadSettings();
+      router.push('/admin/books');
     }
   };
 

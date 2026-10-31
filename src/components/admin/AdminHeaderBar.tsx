@@ -29,11 +29,12 @@ export const AdminHeaderBar: React.FC<AdminHeaderBarProps> = ({
 
   const activeTab = (() => {
     if (propActiveTab) return propActiveTab;
-    if (pathname.includes('/books')) return 'books';
+    if (pathname.includes('/analytics')) return 'analytics';
     if (pathname.includes('/categories') || pathname.includes('/disciplines')) return 'categories';
     if (pathname.includes('/sections') || pathname.includes('/homepage')) return 'homepage';
     if (pathname.includes('/editor')) return 'editor';
-    return 'analytics';
+    if (pathname.includes('/books') || pathname === '/admin' || pathname === '/admin/') return 'books';
+    return 'books';
   })();
 
   const goTo = (tab: 'analytics' | 'books' | 'categories' | 'editor' | 'homepage', route: string) => {
@@ -65,7 +66,7 @@ export const AdminHeaderBar: React.FC<AdminHeaderBarProps> = ({
         <div className="flex items-center bg-night-surface rounded-xl p-1 border border-emerald-border">
           <button
             type="button"
-            onClick={() => goTo('analytics', '/admin')}
+            onClick={() => goTo('analytics', '/admin/analytics')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
               activeTab === 'analytics'
                 ? 'bg-primary-container text-white shadow-xs'
