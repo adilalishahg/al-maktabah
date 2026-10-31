@@ -22,6 +22,7 @@ export interface ReaderMasterToolbarProps {
   onThemeChange?: (theme: ReaderTheme) => void;
   onNavigate: (path: string) => void;
   onOpenAdminEdit?: (book: DetailedBook) => void;
+  isStandaloneRoute?: boolean;
 }
 
 export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
@@ -42,11 +43,14 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
   onThemeChange,
   onNavigate,
   onOpenAdminEdit,
+  isStandaloneRoute = false,
 }) => {
   return (
     <div
-      style={{ top: 'calc(var(--app-header-height, 108px) + 2px)' }}
-      className="sticky z-30 !mt-0 bg-surface-container-lowest/95 backdrop-blur-md p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-surface-container shadow-xs select-none"
+      style={!isStandaloneRoute ? { top: 'calc(var(--app-header-height, 0px) + 2px)' } : undefined}
+      className={`z-30 !mt-0 bg-surface-container-lowest/95 backdrop-blur-md p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-surface-container shadow-xs select-none w-full shrink-0 ${
+        isStandaloneRoute ? 'relative' : 'sticky'
+      }`}
     >
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3">
         {/* Group 1: Navigation, Chapter TOC Drawer Button & Book Title */}

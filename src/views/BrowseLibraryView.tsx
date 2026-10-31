@@ -1,6 +1,7 @@
 import React from 'react';
 import type { BrowseLibraryViewProps } from '../types/views';
 import { useCatalogSearch } from '@/hooks/useCatalogSearch';
+import { getBookSlug } from '@/utils/slug';
 
 export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
   books,
@@ -270,13 +271,17 @@ export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
                 </div>
 
                 <div className="pt-3 mt-3 grid grid-cols-2 gap-2 border-t border-surface-container">
-                  <button
-                    onClick={() => onOpenReader(book)}
+                  <a
+                    href={`/book/${getBookSlug(book)}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onOpenReader(book);
+                    }}
                     className="py-1.5 px-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-semibold text-xs flex items-center justify-center gap-1 cursor-pointer"
                   >
                     <span className="material-symbols-outlined text-sm">chrome_reader_mode</span>
                     <span>Read</span>
-                  </button>
+                  </a>
                   <button
                     onClick={() => onOpenDownload(book)}
                     className="py-1.5 px-2 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-semibold text-xs flex items-center justify-center gap-1 shadow-sm cursor-pointer"
@@ -350,12 +355,16 @@ export const BrowseLibraryView: React.FC<BrowseLibraryViewProps> = ({
                     </td>
                     <td className="py-3 px-4 text-right">
                       <div className="flex items-center justify-end gap-1.5">
-                        <button
-                          onClick={() => onOpenReader(book)}
-                          className="px-2.5 py-1 rounded bg-primary-container text-on-primary font-semibold text-xs hover:bg-primary transition-colors cursor-pointer"
+                        <a
+                          href={`/book/${getBookSlug(book)}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            onOpenReader(book);
+                          }}
+                          className="px-2.5 py-1 rounded bg-primary-container text-on-primary font-semibold text-xs hover:bg-primary transition-colors cursor-pointer inline-block"
                         >
                           Read
-                        </button>
+                        </a>
                         <button
                           onClick={() => onOpenDownload(book)}
                           className="p-1 rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container cursor-pointer"

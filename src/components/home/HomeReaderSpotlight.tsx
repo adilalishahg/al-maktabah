@@ -307,9 +307,9 @@ export const HomeReaderSpotlight: React.FC<HomeReaderSpotlightProps> = ({
                       </div>
                       {activeFootnoteOpen && (
                         <div className="space-y-2 pt-2 border-t border-surface-container text-xs text-on-surface-variant">
-                          {activeReader.footnotes.map((fn) => (
+                          {activeReader.footnotes.map((fn, fIdx) => (
                             <div key={fn.id} className="flex gap-2">
-                              <span className="font-mono text-tertiary font-bold shrink-0">{fn.number}.</span>
+                              <span className="font-mono text-tertiary font-bold shrink-0">{fn.code || fIdx + 1}.</span>
                               <p>{fn.text}</p>
                             </div>
                           ))}
@@ -335,19 +335,19 @@ export const HomeReaderSpotlight: React.FC<HomeReaderSpotlightProps> = ({
                   className="font-arabic leading-[2.6] text-right font-medium tracking-wide p-4 sm:p-6 rounded-2xl bg-surface-container-low/30 border border-surface-container"
                   style={{ fontSize: `${readerFontSize + 6}px` }}
                 >
-                  {activeReader.arabicWords && activeReader.arabicWords.length > 0 ? (
-                    activeReader.arabicWords.map((w, idx) => (
+                  {activeReader.wordAnalyses && activeReader.wordAnalyses.length > 0 ? (
+                    activeReader.wordAnalyses.map((w, idx) => (
                       <span
                         key={idx}
                         onClick={() => onOpenWordAnalysis(w)}
                         className="inline-block px-1 rounded-sm hover:bg-tertiary-container/30 hover:text-tertiary cursor-pointer transition-colors"
                         title="Click for morphology breakdown"
                       >
-                        {w.word}{' '}
+                        {w.arabic}{' '}
                       </span>
                     ))
                   ) : (
-                    <span>{activeReader.arabicText}</span>
+                    <span>{activeReader.arabicMatn || activeReader.arabicLead || activeReader.arabicSubtext}</span>
                   )}
                 </div>
               </div>

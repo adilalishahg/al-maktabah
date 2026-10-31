@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, Suspense, lazy } from 'react';
+import { useRouter } from 'next/navigation';
 import { Book, CategoryScience, IsnadNode, ReaderTheme, WordAnalysis } from './types/library';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { BOOKS, MANUSCRIPTS, PRIMARY_READING_SECTION } from './data/mockLibrary';
@@ -12,6 +13,7 @@ import { HomeSettings } from './types/homeSettings';
 import { getStoredBooks, getPublicLibraryBooks, saveStoredBooks } from './data/bookStore';
 import { getStoredCategories } from './data/categoryStore';
 import { getHomeSettings, saveHomeSettings } from './data/homeSettingsStore';
+import { getBookSlug } from './utils/slug';
 
 // Lazy-loaded secondary views (Dynamic Code Splitting for ultra-fast LCP)
 const BrowseLibraryView = lazy(() => import('./views/BrowseLibraryView').then((m) => ({ default: m.BrowseLibraryView })));
@@ -43,6 +45,7 @@ const ViewLoadingFallback = () => (
 );
 
 export default function App() {
+  const router = useRouter();
   const [currentPath, setCurrentPath] = useState<string>('home');
   const {
     currentTheme,
@@ -119,6 +122,13 @@ export default function App() {
     };
     window.addEventListener('storage', syncLibrary);
     window.addEventListener('al_maktabah_settings_updated', syncLibrary);
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab');
+      if (tab) {
+        setCurrentPath(tab);
+      }
+    }
     syncFromApi();
 
     return () => {
@@ -140,77 +150,11 @@ export default function App() {
 
   const handleOpenReader = (book?: Book) => {
     if (book) {
-      setReaderBook(book);
-      const stored = getStoredBooks();
-      const detailed = stored.find(
-        (b) => b.id === book.id || b.title.toLowerCase().trim() === book.title.toLowerCase().trim()
-      );
-      if (detailed) {
-        setDetailedReaderBook(detailed);
-        setActiveChapterId(undefined);
-        navigateTo('book-viewer');
-
-        // Stale-While-Revalidate: fetch complete full-text chapters from database in background
-        fetch(`/api/books/${book.id}`)
-          .then((res) => (res.ok ? res.json() : null))
-          .then((json) => {
-            if (json?.data?.chapters?.length) {
-              setDetailedReaderBook(json.data);
-            }
-          })
-          .catch(() => {});
-        return;
-      }
-
-      // Universal fallback to BookReaderView
-      const runtimeDetailed: DetailedBook = {
-        id: book.id,
-        title: book.title,
-        arabicTitle: book.arabicTitle,
-        author: book.author,
-        authorHijriYear: book.authorHijriYear,
-        discipline: book.discipline,
-        disciplineName: book.disciplineName,
-        coverImage: book.coverImage,
-        description: book.description,
-        pages: book.pages,
-        sizeMb: book.sizeMb,
-        edition: book.edition,
-        volumes: book.volumes,
-        verified: book.verified,
-        published: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        formats: book.formats,
-        chapters: [
-          {
-            id: 'ch-1',
-            number: 1,
-            title: 'Foundational Recension & Matn',
-            arabicTitle: book.arabicTitle,
-            startPage: 1,
-            content: 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\nالْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى رَسُولِ اللَّهِ وَعَلَى آلِهِ وَصَحْبِهِ أَجْمَعِينَ.',
-            translation: 'In the name of Allah, the Entirely Merciful, the Especially Merciful. All praise is due to Allah, Lord of the worlds, and peace and blessings be upon the Messenger of Allah.',
-            notes: 'Critical edition verified against Ottoman & Andalusian codices with full isnād transmission.',
-          },
-        ],
-      };
-      setDetailedReaderBook(runtimeDetailed);
-      setActiveChapterId(undefined);
-      navigateTo('book-viewer');
-
-      // Fetch full codex from API if available
-      fetch(`/api/books/${book.id}`)
-        .then((res) => (res.ok ? res.json() : null))
-        .then((json) => {
-          if (json?.data?.chapters?.length) {
-            setDetailedReaderBook(json.data);
-          }
-        })
-        .catch(() => {});
+      const slug = getBookSlug(book);
+      router.push(`/book/${slug}`);
       return;
     }
-    navigateTo('reader-studio');
+    router.push('/book/mukhtasar-bukhari');
   };
 
   const handleSearchQueryFromHome = (query: string) => {
@@ -234,13 +178,14 @@ export default function App() {
         onThemeChange={setCurrentTheme}
         currentLang={currentLang}
         onLangChange={setCurrentLang}
+        isReaderRoute={currentPath === 'book-viewer'}
       />
 
       {/* Main Content Viewport */}
       <main
-        style={currentPath === 'book-viewer' ? { paddingTop: 'var(--app-header-height, 108px)' } : undefined}
+        style={currentPath === 'book-viewer' ? { paddingTop: 0 } : undefined}
         className={`flex-1 w-full overflow-x-hidden ${
-          currentPath === 'book-viewer' ? 'pt-0 pb-3 sm:pb-4' : 'pt-20 sm:pt-24 pb-8 sm:pb-12'
+          currentPath === 'book-viewer' ? 'pt-0 pb-1 sm:pb-2' : 'pt-20 sm:pt-24 pb-8 sm:pb-12'
         }`}
       >
         <div className="w-full max-w-7xl xl:max-w-archive-xl 2xl:max-w-archive-2xl mx-auto px-2 sm:px-6 lg:px-8">
@@ -322,14 +267,15 @@ export default function App() {
                 }}
                 theme={currentTheme}
                 onThemeChange={setCurrentTheme}
+                isStandaloneRoute={true}
               />
             )}
           </Suspense>
         </div>
       </main>
 
-      {/* Footer */}
-      <Footer onNavigate={navigateTo} />
+      {/* Footer (hidden when in reader view to prevent window scroll) */}
+      {currentPath !== 'book-viewer' && <Footer onNavigate={navigateTo} />}
 
       {/* Modals & Dialogs (Lazily loaded only when activated) */}
       <Suspense fallback={null}>

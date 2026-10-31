@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { DetailedBook } from '@/types/bookContent';
+import { getBookSlug } from '@/utils/slug';
 
 export interface DashboardBooksTableProps {
   books: DetailedBook[];
@@ -87,13 +88,17 @@ export const DashboardBooksTable: React.FC<DashboardBooksTableProps> = ({
 
             {/* Action Buttons */}
             <div className="bg-surface-container-low/50 px-4 py-2.5 border-t border-surface-container flex items-center justify-between gap-2">
-              <button
-                onClick={() => onOpenReader(book)}
+              <a
+                href={`/book/${getBookSlug(book)}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  onOpenReader(book);
+                }}
                 className="px-3 py-1.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
               >
                 <span className="material-symbols-outlined text-sm">menu_book</span>
                 <span>Read in Viewer</span>
-              </button>
+              </a>
 
               <div className="flex items-center gap-1">
                 <button

@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Book } from '../types/library';
 import type { LatestReleasesViewProps } from '../types/views';
+import { getBookSlug } from '@/utils/slug';
 
 export const LatestReleasesView: React.FC<LatestReleasesViewProps> = ({
   books,
@@ -97,13 +98,17 @@ export const LatestReleasesView: React.FC<LatestReleasesViewProps> = ({
             </div>
 
             <div className="flex items-center gap-2 shrink-0 self-stretch sm:self-end md:self-center w-full sm:w-auto">
-              <button
-                onClick={() => onOpenReader(item.book)}
+              <a
+                href={`/book/${getBookSlug(item.book)}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  onOpenReader(item.book);
+                }}
                 className="flex-1 sm:flex-none justify-center px-4 py-2 bg-primary-container text-on-primary rounded-lg text-xs font-semibold hover:bg-primary transition-colors flex items-center gap-1.5 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-sm">chrome_reader_mode</span>
                 <span>Open Reader</span>
-              </button>
+              </a>
               <button
                 onClick={() => onOpenDownload(item.book)}
                 className="flex-1 sm:flex-none justify-center px-4 py-2 bg-surface-container hover:bg-surface-container-high text-on-surface rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer border border-surface-container-high"

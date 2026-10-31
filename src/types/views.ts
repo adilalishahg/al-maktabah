@@ -29,6 +29,7 @@ export interface BookReaderViewProps {
   onOpenAdminEdit?: (book: DetailedBook) => void;
   theme: ReaderTheme;
   onThemeChange: (theme: ReaderTheme) => void;
+  isStandaloneRoute?: boolean;
 }
 
 /**

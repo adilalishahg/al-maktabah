@@ -1,6 +1,7 @@
 import React from 'react';
 import type { DetailedBook } from '../../../types/bookContent';
 import type { HomeSettings } from '../../../types/homeSettings';
+import { getBookSlug } from '@/utils/slug';
 
 export interface AdminBooksTabProps {
   books: DetailedBook[];
@@ -97,14 +98,15 @@ export const AdminBooksTab: React.FC<AdminBooksTabProps> = ({
 
             <div className="pt-3 mt-3 border-t border-surface-container flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-1.5 flex-wrap">
-                <button
-                  type="button"
-                  onClick={() => setViewingReaderBook(book)}
+                <a
+                  href={`/book/${getBookSlug(book)}`}
+                  target="_blank"
+                  rel="noreferrer"
                   className="px-2.5 py-1.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-sm">menu_book</span>
                   <span>View</span>
-                </button>
+                </a>
 
                 <button
                   type="button"

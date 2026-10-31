@@ -20,6 +20,7 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
   onOpenAdminEdit,
   theme,
   onThemeChange,
+  isStandaloneRoute = false,
 }) => {
   const {
     chapters,
@@ -49,7 +50,13 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
   return (
     <>
       <ScholarlyJsonLd book={book} />
-      <div className="space-y-1.5 sm:space-y-2 animate-fade-in pb-6 pt-0.5">
+      <div
+        className={
+          isStandaloneRoute
+            ? 'flex-1 min-h-0 flex flex-col w-full overflow-hidden space-y-1 sm:space-y-1.5 animate-fade-in'
+            : 'space-y-1.5 sm:space-y-2 animate-fade-in pb-6 pt-0.5'
+        }
+      >
         {/* Sleek Master Reader Toolbar (Device-Responsive: 2-Tier on Mobile, 1-Tier on Desktop) */}
         <ReaderMasterToolbar
           book={book}
@@ -69,11 +76,12 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
           onThemeChange={onThemeChange}
           onNavigate={onNavigate}
           onOpenAdminEdit={onOpenAdminEdit}
+          isStandaloneRoute={isStandaloneRoute}
         />
 
         {/* Reader Body: Continuous Facsimile PDF Codex OR Classical Matn View */}
         {readingFormat === 'facsimile' ? (
-          <div className="w-full">
+          <div className={isStandaloneRoute ? 'flex-1 min-h-0 w-full overflow-hidden flex flex-col' : 'w-full'}>
             <Suspense
               fallback={
                 <div className="h-[65vh] flex flex-col items-center justify-center gap-3 text-emerald-800 dark:text-emerald-400 bg-surface-container-lowest/50 rounded-2xl border border-surface-container p-8 animate-pulse">
@@ -96,12 +104,13 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
                 onPageChange={(p) => setPageInput(String(p))}
                 onSwitchToMatn={() => setReadingFormat('matn')}
                 onClose={() => onNavigate('browse-library')}
+                isStandaloneRoute={isStandaloneRoute}
               />
             </Suspense>
           </div>
         ) : (
           /* Classical Matn View with Chapters Drawer */
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <div className={isStandaloneRoute ? 'flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start overflow-y-auto' : 'grid grid-cols-1 lg:grid-cols-12 gap-6 items-start'}>
             <ReaderTocDrawer
               chapters={chapters}
               currentChapterIndex={currentChapterIndex}

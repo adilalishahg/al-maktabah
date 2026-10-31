@@ -13,6 +13,7 @@ export interface HeaderProps {
   onThemeChange: (theme: ReaderTheme) => void;
   currentLang: 'EN' | 'AR';
   onLangChange: (lang: 'EN' | 'AR') => void;
+  isReaderRoute?: boolean;
 }
 
 /**
@@ -92,6 +93,8 @@ export interface CodexPdfReaderProps {
   onClose?: () => void;
   onJumpToChapter?: (chapter: BookChapter) => void;
   onSwitchToMatn?: () => void;
+  isStandaloneRoute?: boolean;
+  className?: string;
 }
 
 /**

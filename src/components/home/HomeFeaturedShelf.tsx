@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import type { Book } from '@/types/library';
 import type { FeaturedShelfConfig } from '@/types/homeSettings';
+import { getBookSlug } from '@/utils/slug';
 
 export interface HomeFeaturedShelfProps {
   shelfConfig: FeaturedShelfConfig;
@@ -192,13 +193,17 @@ export const HomeFeaturedShelf: React.FC<HomeFeaturedShelfProps> = ({
                 </div>
 
                 <div className="pt-3 grid grid-cols-2 gap-2 border-t border-surface-container">
-                  <button
-                    onClick={() => onOpenReader(book)}
+                  <a
+                    href={`/book/${getBookSlug(book)}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onOpenReader(book);
+                    }}
                     className="py-2 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-title-md text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer border border-surface-container-high"
                   >
                     <span className="material-symbols-outlined text-base text-primary">chrome_reader_mode</span>
                     <span>Read</span>
-                  </button>
+                  </a>
                   <button
                     onClick={() => onOpenDownload(book)}
                     className="py-2 px-3 rounded-xl bg-gradient-to-r from-primary to-primary-container hover:brightness-105 text-on-primary font-title-md text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"

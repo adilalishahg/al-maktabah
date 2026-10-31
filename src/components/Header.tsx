@@ -10,6 +10,7 @@ export const Header: React.FC<HeaderProps> = ({
   onThemeChange,
   currentLang,
   onLangChange,
+  isReaderRoute = false,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
@@ -17,6 +18,10 @@ export const Header: React.FC<HeaderProps> = ({
   // Dynamically synchronize exact header height into CSS custom property --app-header-height
   useEffect(() => {
     const updateHeaderHeight = () => {
+      if (isReaderRoute) {
+        document.documentElement.style.setProperty('--app-header-height', '0px');
+        return;
+      }
       if (headerRef.current) {
         const height = headerRef.current.offsetHeight;
         if (height > 0) {
@@ -40,7 +45,7 @@ export const Header: React.FC<HeaderProps> = ({
       if (resizeObserver) resizeObserver.disconnect();
       window.removeEventListener('resize', updateHeaderHeight);
     };
-  }, []);
+  }, [isReaderRoute]);
 
   const navLinks = [
     { id: 'home', label: 'Home' },
@@ -53,7 +58,12 @@ export const Header: React.FC<HeaderProps> = ({
   ];
 
   return (
-    <header ref={headerRef} className="fixed top-0 inset-x-0 z-50 bg-surface/95 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-surface-container">
+    <header
+      ref={headerRef}
+      className={`${
+        isReaderRoute ? 'relative' : 'fixed top-0 inset-x-0'
+      } z-50 bg-surface/95 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-surface-container shrink-0`}
+    >
       {/* Top Banner: Daily Insight Calligraphy & Hijri Date */}
       <div className="w-full bg-primary-container text-on-primary py-1 sm:py-1.5 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-7xl xl:max-w-archive-xl 2xl:max-w-archive-2xl mx-auto flex items-center justify-between font-body-sm text-xs sm:text-body-sm">
@@ -83,7 +93,7 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Main App Navigation Bar */}
-      <div className="h-16 sm:h-20 w-full max-w-7xl xl:max-w-archive-xl 2xl:max-w-archive-2xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2 xl:gap-3 2xl:gap-6">
+      <div className={`${isReaderRoute ? 'h-13 sm:h-15' : 'h-16 sm:h-20'} w-full max-w-7xl xl:max-w-archive-xl 2xl:max-w-archive-2xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2 xl:gap-3 2xl:gap-6`}>
         {/* Brand Logo & Name */}
         <div
           onClick={() => onNavigate('home')}

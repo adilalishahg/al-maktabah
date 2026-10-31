@@ -3,6 +3,7 @@ import { connectToDatabase } from '@/lib/mongodb';
 import { BookModel } from '@/models/BookModel';
 import { INITIAL_DETAILED_BOOKS } from '@/data/bookStore';
 import { verifyAdminRequest } from '@/lib/authGuard';
+import { matchesBookSlug } from '@/utils/slug';
 
 export async function GET(
   request: Request,
@@ -13,15 +14,33 @@ export async function GET(
     const db = await connectToDatabase();
 
     if (db) {
-      const book = await BookModel.findOne({ id }).lean();
+      let book = await BookModel.findOne({ id }).lean();
       if (!book) {
+        // Try slug / title lookup
+        const allBooks = await BookModel.find({}).lean();
+        const matched = allBooks.find((b: any) => matchesBookSlug(b, id));
+        if (matched) {
+          book = matched;
+        }
+      }
+
+      if (book) {
         return NextResponse.json(
-          { success: false, message: 'Codex not found' },
-          { status: 404 }
+          { success: true, data: book },
+          {
+            headers: {
+              'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=1200',
+            },
+          }
         );
       }
+    }
+
+    // Fallback: check in-memory seed books
+    const inMemory = INITIAL_DETAILED_BOOKS.find((b) => matchesBookSlug(b, id));
+    if (inMemory) {
       return NextResponse.json(
-        { success: true, data: book },
+        { success: true, data: inMemory },
         {
           headers: {
             'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=1200',
@@ -31,7 +50,7 @@ export async function GET(
     }
 
     return NextResponse.json(
-      { success: false, message: 'Codex not found or database not connected' },
+      { success: false, message: 'Codex not found' },
       { status: 404 }
     );
   } catch (error: any) {

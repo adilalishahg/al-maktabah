@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Book } from '../types/library';
 import type { BookDetailModalProps } from '../types/components';
+import { getBookSlug } from '@/utils/slug';
 
 export const BookDetailModal: React.FC<BookDetailModalProps> = ({
   book,
@@ -66,8 +67,10 @@ export const BookDetailModal: React.FC<BookDetailModalProps> = ({
 
               {/* Action Buttons */}
               <div className="space-y-2 mt-4 max-w-xs mx-auto md:max-w-none">
-                <button
-                  onClick={() => {
+                <a
+                  href={`/book/${getBookSlug(book)}`}
+                  onClick={(e) => {
+                    e.preventDefault();
                     onOpenReader(book);
                     onClose();
                   }}
@@ -75,7 +78,7 @@ export const BookDetailModal: React.FC<BookDetailModalProps> = ({
                 >
                   <span className="material-symbols-outlined text-base">chrome_reader_mode</span>
                   <span>Read in Web Reader</span>
-                </button>
+                </a>
                 <button
                   onClick={() => onDownload(book)}
                   className="w-full py-2.5 px-4 bg-surface-container hover:bg-surface-container-high text-on-surface rounded-lg font-title-md text-sm font-semibold flex items-center justify-center gap-2 transition-colors border border-surface-container-high cursor-pointer"

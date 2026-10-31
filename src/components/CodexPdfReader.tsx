@@ -20,6 +20,8 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
   onClose,
   onJumpToChapter,
   onSwitchToMatn,
+  isStandaloneRoute = false,
+  className = '',
 }) => {
   const {
     totalPages,
@@ -73,12 +75,15 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
 
   return (
     <div
-      className={`flex flex-col bg-night-card text-night-text overflow-hidden transition-all duration-300 ${isFullscreen
+      className={`flex flex-col bg-night-card text-night-text overflow-hidden transition-all duration-300 ${
+        isFullscreen
           ? 'fixed inset-0 z-[100] w-screen h-screen'
-          : hideHeader
-            ? 'h-[calc(100dvh-var(--app-header-height,108px)-4.5rem)] min-h-[460px] w-full rounded-2xl border border-tertiary/40 shadow-xl'
-            : 'h-[calc(100dvh-6.5rem)] sm:h-[86vh] min-h-reader-tall w-full rounded-xl sm:rounded-2xl border border-tertiary/40 shadow-2xl mt-2 sm:mt-4 mb-6'
-        }`}
+          : isStandaloneRoute
+            ? 'flex-1 min-h-0 w-full rounded-2xl border border-tertiary/40 shadow-xl'
+            : hideHeader
+              ? 'h-[calc(100dvh-var(--app-header-height,108px)-4.5rem)] min-h-[460px] w-full rounded-2xl border border-tertiary/40 shadow-xl'
+              : 'h-[calc(100dvh-6.5rem)] sm:h-[86vh] min-h-reader-tall w-full rounded-xl sm:rounded-2xl border border-tertiary/40 shadow-2xl mt-2 sm:mt-4 mb-6'
+      } ${className}`}
     >
       {/* Top Header & Navigation Bar */}
       {!hideHeader && (
