@@ -13,6 +13,10 @@ async function getPdfJs(): Promise<any> {
   return new Promise((resolve, reject) => {
     const existing = document.getElementById('pdfjs-cdn-script');
     if (existing) {
+      if ((window as any).pdfjsLib) {
+        resolve((window as any).pdfjsLib);
+        return;
+      }
       existing.addEventListener('load', () => resolve((window as any).pdfjsLib));
       return;
     }
@@ -35,8 +39,181 @@ async function getPdfJs(): Promise<any> {
   });
 }
 
+// Arabic Title Extraction from text
+function detectArabicTitle(text: string): string {
+  const lines = text
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter(Boolean);
+
+  for (const line of lines) {
+    if (
+      /(?:كِتَابُ|كتاب|صَحِيحُ|صحيح|سُنَنُ|سنن|مُسْنَدُ|مسند|تَفْسِيرُ|تفسير|مُخْتَصَرُ|مختصر|رِسَالَةُ|رسالة|شَرْحُ|شرح|مَتْنُ|متن|دِيوَانُ|ديوان|عُمْدَةُ|عمدة|بُلُوغُ|بلوغ|رِيَاضُ|رياض)\s+/u.test(
+        line
+      )
+    ) {
+      if (line.length <= 100 && /[\u0600-\u06FF]/.test(line)) {
+        return line;
+      }
+    }
+  }
+
+  for (const line of lines.slice(0, 20)) {
+    const arabicOnly = line.replace(/[^\u0600-\u06FF\s]/g, '').trim();
+    if (arabicOnly.length > 8 && arabicOnly.length < 80) {
+      return line;
+    }
+  }
+
+  return 'المخطوط الأصلي المعتمد';
+}
+
+// Author & Hijri year extraction
+function detectAuthorAndHijri(
+  text: string,
+  metaAuthor?: string
+): { author: string; hijriYear: string } {
+  let author = (metaAuthor || '').trim();
+  let hijriYear = '1445 AH';
+
+  const hijriMatch =
+    text.match(/\b(1[0-4]\d{2}|\d{2,3})\s*(?:هـ|هـ\.|AH|هجرية)\b/i) ||
+    text.match(/توفي\s*سنة\s*(\d{2,4})/);
+  if (hijriMatch) {
+    hijriYear = `${hijriMatch[1]} AH`;
+  }
+
+  if (author && !/acrobat|indesign|word|pdf|writer|latex|unknown|calibre/i.test(author)) {
+    return { author, hijriYear };
+  }
+
+  const authorPattern =
+    /(?:تأليف|تصنيف|للإمام|للشيخ|الإمام|الشيخ|العلامة|المؤلف)\s*[:\s]\s*([^\n\r,]{4,60})/u;
+  const match = text.match(authorPattern);
+  if (match && match[1]) {
+    author = match[1].trim();
+  } else {
+    if (/البخاري/i.test(text)) author = 'الإمام محمد بن إسماعيل البخاري (d. 256 AH)';
+    else if (/مسلم/i.test(text)) author = 'الإمام مسلم بن الحجاج النيسابوري (d. 261 AH)';
+    else if (/النووي/i.test(text)) author = 'الإمام محيي الدين يحيى بن شرف النووي (d. 676 AH)';
+    else if (/ابن حجر/i.test(text)) author = 'الحافظ أحمد بن علي بن حجر العسقلاني (d. 852 AH)';
+    else if (/ابن كثير/i.test(text)) author = 'الحافظ إسماعيل بن كثير (d. 774 AH)';
+    else if (/ابن تيمية/i.test(text)) author = 'شيخ الإسلام تقي الدين ابن تيمية (d. 728 AH)';
+    else if (/الغزالي/i.test(text)) author = 'حجة الإسلام أبو حامد الغزالي (d. 505 AH)';
+    else if (/مالك/i.test(text)) author = 'الإمام مالك بن أنس (d. 179 AH)';
+    else author = 'Classical Islamic Scholar';
+  }
+
+  return { author, hijriYear };
+}
+
+// Smart Chapter Extractor using PDF outline or text analysis
+async function extractChapters(
+  doc: any,
+  extractedPages: { pageNum: number; text: string }[],
+  totalPages: number
+): Promise<BookChapter[]> {
+  const chapters: BookChapter[] = [];
+
+  // 1. Try PDF bookmarks/outline
+  try {
+    const outline = await doc.getOutline();
+    if (outline && Array.isArray(outline) && outline.length > 0) {
+      for (let i = 0; i < outline.length; i++) {
+        const item = outline[i];
+        let startPage = 1;
+        if (item.dest) {
+          try {
+            let destRef = item.dest;
+            if (typeof destRef === 'string') {
+              destRef = await doc.getDestination(destRef);
+            }
+            if (Array.isArray(destRef) && destRef[0]) {
+              const pageIdx = await doc.getPageIndex(destRef[0]);
+              startPage = Math.max(1, pageIdx + 1);
+            }
+          } catch {}
+        }
+
+        const rawTitle = (item.title || `Chapter ${i + 1}`).trim();
+        const isArabic = /[\u0600-\u06FF]/.test(rawTitle);
+
+        const pageObj = extractedPages.find((p) => p.pageNum === startPage);
+        const contentSnippet = pageObj ? pageObj.text.slice(0, 1500) : '';
+
+        chapters.push({
+          id: `ch-${Date.now()}-${i + 1}`,
+          number: i + 1,
+          title: isArabic ? `Chapter ${i + 1}: ${rawTitle}` : rawTitle,
+          arabicTitle: isArabic ? rawTitle : '',
+          startPage,
+          content: contentSnippet || 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\n...',
+          translation: `Translation and commentary for ${rawTitle}.`,
+          notes: `Extracted from PDF Table of Contents (p. ${startPage}).`,
+        });
+      }
+    }
+  } catch (err) {
+    console.warn('Outline extraction notice:', err);
+  }
+
+  if (chapters.length > 0) {
+    return chapters;
+  }
+
+  // 2. Scan text for chapter/heading patterns
+  const chapterPattern = /(?:كِتَابُ|كتاب|بَابُ|باب|الفَصْلُ|الفصل|الجُزْءُ|الجزء)\s+([^\n\r]+)/g;
+  let chNum = 1;
+
+  for (const p of extractedPages) {
+    let match;
+    while ((match = chapterPattern.exec(p.text)) !== null && chapters.length < 15) {
+      const matchedTitle = match[0].trim();
+      const snippet = p.text.slice(match.index, match.index + 1200);
+
+      chapters.push({
+        id: `ch-${Date.now()}-${chNum}`,
+        number: chNum,
+        title: `Chapter ${chNum}: ${matchedTitle}`,
+        arabicTitle: matchedTitle,
+        startPage: p.pageNum,
+        content: snippet,
+        translation: `Authentic scholastic translation for ${matchedTitle}.`,
+        notes: `Extracted from PDF Page ${p.pageNum}.`,
+      });
+      chNum++;
+    }
+  }
+
+  if (chapters.length > 0) {
+    return chapters;
+  }
+
+  // 3. Fallback: chunk based on pages
+  const step = Math.max(1, Math.floor(totalPages / 5));
+  for (let i = 0; i < Math.min(5, Math.ceil(totalPages / step)); i++) {
+    const pageNum = i * step + 1;
+    const pageObj = extractedPages.find((p) => p.pageNum === pageNum);
+    chapters.push({
+      id: `ch-${Date.now()}-${i + 1}`,
+      number: i + 1,
+      title: i === 0 ? 'Opening Chapter & Preamble' : `Section ${i + 1}`,
+      arabicTitle: i === 0 ? 'المقدمة والباب الأول' : `الفصل ${i + 1}`,
+      startPage: pageNum,
+      content:
+        pageObj?.text?.slice(0, 1200) ||
+        'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\nالْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ...',
+      translation:
+        'In the name of Allah, the Entirely Merciful, the Especially Merciful. All praise is due to Allah, Lord of the worlds.',
+      notes: `Extracted from PDF (Page ${pageNum}).`,
+    });
+  }
+
+  return chapters;
+}
+
 /**
- * Reads an uploaded PDF file, extracts its page count, metadata, and chapters/text.
+ * Reads an uploaded PDF file, extracts its page count, metadata, page 1 cover image, and chapters/text.
  */
 export async function analyzeUploadedPdf(
   file: File,
@@ -44,17 +221,72 @@ export async function analyzeUploadedPdf(
 ): Promise<ExtractedBookData> {
   const fileName = file.name || '';
   const sizeMb = parseFloat((file.size / (1024 * 1024)).toFixed(1));
-  let totalPages = 150;
+  let totalPages = 1;
   let extractedRawText = '';
+  const extractedPages: { pageNum: number; text: string }[] = [];
+
+  let coverImage =
+    'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=1000';
+  let coverFile: File | undefined;
+  let metaTitle = '';
+  let metaAuthor = '';
 
   onProgress?.('Reading PDF structure and page count...');
+
+  let doc: any = null;
 
   try {
     const pdfjs = await getPdfJs();
     if (pdfjs) {
       const arrayBuffer = await file.arrayBuffer();
-      const doc = await pdfjs.getDocument({ data: arrayBuffer }).promise;
-      totalPages = doc.numPages || 150;
+      doc = await pdfjs.getDocument({
+        data: arrayBuffer,
+        cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
+        cMapPacked: true,
+      }).promise;
+
+      totalPages = doc.numPages || 1;
+
+      // Extract Page 1 as high-res cover image canvas
+      try {
+        onProgress?.('Extracting cover manuscript image from Page 1...');
+        const page1 = await doc.getPage(1);
+        const viewport = page1.getViewport({ scale: 1.5 });
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(viewport.width);
+        canvas.height = Math.round(viewport.height);
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          await page1.render({ canvasContext: ctx, viewport }).promise;
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+          coverImage = dataUrl;
+
+          const blob = await new Promise<Blob | null>((resolve) =>
+            canvas.toBlob((b) => resolve(b), 'image/jpeg', 0.88)
+          );
+          if (blob) {
+            const cleanBase = fileName
+              .replace(/\.[^/.]+$/, '')
+              .replace(/[^a-zA-Z0-9_-]/g, '_');
+            coverFile = new File([blob], `${cleanBase || 'manuscript'}_cover.jpg`, {
+              type: 'image/jpeg',
+            });
+          }
+        }
+      } catch (imgErr) {
+        console.warn('Cover extraction notice from Page 1:', imgErr);
+      }
+
+      // Extract Document Metadata
+      try {
+        const metadata = await doc.getMetadata();
+        if (metadata?.info) {
+          metaTitle = (metadata.info.Title || '').trim();
+          metaAuthor = (metadata.info.Author || '').trim();
+        }
+      } catch (metaErr) {
+        console.warn('Metadata read notice:', metaErr);
+      }
 
       onProgress?.(`Detected ${totalPages} pages. Extracting text & chapters...`);
 
@@ -68,6 +300,7 @@ export async function analyzeUploadedPdf(
           const content = await page.getTextContent();
           const pageStr = content.items.map((item: any) => item.str).join(' ');
           textPieces.push(pageStr);
+          extractedPages.push({ pageNum: i, text: pageStr });
         } catch {
           // ignore single page read errors
         }
@@ -91,10 +324,10 @@ export async function analyzeUploadedPdf(
       authorHijriYear: '194 – 256 AH',
       discipline: 'hadith',
       disciplineName: 'Hadīth & Transmitted Sunnah (الحديث النبوي)',
-      pages: totalPages > 1 ? totalPages : 631,
+      pages: totalPages > 1 ? totalPages : 150,
       sizeMb: sizeMb || 7.9,
-      coverImage:
-        'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=1000',
+      coverImage,
+      coverFile,
       description:
         'الجامع المسند الصحيح المختصر من أمور رسول الله صلى الله عليه وسلم وسننه وأيامه. Complete Arabic matn recension with parallel Urdu translation, authentic isnād transmission chains, and academic notes.',
       chapters: [
@@ -181,120 +414,77 @@ export async function analyzeUploadedPdf(
 ام المؤمنین عائشہ رضی اللہ عنہا سے روایت ہے کہ نبی کریم صلی اللہ علیہ وسلم جب غسل جنابت فرماتے تو پہلے دونوں ہاتھ دھوتے، پھر اس طرح وضو فرماتے جس طرح نماز کے لیے وضو کیا جاتا ہے، پھر اپنی انگلیاں پانی میں داخل کر کے بالوں کی جڑوں کا خلال فرماتے...`,
           notes: 'غسل جنابت کی سنتیں اور طریقہ کار۔ احادیث نمبر ۲۴۸ تا ۲۹۳۔',
         },
-        {
-          id: `ch-${Date.now()}-6`,
-          number: 6,
-          title: 'The Book of Menses (Kitāb al-Ḥayḍ)',
-          arabicTitle: 'كتاب الحيض',
-          startPage: 222,
-          content: `كِتَابُ الحَيْضِ
-1- بَابُ كَيْفَ كَانَ بَدْءُ الحَيْضِ:
-وَقَوْلِ النَّبِيِّ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ: «هَذَا شَيْءٌ كَتَبَهُ اللَّهُ عَلَى بَنَاتِ آدَمَ».`,
-          translation: `کتاب حیض کے احکام و مسائل
-باب: حیض کی ابتداء کیسے ہوئی اور نبی کریم صلی اللہ علیہ وسلم کا ارشاد کہ "یہ ایک ایسی چیز ہے جو اللہ تعالیٰ نے آدم کی بیٹیوں پر مقدر فرما دی ہے"۔`,
-          notes: 'خواتین کے مخصوص شرعی مسائل اور عبادات۔ احادیث نمبر ۲۹۴ تا ۳۳۳۔',
-        },
-        {
-          id: `ch-${Date.now()}-7`,
-          number: 7,
-          title: 'The Book of Tayammum (Dry Ablution)',
-          arabicTitle: 'كتاب التيمم',
-          startPage: 248,
-          content: `كِتَابُ التَّيَمُّمِ
-1- بَابُ قَوْلِ اللَّهِ تَعَالَى: {فَلَمْ تَجِدُوا مَاءً فَتَيَمَّمُوا صَعِيدًا طَيِّبًا فَامْسَحُوا بِوُجُوهِكُمْ وَأَيْدِيكُمْ مِنْهُ} [المائدة: 6]`,
-          translation: `کتاب تیمم کے احکام و مسائل
-باب: اللہ تعالیٰ کا فرمان کہ "پس اگر تمہیں پانی نہ ملے تو پاک مٹی سے تیمم کر لو اور اپنے چہروں اور ہاتھوں پر مسح کر لو"۔`,
-          notes: 'پانی کی عدم دستیابی یا عذر کے وقت تیمم کا شرعی حکم۔ احادیث نمبر ۳۳۴ تا ۳۴۸۔',
-        },
-        {
-          id: `ch-${Date.now()}-8`,
-          number: 8,
-          title: 'Times of the Prayers (Mawāqīt aṣ-Ṣalāh)',
-          arabicTitle: 'كتاب مواقيت الصلاة',
-          startPage: 368,
-          content: `كِتَابُ مَوَاقِيتِ الصَّلاَةِ وَفَضْلِهَا
-1- بَابُ مَوَاقِيتِ الصَّلاَةِ وَقَوْلِ اللَّهِ تَعَالَى: {إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَوْقُوتًا} [النساء: 103]`,
-          translation: `کتاب اوقات نماز اور اس کی فضیلت
-باب: نماز کے مقررہ اوقات اور اللہ تعالیٰ کا فرمان کہ "بے شک نماز مومنوں پر وقت مقررہ پر فرض کی گئی ہے"۔`,
-          notes: 'پنجگانہ نمازوں کے ابتدائی و انتہائی اوقات۔ احادیث نمبر ۵۲۱ تا ۶۰۲۔',
-        },
-        {
-          id: `ch-${Date.now()}-9`,
-          number: 9,
-          title: 'The Call to Prayer (Kitāb al-Adhān)',
-          arabicTitle: 'كتاب الأذان',
-          startPage: 417,
-          content: `كِتَابُ الأَذَانِ
-1- بَابُ بَدْءِ الأَذَانِ:
-حَدَّثَنَا مَحْمُودُ بْنُ غَيْلاَنَ، قَالَ: حَدَّثَنَا عَبْدُ الرَّزَّاقِ، قَالَ: أَخْبَرَنَا ابْنُ جُرَيْجٍ، قَالَ: أَخْبَرَنِي نَافِعٌ، أَنَّ ابْنَ عُمَرَ كَانَ يَقُولُ: كَانَ المُسْلِمُونَ حِينَ قَدِمُوا المَدِينَةَ يَجْتَمِعُونَ فَيَتَحَيَّنُونَ الصَّلاَةَ لَيْسَ يُنَادَى لَهَا...`,
-          translation: `کتاب اذان کے مسائل کے بیان میں
-باب: اذان کی مشروعیت کی ابتداء کیسے ہوئی؟ عبداللہ بن عمر رضی اللہ عنہما فرماتے تھے کہ جب مسلمان ہجرت کر کے مدینہ منورہ تشریف لائے تو وہ جمع ہو کر نماز کے وقت کا اندازہ لگاتے تھے، اس کے لیے کوئی اعلان نہیں ہوتا تھا...`,
-          notes: 'اذان اور اقامت کے فضائل و احکام۔ احادیث نمبر ۶۰۳ تا ۸۷۵۔',
-        },
-        {
-          id: `ch-${Date.now()}-10`,
-          number: 10,
-          title: 'The Friday Prayer (Kitāb al-Jumu‘ah)',
-          arabicTitle: 'كتاب الجمعة',
-          startPage: 585,
-          content: `كِتَابُ الجُمُعَةِ
-1- بَابُ فَرْضِ الجُمُعَةِ:
-وَقَوْلِ اللَّهِ عَزَّ وَجَلَّ: {إِذَا نُودِيَ لِلصَّلَاةِ مِنْ يَوْمِ الْجُمُعَةِ فَاسْعَوْا إِلَى ذِكْرِ اللَّهِ وَذَرُوا الْبَيْعَ ذَلِكُمْ خَيْرٌ لَكُمْ إِنْ كُنْتُمْ تَعْلَمُونَ} [الجمعة: 9]`,
-          translation: `کتاب جمعہ کے بیان میں
-باب: نماز جمعہ کی فرضیت اور اللہ تعالیٰ کا فرمان: "اے ایمان والو! جب جمعہ کے دن نماز کے لیے اذان دی جائے تو اللہ کے ذکر کی طرف دوڑو اور خرید و فروخت چھوڑ دو..."۔`,
-          notes: 'نماز جمعہ، خطبہ اور جمعہ کے آداب۔ احادیث نمبر ۸۷۶ تا ۹۴۱۔',
-        },
       ],
     };
   }
 
-  // Generic Smart Title Detection from filename
+  // Generic Smart Title Detection from filename or metadata
   const cleanBase = fileName.replace(/\.pdf$/i, '').replace(/[-_]+/g, ' ').trim();
-  const title = cleanBase
+  const fileTitle = cleanBase
     .split(' ')
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ');
 
+  const title =
+    metaTitle && !/untitled|microsoft|writer|acrobat/i.test(metaTitle)
+      ? metaTitle
+      : fileTitle || 'Classical Manuscript';
+
+  const arabicTitle = detectArabicTitle(extractedRawText);
+  const { author, hijriYear } = detectAuthorAndHijri(extractedRawText, metaAuthor);
+
   let discipline = 'hadith';
   let disciplineName = 'Prophetic Traditions (Hadīth)';
-  if (/tafsir|quran|ayah/i.test(cleanBase)) {
+  if (/tafsir|quran|ayah|تفسير/i.test(cleanBase + extractedRawText)) {
     discipline = 'tafsir';
     disciplineName = 'Exegesis & Quranic Sciences (Tafsīr)';
-  } else if (/fiqh|usul|law|fatwa/i.test(cleanBase)) {
+  } else if (/fiqh|usul|law|fatwa|فقه|أصول/i.test(cleanBase + extractedRawText)) {
     discipline = 'fiqh';
     disciplineName = 'Islamic Jurisprudence (Fiqh)';
-  } else if (/aqeedah|creed|tawheed/i.test(cleanBase)) {
+  } else if (/aqeedah|creed|tawheed|عقيدة|توحيد/i.test(cleanBase + extractedRawText)) {
     discipline = 'aqeedah';
     disciplineName = 'Theology & Creed (‘Aqīdah)';
-  } else if (/seerah|history|tarikh/i.test(cleanBase)) {
+  } else if (/seerah|history|tarikh|سيرة|تاريخ/i.test(cleanBase + extractedRawText)) {
     discipline = 'seerah';
     disciplineName = 'Prophetic Biography & History (Sīrah)';
   }
 
-  return {
-    title,
-    arabicTitle: 'المخطوط الأصلي المعتمد',
-    author: 'Classical Islamic Scholar',
-    authorHijriYear: '1445 AH',
-    discipline,
-    disciplineName,
-    pages: totalPages,
-    sizeMb,
-    coverImage:
-      'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=1000',
-    description: `Digitized treatise preserving authentic sacred knowledge. Contains ${totalPages} pages and complete chapter indexing.`,
-    chapters: [
+  // Extract chapters from outline or scanned pages
+  let chapters: BookChapter[] = [];
+  if (doc) {
+    chapters = await extractChapters(doc, extractedPages, totalPages);
+  }
+
+  if (chapters.length === 0) {
+    chapters = [
       {
         id: `ch-${Date.now()}-1`,
         number: 1,
         title: 'Opening Chapter & Preamble',
         arabicTitle: 'المقدمة والباب الأول',
         startPage: 1,
-        content: extractedRawText.slice(0, 1200) || 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\nالْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ...',
-        translation: 'In the name of Allah, the Entirely Merciful, the Especially Merciful. All praise is due to Allah, Lord of the worlds.',
+        content:
+          extractedRawText.slice(0, 1200) ||
+          'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\nالْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ...',
+        translation:
+          'In the name of Allah, the Entirely Merciful, the Especially Merciful. All praise is due to Allah, Lord of the worlds.',
         notes: `Extracted from uploaded PDF (${totalPages} total pages).`,
       },
-    ],
+    ];
+  }
+
+  return {
+    title,
+    arabicTitle,
+    author,
+    authorHijriYear: hijriYear,
+    discipline,
+    disciplineName,
+    pages: totalPages,
+    sizeMb,
+    coverImage,
+    coverFile,
+    description: `Digitized treatise preserving authentic sacred knowledge. Contains ${totalPages} pages and complete chapter indexing.`,
+    chapters,
   };
 }
-

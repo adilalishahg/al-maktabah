@@ -3,6 +3,7 @@ import { connectToDatabase } from '@/lib/mongodb';
 import { CategoryModel } from '@/models/CategoryModel';
 import { INITIAL_CATEGORIES } from '@/data/categoryStore';
 import { verifyAdminRequest } from '@/lib/authGuard';
+import { CategoryInputSchema } from '@/lib/validationSchemas';
 
 export async function GET() {
   try {
@@ -44,33 +45,25 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    if (!body || !body.name || !body.id) {
+    const parseResult = CategoryInputSchema.safeParse(body);
+
+    if (!parseResult.success) {
       return NextResponse.json(
-        { success: false, message: 'Category Name and ID/Slug are required.' },
-        { status: 400 }
+        {
+          success: false,
+          message: 'Invalid category schema payload.',
+          errors: parseResult.error.flatten().fieldErrors,
+        },
+        { status: 422 }
       );
     }
 
-    // Input sanitization
-    const sanitizedId = String(body.id).trim().toLowerCase().replace(/[^a-z0-9_-]/g, '-');
-    const sanitizedName = String(body.name).trim();
-    const sanitizedArabicName = body.arabicName ? String(body.arabicName).trim() : '';
-
+    const validated = parseResult.data;
     const isConnected = await connectToDatabase();
     if (isConnected) {
       const updated = await CategoryModel.findOneAndUpdate(
-        { id: sanitizedId },
-        {
-          id: sanitizedId,
-          name: sanitizedName,
-          arabicName: sanitizedArabicName,
-          icon: body.icon || 'category',
-          description: body.description ? String(body.description).trim() : '',
-          volumeCount: typeof body.volumeCount === 'number' ? body.volumeCount : 0,
-          tags: Array.isArray(body.tags) ? body.tags.map((t: any) => String(t).trim()) : [],
-          subBranches: Array.isArray(body.subBranches) ? body.subBranches.map((s: any) => String(s).trim()) : [],
-          foundationTreatises: Array.isArray(body.foundationTreatises) ? body.foundationTreatises : [],
-        },
+        { id: validated.id },
+        validated,
         { upsert: true, new: true, setDefaultsOnInsert: true }
       );
       return NextResponse.json({ success: true, category: updated, source: 'mongodb' });
@@ -78,7 +71,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      category: { ...body, id: sanitizedId, name: sanitizedName, arabicName: sanitizedArabicName },
+      category: validated,
       source: 'local',
     });
   } catch (error: any) {

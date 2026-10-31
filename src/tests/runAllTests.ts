@@ -16,9 +16,11 @@ import { GET as getBooks } from '../app/api/books/route';
 import { GET as getCategories } from '../app/api/categories/route';
 import { GET as getSettings } from '../app/api/settings/route';
 import { GET as getHealth } from '../app/api/health/route';
+import { POST as logoutPost } from '../app/api/auth/logout/route';
 import sitemapGenerator from '../app/sitemap';
 import robotsGenerator from '../app/robots';
-import { INITIAL_DETAILED_BOOKS } from '../data/bookStore';
+import { INITIAL_DETAILED_BOOKS, getStoredBooks } from '../data/bookStore';
+import { BookInputSchema, CategoryInputSchema } from '../lib/validationSchemas';
 
 let passed = 0;
 let failed = 0;
@@ -56,6 +58,11 @@ async function runAllTests() {
     headers: { Authorization: `Bearer ${goodLogin.token}` },
   });
   assert(verifyAdminRequest(reqWithToken).authorized, 'Authorizes Bearer token mutation');
+
+  const logoutRes = await logoutPost();
+  const logoutJson = await logoutRes.json();
+  const hasClearedCookie = logoutRes.headers.get('set-cookie')?.includes('al_maktabah_admin_token=;');
+  assert(logoutJson.success === true && hasClearedCookie === true, 'Logout endpoint securely invalidates httpOnly cookie');
 
   // Magic bytes
   const fakePdfBuffer = Buffer.concat([Buffer.from('%PDF-1.4\n%âãÏÓ\n'), Buffer.alloc(50, 0)]);
@@ -100,6 +107,23 @@ async function runAllTests() {
   const healthData = await healthRes.json();
   assert(healthData.status === 'healthy', 'System healthcheck endpoint reports healthy status');
 
+  // --- SUITE 3B: DATA INTEGRITY & ZOD SCHEMA VALIDATION ---
+  const storedOnFirstLoad = getStoredBooks();
+  assert(
+    Array.isArray(storedOnFirstLoad) && storedOnFirstLoad.length > 0,
+    'First-load bookStore auto-seeds initial codices (0-books bug resolved)'
+  );
+
+  const invalidBookValidation = BookInputSchema.safeParse({ title: '' });
+  assert(!invalidBookValidation.success, 'Zod BookInputSchema rejects invalid payload missing required fields');
+
+  const validBookValidation = BookInputSchema.safeParse({
+    id: 'valid-book-slug',
+    title: 'Al-Muwatta',
+    author: 'Imam Malik ibn Anas',
+  });
+  assert(validBookValidation.success, 'Zod BookInputSchema validates correctly structured book data');
+
   // --- SUITE 4: SEO, SITEMAP & STRUCTURED DATA ---
   console.log('\n▶ [4/4] SUITE: SEO, Sitemap & Semantic Web');
   const robots = robotsGenerator();
@@ -108,10 +132,10 @@ async function runAllTests() {
   const sitemap = await sitemapGenerator();
   assert(Array.isArray(sitemap) && sitemap.length > 5, 'Sitemap dynamically generates all required URLs');
   assert(sitemap.some((e) => e.priority === 1.0), 'Sitemap designates homepage priority 1.0');
-  assert(sitemap.some((e) => e.url.includes('/books/')), 'Sitemap indexes individual codex pages');
+  assert(sitemap.some((e) => e.url.includes('/books/')), 'Sitemap indexes individual book pages');
 
   const testBook = INITIAL_DETAILED_BOOKS[0];
-  assert(Boolean(testBook.title && testBook.author), 'Canonical codex available for Schema.org/Book metadata');
+  assert(Boolean(testBook.title && testBook.author), 'Canonical book available for Schema.org/Book metadata');
 
   console.log('\n================================================================');
   console.log(`  SUMMARY: ${passed} Passed, ${failed} Failed out of ${passed + failed} Total Assertions`);

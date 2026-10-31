@@ -18,7 +18,7 @@ export const ScholarlyJsonLd: React.FC<ScholarlyJsonLdProps> = ({
     alternateName: 'Al-Maktabah Digital Waqf & Islamic Archives',
     url: baseUrl,
     description:
-      'Autonomous Academic Islamic Codex & Digital Waqf Repository preserving timeless classical treatises, Qur’anic exegesis, and authenticated hadith collections.',
+      'Autonomous Academic Islamic Manuscript & Digital Waqf Repository preserving timeless classical treatises, Qur’anic exegesis, and authenticated hadith collections.',
     potentialAction: {
       '@type': 'SearchAction',
       target: `${baseUrl}/browse-library?q={search_term_string}`,

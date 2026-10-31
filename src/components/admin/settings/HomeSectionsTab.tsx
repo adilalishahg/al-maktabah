@@ -325,7 +325,7 @@ export const HomeSectionsTab: React.FC<HomeSectionsTabProps> = ({
                   <span className="material-symbols-outlined text-base">chrome_reader_mode</span>
                 </span>
                 <div>
-                  <span className="text-xs font-bold text-white block">Scholarly Codex Reader</span>
+                  <span className="text-xs font-bold text-white block">Scholarly Manuscript Reader</span>
                   <span className="text-label-xs text-tertiary-fixed font-semibold">Featured Live Reading Canvas</span>
                 </div>
               </div>

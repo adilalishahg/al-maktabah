@@ -154,17 +154,18 @@ const LOCAL_STORAGE_KEY = 'al_maktabah_books_live_v1';
 
 export function getStoredBooks(): DetailedBook[] {
   if (typeof window === 'undefined') {
-    return [];
+    return INITIAL_DETAILED_BOOKS;
   }
   try {
     const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (!raw) {
-      return [];
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(INITIAL_DETAILED_BOOKS));
+      return INITIAL_DETAILED_BOOKS;
     }
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed : INITIAL_DETAILED_BOOKS;
   } catch (err) {
-    return [];
+    return INITIAL_DETAILED_BOOKS;
   }
 }
 
@@ -222,7 +223,7 @@ export function getPublicLibraryBooks(): (import('../types/library').Book)[] {
     volumes: b.volumes || 1,
     rating: 4.9,
     readingTimeHours: Math.round((b.pages || 100) / 30),
-    canonicalStatus: 'Academic Council Verified Codex',
+    canonicalStatus: 'Academic Council Verified Manuscript',
   }));
 
   // Only return real stored/live books — static mock library is hidden

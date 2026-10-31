@@ -39,7 +39,7 @@ export const HomeHeroSection: React.FC<HomeHeroSectionProps> = ({
 
         <div className="space-y-3">
           <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-display-hero xl:text-display-xl text-primary tracking-tight font-extrabold leading-[1.18]">
-            {hero.headline || 'Authentic Islamic Codices & Scholarly Archives'}
+            {hero.headline || 'Authentic Islamic Manuscripts & Scholarly Archives'}
             <span className="block font-display italic text-tertiary font-normal mt-1.5 text-2xl sm:text-3xl md:text-4xl">
               {hero.subheadline || 'Open, Peer-Reviewed & Preserved for Posterity.'}
             </span>
@@ -91,7 +91,7 @@ export const HomeHeroSection: React.FC<HomeHeroSectionProps> = ({
 
             <div className="relative z-10 flex justify-between items-start">
               <span className="font-label-sm text-label-xs sm:text-xs px-2.5 py-0.5 rounded-full bg-tertiary-container/20 text-gold-bright border border-tertiary/40 font-bold uppercase tracking-wider">
-                Tārīkh Codex
+                Tārīkh Manuscript
               </span>
               <span className="material-symbols-outlined text-gold-bright text-base sm:text-lg">bookmark</span>
             </div>
@@ -162,10 +162,10 @@ export const HomeHeroSection: React.FC<HomeHeroSectionProps> = ({
               <div className="relative z-10 flex justify-between items-center">
                 <span className="inline-flex items-center gap-1.5 font-label-sm text-xs px-2.5 py-1 rounded-full bg-primary-container text-on-primary font-bold shadow-xs">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                  {centerBook.disciplineName || 'Featured Codex'}
+                  {centerBook.disciplineName || 'Featured Manuscript'}
                 </span>
                 <span className="font-label-sm text-xs text-tertiary font-bold tracking-wider">
-                  {centerBook.authorHijriYear || '1445 AH Codex'}
+                  {centerBook.authorHijriYear || '1445 AH Edition'}
                 </span>
               </div>
 

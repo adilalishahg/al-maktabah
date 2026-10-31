@@ -12,8 +12,8 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  let bookTitle = 'Sacred Codex & Facsimile Reader';
-  let bookDesc = 'Read authentic classical Islamic codices with isnād transmission graphs and digital facsimile matn.';
+  let bookTitle = 'Sacred Manuscript & Facsimile Reader';
+  let bookDesc = 'Read authentic classical Islamic manuscripts with isnād transmission graphs and digital facsimile matn.';
 
   try {
     const db = await connectToDatabase();

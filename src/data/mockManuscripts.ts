@@ -16,11 +16,11 @@ export const MANUSCRIPTS: ManuscriptCodex[] = [
     scribeName: 'Sharaf ad-Dīn ‘Alī al-Yūnīnī',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDU78ZDdbhpH6RbR5aniEC94eIG9XExjaP97ozBeIPo9y_XJR7S31hXfSQJhFYFav8hnmY67pF36_CN431NkDYjDpw6pDMjp17YXAALxEAZVnktHC4eTsP1MIRiP3OlrtjtMxiqZ94mAWZhQzLoMtQUyZ_hXgtNrf2MFWgy1ncBd0R6jrsaaaWcqS7YvXqwwaKiQ0Ev8LsuEuM9bc4UZU-oFtcf_F4hhYs0dNmUFJKCE9YdNM66s0RL',
     illuminationNotes: 'Double-page frontispiece illuminated in lapis lazuli pigment and 24-karat burnished gold leaf with intricate eight-point rosettes.',
-    historicalSignificance: 'The benchmark codex upon which all modern printed critical editions of Sahih al-Bukhari are authenticated.'
+    historicalSignificance: 'The benchmark manuscript upon which all modern printed critical editions of Sahih al-Bukhari are authenticated.'
   },
   {
     id: 'ms-quran-samarkand',
-    title: 'The Great Andalusian Qur’an Codex',
+    title: 'The Great Andalusian Qur’an Manuscript',
     arabicTitle: 'المصحف الأندلسي المذهب',
     callNumber: 'Bibliothèque Nationale de France Arabe 385',
     holdingRepository: 'Bibliothèque Nationale de France',
@@ -37,7 +37,7 @@ export const MANUSCRIPTS: ManuscriptCodex[] = [
   },
   {
     id: 'ms-tafsir-tabari',
-    title: 'Jāmi‘ al-Bayān Codex of al-Ṭabarī',
+    title: 'Jāmi‘ al-Bayān Manuscript of al-Ṭabarī',
     arabicTitle: 'مخطوطة جامع البيان للإمام الطبري',
     callNumber: 'Dār al-Kutub al-Miṣriyyah MS Tafsīr 102',
     holdingRepository: 'National Library of Egypt (Dār al-Kutub)',

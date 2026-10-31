@@ -24,7 +24,7 @@ export async function GET() {
   return NextResponse.json(
     {
       status: isHealthy ? 'healthy' : 'degraded',
-      service: 'Al-Maktabah Digital Archives & Academic Codex Repository',
+      service: 'Al-Maktabah Digital Archives & Academic Manuscript Repository',
       version: '1.0.0',
       timestamp: new Date().toISOString(),
       latencyMs: Date.now() - startTime,

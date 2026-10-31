@@ -87,7 +87,7 @@ export const AdminAnalyticsTab: React.FC<AdminAnalyticsTabProps> = ({
         <div className="lg:col-span-7 p-6 rounded-2xl bg-surface-container-lowest border border-surface-container shadow-xs space-y-4">
           <h3 className="font-title-md font-bold text-base text-primary flex items-center gap-2">
             <span className="material-symbols-outlined text-primary text-lg">pie_chart</span>
-            <span>Codex Distribution by Canonical Discipline</span>
+            <span>Manuscript Distribution by Canonical Discipline</span>
           </h3>
 
           <div className="space-y-3 pt-2">

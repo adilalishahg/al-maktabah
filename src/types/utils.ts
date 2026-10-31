@@ -24,5 +24,6 @@ export interface ExtractedBookData {
   sizeMb: number;
   description: string;
   coverImage: string;
+  coverFile?: File;
   chapters: BookChapter[];
 }

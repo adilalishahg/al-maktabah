@@ -48,9 +48,8 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
   return (
     <div
       style={!isStandaloneRoute ? { top: 'calc(var(--app-header-height, 0px) + 2px)' } : undefined}
-      className={`z-30 !mt-0 bg-surface-container-lowest/95 backdrop-blur-md p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-surface-container shadow-xs select-none w-full shrink-0 ${
-        isStandaloneRoute ? 'relative' : 'sticky'
-      }`}
+      className={`z-30 !mt-0 bg-surface-container-lowest/95 backdrop-blur-md p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-surface-container shadow-xs select-none w-full shrink-0 ${isStandaloneRoute ? 'relative' : 'sticky'
+        }`}
     >
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3">
         {/* Group 1: Navigation, Chapter TOC Drawer Button & Book Title */}
@@ -67,8 +66,8 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className={`px-2 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs shrink-0 cursor-pointer ${sidebarOpen
-                  ? 'bg-primary text-on-primary ring-2 ring-primary/20'
-                  : 'bg-surface-container hover:bg-surface-container-high text-primary'
+                ? 'bg-primary text-on-primary ring-2 ring-primary/20'
+                : 'bg-surface-container hover:bg-surface-container-high text-primary'
                 }`}
               title="Table of Contents (Chapters)"
             >
@@ -96,19 +95,19 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
             <button
               onClick={() => setReadingFormat('facsimile')}
               className={`px-2 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${readingFormat === 'facsimile'
-                  ? 'bg-primary text-on-primary shadow-xs'
-                  : 'text-on-surface-variant hover:text-on-surface'
+                ? 'bg-primary text-on-primary shadow-xs'
+                : 'text-on-surface-variant hover:text-on-surface'
                 }`}
               title="Facsimile Continuous Manuscript"
             >
               <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
-              <span className="hidden xs:inline">Codex</span>
+              <span className="hidden xs:inline">PDF</span>
             </button>
             <button
               onClick={() => setReadingFormat('matn')}
               className={`px-2 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${readingFormat === 'matn'
-                  ? 'bg-primary text-on-primary shadow-xs'
-                  : 'text-on-surface-variant hover:text-on-surface'
+                ? 'bg-primary text-on-primary shadow-xs'
+                : 'text-on-surface-variant hover:text-on-surface'
                 }`}
               title="Digitized Arabic Matn & Translation"
             >
@@ -142,7 +141,7 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
               onChange={(e) => setPageInput(e.target.value)}
               className="w-12 px-1.5 py-0.5 rounded bg-surface-container-lowest border border-surface-container text-xs text-center font-mono font-bold text-primary focus:outline-none focus:border-primary"
             />
-            <span className="text-label-sm text-on-surface-variant">/ {book.pages || 631}</span>
+            <span className="text-label-sm text-on-surface-variant">/ {book.pages || ""}</span>
             <button
               type="submit"
               className="px-2 py-0.5 rounded bg-primary-container text-on-primary text-label-xs font-bold hover:bg-primary cursor-pointer"
@@ -154,7 +153,7 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
           <button
             type="button"
             onClick={() => {
-              const next = Math.min(book.pages || 631, parseInt(pageInput || '1', 10) + 1);
+              const next = Math.min(book.pages, parseInt(pageInput || '1', 10) + 1);
               handlePageChange(next);
             }}
             className="p-1 rounded text-on-surface-variant hover:text-on-surface cursor-pointer"
@@ -189,12 +188,12 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
                 onChange={(e) => setPageInput(e.target.value)}
                 className="w-9 px-1 py-0.5 rounded bg-surface-container-lowest border border-surface-container text-label-xs text-center font-mono font-bold text-primary focus:outline-none"
               />
-              <span className="text-on-surface-variant text-label-xs">/{book.pages || 631}</span>
+              <span className="text-on-surface-variant text-label-xs">/{book.pages}</span>
             </form>
             <button
               type="button"
               onClick={() => {
-                const next = Math.min(book.pages || 631, parseInt(pageInput || '1', 10) + 1);
+                const next = Math.min(book.pages, parseInt(pageInput || '1', 10) + 1);
                 handlePageChange(next);
               }}
               className="p-1 rounded text-on-surface-variant hover:text-on-surface cursor-pointer"
@@ -209,19 +208,19 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
             <button
               onClick={() => setReadingFormat('facsimile')}
               className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${readingFormat === 'facsimile'
-                  ? 'bg-primary text-on-primary shadow-xs'
-                  : 'text-on-surface-variant hover:text-on-surface'
+                ? 'bg-primary text-on-primary shadow-xs'
+                : 'text-on-surface-variant hover:text-on-surface'
                 }`}
               title="Facsimile Continuous Manuscript"
             >
               <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
-              <span>Codex ({book.pages || 631})</span>
+              <span>PDF ({book.pages})</span>
             </button>
             <button
               onClick={() => setReadingFormat('matn')}
               className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${readingFormat === 'matn'
-                  ? 'bg-primary text-on-primary shadow-xs'
-                  : 'text-on-surface-variant hover:text-on-surface'
+                ? 'bg-primary text-on-primary shadow-xs'
+                : 'text-on-surface-variant hover:text-on-surface'
                 }`}
               title="Digitized Arabic Matn & Translation"
             >

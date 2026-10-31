@@ -23,7 +23,7 @@ export const DashboardBooksTable: React.FC<DashboardBooksTableProps> = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="font-title-md font-bold text-lg text-primary">
-          Cataloged Treatises &amp; Codex Records ({books.length})
+          Cataloged Treatises &amp; Manuscript Records ({books.length})
         </h2>
         <span className="text-xs text-on-surface-variant font-medium">
           Click &apos;Read in Viewer&apos; or &apos;Edit&apos; to update text and chapters.

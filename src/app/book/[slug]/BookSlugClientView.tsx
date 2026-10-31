@@ -129,13 +129,12 @@ export function BookSlugClientView({ slug }: BookSlugClientViewProps) {
 
   return (
     <div
-      className={`h-dvh flex flex-col overflow-hidden transition-colors duration-300 ${
-        currentTheme === 'night'
+      className={`h-dvh flex flex-col overflow-hidden transition-colors duration-300 ${currentTheme === 'night'
           ? 'bg-night-canvas text-night-text'
           : currentTheme === 'sepia'
             ? 'bg-sepia-canvas text-sepia-text'
             : 'bg-parchment-canvas text-on-surface'
-      }`}
+        }`}
     >
       {/* Unified Site Header - Rendered directly in layout flow with isReaderRoute={true} for zero gap */}
       <Header
@@ -174,7 +173,7 @@ export function BookSlugClientView({ slug }: BookSlugClientViewProps) {
               <span className="material-symbols-outlined text-3xl animate-spin">menu_book</span>
             </div>
             <div className="text-sm font-semibold tracking-wide text-gray-700 dark:text-gray-300 font-serif">
-              Opening Scholarly Codex &amp; Digital Facsimile Canvas...
+              Opening Scholarly Manuscript &amp; Digital Facsimile Canvas...
             </div>
             <div className="text-xs text-gray-400 mt-1">جاري تحميل المخطوطة والبيانات العلمية</div>
           </div>
@@ -184,7 +183,7 @@ export function BookSlugClientView({ slug }: BookSlugClientViewProps) {
               <span className="material-symbols-outlined text-3xl text-rose-500">menu_book</span>
             </div>
             <div className="space-y-1">
-              <h2 className="text-xl font-bold font-serif text-primary">Codex Not Found</h2>
+              <h2 className="text-xl font-bold font-serif text-primary">Book Not Found</h2>
               <p className="text-xs text-gray-500 font-mono">
                 No manuscript or treatise matched slug &ldquo;{slug}&rdquo;
               </p>

@@ -84,7 +84,7 @@ export async function POST(request: Request) {
     const apiKey = process.env.CLOUDINARY_API_KEY;
     const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
-    // Check if Cloudinary credentials exist
+    // Check if Cloudinary credentials exist for high-speed edge delivery
     if (cloudName && apiKey && apiSecret) {
       const base64Data = buffer.toString('base64');
       const mime = validation.mimeType || file.type || 'application/octet-stream';
@@ -124,6 +124,20 @@ export async function POST(request: Request) {
     }
 
     // High performance local fallback if Cloudinary env is not set yet
+    // Defend against memory exhaustion and Vercel/serverless 4.5MB payload limitations
+    const MAX_LOCAL_FALLBACK_BYTES = 2.5 * 1024 * 1024; // 2.5 MB maximum for in-memory Data URLs
+    if (file.size > MAX_LOCAL_FALLBACK_BYTES) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            `File size (${(file.size / (1024 * 1024)).toFixed(1)} MB) exceeds the local in-memory fallback limit (2.5 MB). ` +
+            `Please configure CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in your .env for high-speed uploads up to 50MB, or paste a direct CDN URL.`,
+        },
+        { status: 413 }
+      );
+    }
+
     const base64 = buffer.toString('base64');
     const localDataUrl = `data:${validation.mimeType || file.type || 'application/octet-stream'};base64,${base64}`;
 
@@ -133,7 +147,7 @@ export async function POST(request: Request) {
       fileName: file.name,
       size: file.size,
       mimeType: validation.mimeType,
-      provider: 'Direct In-Memory CDN (Add CLOUDINARY_CLOUD_NAME to .env for Production CDN)',
+      provider: 'Direct In-Memory Fallback (Add CLOUDINARY_CLOUD_NAME to .env for Production CDN)',
     });
   } catch (error: any) {
     console.error('Upload Error:', error);

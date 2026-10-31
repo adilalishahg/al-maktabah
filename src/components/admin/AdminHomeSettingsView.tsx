@@ -172,10 +172,10 @@ export const AdminHomeSettingsView: React.FC<AdminHomeSettingsViewProps> = ({
             <span>Public Portal Content Management System</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
-            Homepage View &amp; Scholarly Codex Customizer
+            Homepage View &amp; Scholarly Reader Customizer
           </h2>
           <p className="text-xs sm:text-sm text-emerald-highlight max-w-2xl">
-            Toggle which library sections appear on the public homepage, or customize the featured Hadīth / Codex Reader with verified isnād narrators, Arabic text, and academic apparatus.
+            Toggle which library sections appear on the public homepage, or customize the featured Hadīth / Manuscript Reader with verified isnād narrators, Arabic text, and academic apparatus.
           </p>
         </div>
 

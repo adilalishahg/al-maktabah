@@ -27,7 +27,7 @@ export const AdminCodexReaderModal: React.FC<AdminCodexReaderModalProps> = ({
           fallback={
             <div className="h-full flex flex-col items-center justify-center gap-2 text-white animate-pulse">
               <span className="material-symbols-outlined text-4xl animate-spin">menu_book</span>
-              <span className="text-xs uppercase tracking-wider font-semibold">Loading Codex Reader...</span>
+              <span className="text-xs uppercase tracking-wider font-semibold">Loading Reader...</span>
             </div>
           }
         >

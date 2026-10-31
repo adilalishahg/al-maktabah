@@ -1,17 +1,7 @@
 import mongoose from 'mongoose';
-import dns from 'dns';
 import type { MongooseCache } from '@/types/models';
 
 export type { MongooseCache };
-
-// Ensure Node.js resolves MongoDB Atlas SRV records reliably across all Windows/ISP networks
-if (typeof dns.setServers === 'function') {
-  try {
-    dns.setServers(['8.8.8.8', '1.1.1.1']);
-  } catch {
-    // Ignore if running in a restricted sandbox
-  }
-}
 
 
 

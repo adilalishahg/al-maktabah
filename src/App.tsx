@@ -38,7 +38,7 @@ const ViewLoadingFallback = () => (
       <span className="material-symbols-outlined text-3xl animate-spin">menu_book</span>
     </div>
     <div className="text-sm font-semibold tracking-wide text-gray-700 dark:text-gray-300 font-serif">
-      Loading Scholarly Codex &amp; Digital Waqf Repository...
+      Loading Scholarly Manuscript &amp; Digital Waqf Repository...
     </div>
     <div className="text-xs text-gray-400 mt-1">جاري تحميل المخطوطة والبيانات العلمية</div>
   </div>
@@ -164,10 +164,10 @@ export default function App() {
 
   return (
     <div className={`min-h-screen flex flex-col transition-colors duration-300 ${currentTheme === 'night'
-        ? 'bg-night-canvas text-night-text'
-        : currentTheme === 'sepia'
-          ? 'bg-sepia-canvas text-sepia-text'
-          : 'bg-parchment-canvas text-on-surface'
+      ? 'bg-night-canvas text-night-text'
+      : currentTheme === 'sepia'
+        ? 'bg-sepia-canvas text-sepia-text'
+        : 'bg-parchment-canvas text-on-surface'
       }`}>
       {/* Fixed Sticky Header */}
       <Header
@@ -184,9 +184,8 @@ export default function App() {
       {/* Main Content Viewport */}
       <main
         style={currentPath === 'book-viewer' ? { paddingTop: 0 } : undefined}
-        className={`flex-1 w-full overflow-x-hidden ${
-          currentPath === 'book-viewer' ? 'pt-0 pb-1 sm:pb-2' : 'pt-20 sm:pt-24 pb-8 sm:pb-12'
-        }`}
+        className={`flex-1 w-full overflow-x-hidden ${currentPath === 'book-viewer' ? 'pt-0 pb-1 sm:pb-2' : 'pt-20 sm:pt-24 pb-8 sm:pb-12'
+          }`}
       >
         <div className="w-full max-w-7xl xl:max-w-archive-xl 2xl:max-w-archive-2xl mx-auto px-2 sm:px-6 lg:px-8">
           {currentPath === 'home' && (

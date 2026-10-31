@@ -7,11 +7,11 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://al-maktabah.org';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Al-Maktabah (المكتبة) — Academic Islamic Codex & Digital Waqf Repository',
+    default: 'Al-Maktabah (المكتبة) — Academic Islamic Manuscripts & Digital Waqf Repository',
     template: '%s | Al-Maktabah Digital Archives',
   },
   description:
-    'Authentic classical Islamic codices, manuscripts, and verified treatises. Digitized with isnād transmission graphs, dual-pane comparative reading, and morphological analysis.',
+    'Authentic classical Islamic manuscripts, books, and verified treatises. Digitized with isnād transmission graphs, dual-pane comparative reading, and morphological analysis.',
   keywords: [
     'Islamic Books',
     'Hadith',
@@ -41,9 +41,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'Al-Maktabah (المكتبة) — Academic Islamic Codex Repository',
+    title: 'Al-Maktabah (المكتبة) — Academic Islamic Digital Library & Repository',
     description:
-      'Authentic classical Islamic codices, manuscripts, and verified treatises with isnād transmission and dual-pane comparative reading.',
+      'Authentic classical Islamic manuscripts, books, and verified treatises with isnād transmission and dual-pane comparative reading.',
     url: siteUrl,
     siteName: 'Al-Maktabah Digital Archives',
     images: [
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Al-Maktabah (المكتبة) — Academic Islamic Codex Repository',
+    title: 'Al-Maktabah (المكتبة) — Academic Islamic Digital Library & Repository',
     description:
       'Preserving and digitizing timeless classical Islamic treatises, isnād transmission chains, and illuminated manuscripts.',
     images: ['https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=1200&h=630'],

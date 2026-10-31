@@ -59,7 +59,7 @@ export const AdminEditorTab: React.FC<AdminEditorTabProps> = ({
     <div className="bg-surface-container-lowest border border-surface-container rounded-2xl shadow-sm overflow-hidden animate-fade-in space-y-6 p-4 sm:p-8">
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-surface-container pb-4">
         <div>
-          <span className="text-xs font-bold uppercase text-tertiary">Interactive Codex Editor</span>
+          <span className="text-xs font-bold uppercase text-tertiary">Interactive Manuscript Editor</span>
           <h2 className="font-display text-2xl font-bold text-primary">
             {editingBook.title || 'Untitled Treatise'}
           </h2>
@@ -70,10 +70,10 @@ export const AdminEditorTab: React.FC<AdminEditorTabProps> = ({
             type="button"
             onClick={() => setShowCodexModal(true)}
             className="px-3 py-1.5 rounded-lg bg-tertiary/20 hover:bg-tertiary/30 text-xs font-bold text-tertiary border border-tertiary/30 transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
-            title="Open Full 631-Page Continuous Codex Reader"
+            title="Open Full -Page Continuous PDF Reader"
           >
             <span className="material-symbols-outlined text-sm">auto_stories</span>
-            <span>📖 Read Full Codex ({editingBook.pages || 631} Pgs)</span>
+            <span>📖 Read Full PDF ({editingBook.pages} Pgs)</span>
           </button>
           <button
             type="button"
@@ -286,7 +286,7 @@ export const AdminEditorTab: React.FC<AdminEditorTabProps> = ({
                 title="Open continuous facsimile viewer with chapters sidebar"
               >
                 <span className="material-symbols-outlined text-sm">auto_stories</span>
-                <span>📖 Live Reader Studio ({editingBook.pages || 631} Pgs)</span>
+                <span>📖 Live Reader Studio ({editingBook.pages} Pgs)</span>
               </button>
               <button
                 type="button"
@@ -315,8 +315,8 @@ export const AdminEditorTab: React.FC<AdminEditorTabProps> = ({
                 key={ch.id || idx}
                 onClick={() => setActiveChapterIndex(idx)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer flex items-center gap-2 ${activeChapterIndex === idx
-                    ? 'bg-primary-container text-on-primary font-semibold'
-                    : 'bg-surface-container-low border border-surface-container text-on-surface'
+                  ? 'bg-primary-container text-on-primary font-semibold'
+                  : 'bg-surface-container-low border border-surface-container text-on-surface'
                   }`}
               >
                 <span>{ch.number}. {ch.title}</span>
@@ -439,7 +439,7 @@ export const AdminEditorTab: React.FC<AdminEditorTabProps> = ({
                 fallback={
                   <div className="h-96 flex flex-col items-center justify-center gap-2 text-emerald-800 bg-parchment-canvas animate-pulse">
                     <span className="material-symbols-outlined text-3xl animate-spin">menu_book</span>
-                    <span className="text-xs uppercase tracking-wider font-semibold">Loading Codex Facsimile Engine...</span>
+                    <span className="text-xs uppercase tracking-wider font-semibold">Loading Facsimile Engine...</span>
                   </div>
                 }
               >

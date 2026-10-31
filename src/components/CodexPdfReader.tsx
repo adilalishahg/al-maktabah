@@ -134,7 +134,7 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
               {loadingDoc && (
                 <div className="py-24 text-center space-y-3">
                   <div className="w-12 h-12 mx-auto rounded-full border-3 border-tertiary/30 border-t-tertiary animate-spin"></div>
-                  <p className="text-xs text-emerald-highlight">Streaming PDF pages directly from codex...</p>
+                  <p className="text-xs text-emerald-highlight">Streaming PDF pages directly from manuscript...</p>
                 </div>
               )}
 

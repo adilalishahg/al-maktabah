@@ -4,6 +4,7 @@ import { BookModel } from '@/models/BookModel';
 import { INITIAL_DETAILED_BOOKS } from '@/data/bookStore';
 import { BOOKS } from '@/data/mockLibrary';
 import { verifyAdminRequest } from '@/lib/authGuard';
+import { BookInputSchema } from '@/lib/validationSchemas';
 
 export async function GET(request: Request) {
   try {
@@ -98,19 +99,25 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
+    const parseResult = BookInputSchema.safeParse(body);
 
-    if (!body.title || !body.author) {
+    if (!parseResult.success) {
       return NextResponse.json(
-        { success: false, message: 'Missing required book title or author.' },
-        { status: 400 }
+        {
+          success: false,
+          message: 'Invalid book schema payload.',
+          errors: parseResult.error.flatten().fieldErrors,
+        },
+        { status: 422 }
       );
     }
 
+    const validated = parseResult.data;
     const bookData = {
-      ...body,
-      id: body.id || 'book-' + Date.now(),
+      ...validated,
+      id: validated.id || 'book-' + Date.now(),
       updatedAt: new Date().toISOString(),
-      createdAt: body.createdAt || new Date().toISOString(),
+      createdAt: validated.createdAt || new Date().toISOString(),
     };
 
     const db = await connectToDatabase();
@@ -126,7 +133,7 @@ export async function POST(request: Request) {
         {
           success: true,
           source: 'MongoDB Atlas',
-          message: 'Codex saved and indexed successfully in MongoDB Atlas.',
+          message: 'Book saved and indexed successfully in MongoDB Atlas.',
           data: saved,
         },
         { status: 201 }

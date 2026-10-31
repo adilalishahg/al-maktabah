@@ -17,7 +17,7 @@ export function getBookSlug(book: Partial<Book | DetailedBook>): string {
   }
 
   // Otherwise, create a clean slug from the English or transliterated title
-  const source = book.title || book.id || 'codex';
+  const source = book.title || book.id || 'book';
   const slug = source
     .toLowerCase()
     .normalize('NFD') // Normalize diacritics like Ṣaḥīḥ -> Sahih
@@ -25,7 +25,7 @@ export function getBookSlug(book: Partial<Book | DetailedBook>): string {
     .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric chars with hyphens
     .replace(/^-+|-+$/g, ''); // Trim leading/trailing hyphens
 
-  return slug || 'codex';
+  return slug || 'book';
 }
 
 /**

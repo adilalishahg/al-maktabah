@@ -128,7 +128,7 @@ export function resetHomeSettings(): HomeSettings {
 
 /**
  * Automatically transforms an uploaded/stored DetailedBook into a full ReadingSection
- * for display in the Home Codex Reader.
+ * for display in the Home Reader.
  */
 export function buildReadingSectionFromBook(
   book: DetailedBook,
@@ -178,7 +178,7 @@ export function buildReadingSectionFromBook(
       name: book.author || 'Author',
       arabicName: book.arabicTitle ? book.author : 'المصنف',
       rank: 'Leading Imām',
-      reliability: 'Thiqah Thabt (Author & Verifier of Codex)',
+      reliability: 'Thiqah Thabt (Author & Verifier of Manuscript)',
       birthDeathAH: book.authorHijriYear || '1445 AH',
       region: 'Islamic Caliphate',
       bio: `Author and compiler of ${book.title}. Preserved with critical apparatus in Al-Maktabah digital codices.`,

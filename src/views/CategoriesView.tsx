@@ -208,7 +208,7 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-0.5 rounded bg-secondary text-on-secondary font-label-sm text-xs font-semibold">Stage 3</span>
-                  <h3 className="font-title-md text-sm font-bold text-primary">Advanced Research &amp; Codex Paleography (At-Tahqīq)</h3>
+                  <h3 className="font-title-md text-sm font-bold text-primary">Advanced Research &amp; Manuscript Paleography (At-Tahqīq)</h3>
                 </div>
                 <span className="text-xs text-tertiary font-semibold">Specialist &amp; Post-Graduate</span>
               </div>

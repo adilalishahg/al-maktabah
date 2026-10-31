@@ -79,7 +79,7 @@ export const BookReaderView: React.FC<BookReaderViewProps> = ({
           isStandaloneRoute={isStandaloneRoute}
         />
 
-        {/* Reader Body: Continuous Facsimile PDF Codex OR Classical Matn View */}
+        {/* Reader Body: Continuous Facsimile PDF Manuscript OR Classical Matn View */}
         {readingFormat === 'facsimile' ? (
           <div className={isStandaloneRoute ? 'flex-1 min-h-0 w-full overflow-hidden flex flex-col' : 'w-full'}>
             <Suspense

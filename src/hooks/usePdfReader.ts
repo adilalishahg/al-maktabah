@@ -94,7 +94,7 @@ export function usePdfReader({
   onToggleSidebarExternal,
   onPageChange,
 }: UsePdfReaderOptions): UsePdfReaderReturn {
-  const [totalPages, setTotalPages] = useState<number>(book.pages || 631);
+  const [totalPages, setTotalPages] = useState<number>(book.pages);
   const [currentPage, setCurrentPage] = useState<number>(initialPage);
   const [pageInputValue, setPageInputValue] = useState<string>(String(initialPage));
   const [internalScale, setInternalScale] = useState<number>(1.0);
@@ -179,7 +179,7 @@ export function usePdfReader({
       if (isCloudinary) {
         setLoadingDoc(false);
         setLoadError(null);
-        setTotalPages(book.pages || 631);
+        setTotalPages(book.pages);
         return;
       }
 

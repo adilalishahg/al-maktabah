@@ -151,10 +151,10 @@ export const PdfControlToolbar: React.FC<PdfControlToolbarProps> = ({
                 ? 'bg-tertiary-container text-black font-bold shadow-xs'
                 : 'text-emerald-highlight hover:text-white'
             }`}
-            title="Manuscript Scan (Continuous Codex View)"
+            title="Manuscript Scan (Continuous PDF View)"
           >
             <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
-            <span className="hidden sm:inline">Codex</span>
+            <span className="hidden sm:inline">PDF</span>
           </button>
           <button
             onClick={() => {

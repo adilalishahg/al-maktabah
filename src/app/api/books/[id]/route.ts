@@ -4,6 +4,7 @@ import { BookModel } from '@/models/BookModel';
 import { INITIAL_DETAILED_BOOKS } from '@/data/bookStore';
 import { verifyAdminRequest } from '@/lib/authGuard';
 import { matchesBookSlug } from '@/utils/slug';
+import { BookInputSchema } from '@/lib/validationSchemas';
 
 export async function GET(
   request: Request,
@@ -50,7 +51,7 @@ export async function GET(
     }
 
     return NextResponse.json(
-      { success: false, message: 'Codex not found' },
+      { success: false, message: 'Book not found' },
       { status: 404 }
     );
   } catch (error: any) {
@@ -76,32 +77,46 @@ export async function PUT(
 
     const { id } = await params;
     const body = await request.json();
+
+    const parseResult = BookInputSchema.partial().safeParse(body);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Invalid update payload schema.',
+          errors: parseResult.error.flatten().fieldErrors,
+        },
+        { status: 422 }
+      );
+    }
+
+    const validated = parseResult.data;
     const db = await connectToDatabase();
 
     if (db) {
       const updated = await BookModel.findOneAndUpdate(
         { id },
-        { ...body, updatedAt: new Date().toISOString() },
+        { ...validated, updatedAt: new Date().toISOString() },
         { new: true }
       ).lean();
 
       if (!updated) {
         return NextResponse.json(
-          { success: false, message: 'Codex not found to update' },
+          { success: false, message: 'Book not found to update' },
           { status: 404 }
         );
       }
 
       return NextResponse.json({
         success: true,
-        message: 'Codex updated successfully in MongoDB Atlas.',
+        message: 'Book updated successfully in MongoDB Atlas.',
         data: updated,
       });
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Codex updated (In-memory fallback).',
+      message: 'Book updated (In-memory fallback).',
       data: { ...body, id, updatedAt: new Date().toISOString() },
     });
   } catch (error: any) {
@@ -132,20 +147,20 @@ export async function DELETE(
       const deleted = await BookModel.findOneAndDelete({ id }).lean();
       if (!deleted) {
         return NextResponse.json(
-          { success: false, message: 'Codex not found to delete' },
+          { success: false, message: 'Book not found to delete' },
           { status: 404 }
         );
       }
 
       return NextResponse.json({
         success: true,
-        message: 'Codex successfully deleted from MongoDB Atlas.',
+        message: 'Book successfully deleted from MongoDB Atlas.',
       });
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Codex deleted (In-memory fallback).',
+      message: 'Book deleted (In-memory fallback).',
     });
   } catch (error: any) {
     return NextResponse.json(

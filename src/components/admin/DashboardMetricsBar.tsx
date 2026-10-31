@@ -40,7 +40,7 @@ export const DashboardMetricsBar: React.FC<DashboardMetricsBarProps> = ({ books 
         <div className="text-xl sm:text-2xl font-bold font-display text-primary font-mono">
           {totalPages.toLocaleString()}
         </div>
-        <div className="text-label-xs text-on-surface-variant mt-0.5">Digitized codex leaves</div>
+        <div className="text-label-xs text-on-surface-variant mt-0.5">Digitized manuscript leaves</div>
       </div>
 
       <div className="bg-surface-container-lowest p-4 sm:p-5 rounded-2xl border border-surface-container shadow-xs">

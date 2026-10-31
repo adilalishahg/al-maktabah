@@ -327,7 +327,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
 
             <div className="flex items-center justify-between text-xs text-on-surface-variant pt-2 border-t border-surface-container">
-              <span>Hijri 1445 AH Codex</span>
+              <span>Hijri 1445 AH Archives</span>
               <div className="flex gap-1.5">
                 <button
                   onClick={() => onLangChange('EN')}

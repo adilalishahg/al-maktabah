@@ -28,13 +28,13 @@ export async function POST(request: Request) {
       message: 'Authentication successful.',
     });
 
-    // Set secure cookie as well for transparent browser API calls
+    // Set hardened httpOnly cookie to prevent XSS-based token exfiltration
     response.cookies.set('al_maktabah_admin_token', result.token, {
-      httpOnly: false, // Accessible to client for header injection
+      httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'strict',
       path: '/',
-      maxAge: 7 * 24 * 60 * 60, // 7 days
+      maxAge: 24 * 60 * 60, // 24 hours
     });
 
     return response;
@@ -45,4 +45,3 @@ export async function POST(request: Request) {
     );
   }
 }
-

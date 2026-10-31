@@ -103,7 +103,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               </li>
               <li>
                 <button onClick={() => onNavigate('about')} className="hover:text-primary transition-colors text-left">
-                  Codex Preservation Guidelines
+                  Manuscript Preservation Guidelines
                 </button>
               </li>
               <li>

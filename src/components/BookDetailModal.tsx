@@ -14,7 +14,7 @@ export const BookDetailModal: React.FC<BookDetailModalProps> = ({
 
   if (!book) return null;
 
-  const citationText = `${book.author}. ${book.title} (${book.arabicTitle}). ${book.edition}. Al-Maktabah Digital Waqf Archives, 1445 AH. Open Access Codex ID: AK-${book.id.toUpperCase()}.`;
+  const citationText = `${book.author}. ${book.title} (${book.arabicTitle}). ${book.edition}. Al-Maktabah Digital Waqf Archives, 1445 AH. Open Access ID: AK-${book.id.toUpperCase()}.`;
 
   const handleCopyCitation = () => {
     navigator.clipboard?.writeText(citationText);
@@ -35,7 +35,7 @@ export const BookDetailModal: React.FC<BookDetailModalProps> = ({
               <span className="material-symbols-outlined text-base">auto_stories</span>
             </span>
             <span className="font-label-sm uppercase tracking-wider text-primary font-bold text-xs sm:text-sm truncate">
-              Scholarly Codex Record
+              Scholarly Manuscript Record
             </span>
             {book.verified && (
               <span className="hidden sm:inline-flex items-center gap-1 text-label-sm font-semibold text-tertiary px-2 py-0.5 rounded-full bg-surface-container-lowest border border-tertiary/20 shrink-0">
@@ -151,7 +151,7 @@ export const BookDetailModal: React.FC<BookDetailModalProps> = ({
                     </div>
                   </div>
                   <div className="p-3 bg-surface-container-low rounded-xl text-xs space-y-1">
-                    <span className="font-semibold text-primary block">Codex Provenance & Recension</span>
+                    <span className="font-semibold text-primary block">Manuscript Provenance & Recension</span>
                     <p className="text-on-surface-variant">{book.edition}. Cross-referenced with historical manuscript witnesses held in Istanbul, Cairo, and Damascus.</p>
                   </div>
                 </div>

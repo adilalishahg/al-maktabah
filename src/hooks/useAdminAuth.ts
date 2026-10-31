@@ -18,8 +18,8 @@ const TOKEN_KEY = 'al_maktabah_admin_token';
 const SESSION_KEY = 'al_maktabah_admin_session';
 
 /**
- * Custom hook encapsulating administrative authentication state, HMAC token storage,
- * token verification with the server, login submission, and logout cleanup.
+ * Custom hook encapsulating administrative authentication state, cryptographic token handling,
+ * server verification probes, login submission, and logout cleanup.
  */
 export function useAdminAuth(): UseAdminAuthReturn {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -39,40 +39,33 @@ export function useAdminAuth(): UseAdminAuthReturn {
     return headers;
   }, []);
 
-  // Verify auth on mount
+  // Verify auth on mount via server cryptographic probe (Zero-Trust)
   useEffect(() => {
     const token = typeof window !== 'undefined' ? sessionStorage.getItem(TOKEN_KEY) : null;
-    const authSession = typeof window !== 'undefined' ? sessionStorage.getItem(SESSION_KEY) : null;
-
+    const reqHeaders: Record<string, string> = {};
     if (token) {
-      fetch('/api/auth/verify', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'x-admin-token': token,
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.authenticated) {
-            setIsAuthenticated(true);
-          } else {
+      reqHeaders['Authorization'] = `Bearer ${token}`;
+      reqHeaders['x-admin-token'] = token;
+    }
+
+    fetch('/api/auth/verify', {
+      headers: reqHeaders,
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.authenticated) {
+          setIsAuthenticated(true);
+        } else {
+          if (typeof window !== 'undefined') {
             sessionStorage.removeItem(SESSION_KEY);
             sessionStorage.removeItem(TOKEN_KEY);
-            setIsAuthenticated(false);
           }
-        })
-        .catch(() => {
-          if (authSession === 'authenticated_admin') {
-            setIsAuthenticated(true);
-          } else {
-            setIsAuthenticated(false);
-          }
-        });
-    } else if (authSession === 'authenticated_admin') {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
+          setIsAuthenticated(false);
+        }
+      })
+      .catch(() => {
+        setIsAuthenticated(false);
+      });
   }, []);
 
   // Handle Login via /api/auth/login endpoint
@@ -100,19 +93,8 @@ export function useAdminAuth(): UseAdminAuthReturn {
         setLoginError(data.message || 'Invalid Administrator credentials.');
         setIsLoggingIn(false);
         return false;
-      } catch {
-        // Fallback for offline environments
-        if (
-          (loginEmail.trim().toLowerCase() === 'admin@almaktabah.org' ||
-            loginEmail.trim().toLowerCase() === 'admin') &&
-          loginPassword === 'maktabah1445'
-        ) {
-          sessionStorage.setItem(SESSION_KEY, 'authenticated_admin');
-          setIsAuthenticated(true);
-          setIsLoggingIn(false);
-          return true;
-        }
-        setLoginError('Invalid Administrator credentials.');
+      } catch (err: any) {
+        setLoginError(err.message || 'Network error occurred during authentication.');
         setIsLoggingIn(false);
         return false;
       }
@@ -125,9 +107,7 @@ export function useAdminAuth(): UseAdminAuthReturn {
       sessionStorage.removeItem(SESSION_KEY);
       sessionStorage.removeItem(TOKEN_KEY);
     }
-    if (typeof document !== 'undefined') {
-      document.cookie = 'al_maktabah_admin_token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    }
+    fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
     setIsAuthenticated(false);
     setLoginEmail('');
     setLoginPassword('');
@@ -148,4 +128,3 @@ export function useAdminAuth(): UseAdminAuthReturn {
     handleLogout,
   };
 }
-

@@ -3,6 +3,7 @@ import { connectToDatabase } from '@/lib/mongodb';
 import { SettingsModel } from '@/models/SettingsModel';
 import { DEFAULT_HOME_SETTINGS } from '@/data/homeSettingsStore';
 import { verifyAdminRequest } from '@/lib/authGuard';
+import { HomeSettingsInputSchema } from '@/lib/validationSchemas';
 
 // In-memory fallback if MongoDB is not connected
 let memorySettings = { ...DEFAULT_HOME_SETTINGS };
@@ -62,18 +63,28 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
+    const parseResult = HomeSettingsInputSchema.safeParse(body);
 
-    if (!body || typeof body !== 'object') {
+    if (!parseResult.success) {
       return NextResponse.json(
-        { success: false, message: 'Invalid payload' },
-        { status: 400 }
+        {
+          success: false,
+          message: 'Invalid homepage settings schema payload.',
+          errors: parseResult.error.flatten().fieldErrors,
+        },
+        { status: 422 }
       );
     }
 
     const payload = {
-      ...body,
+      ...memorySettings,
+      ...parseResult.data,
+      sections: {
+        ...memorySettings.sections,
+        ...parseResult.data.sections,
+      },
       updatedAt: new Date().toISOString(),
-    };
+    } as typeof memorySettings;
 
     memorySettings = payload;
 

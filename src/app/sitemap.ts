@@ -48,7 +48,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  // Canonical Scholarly Codex Pages
+  // Canonical Scholarly Book Pages
   const bookRoutes: MetadataRoute.Sitemap = INITIAL_DETAILED_BOOKS.map((book) => ({
     url: `${baseUrl}/books/${book.id}`,
     lastModified: book.updatedAt || currentDate,

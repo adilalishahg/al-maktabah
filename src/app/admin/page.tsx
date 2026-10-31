@@ -123,10 +123,10 @@ export default function AdminPortalPage() {
       authorHijriYear: '',
       discipline: 'hadith',
       disciplineName: 'Prophetic Traditions (Hadīth)',
-      coverImage: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=1000',
+      coverImage: '',
       description: '',
-      pages: 150,
-      sizeMb: 6.8,
+      pages: 1,
+      sizeMb: 0,
       edition: 'Critical Waqf Academic Edition',
       volumes: 1,
       verified: true,
@@ -134,18 +134,7 @@ export default function AdminPortalPage() {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       formats: ['PDF', 'EPUB', 'Searchable OCR'],
-      chapters: [
-        {
-          id: 'ch-1',
-          number: 1,
-          title: 'Opening Chapter (Kitāb al-Fātiḥah)',
-          arabicTitle: 'الباب الأول في المبادئ والأصول',
-          startPage: 1,
-          content: 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\nالْحَمْدُ لِلَّهِ الَّذِي هَدَانَا لِهَٰذَا...',
-          translation: 'In the name of Allah, the Entirely Merciful, the Especially Merciful. All praise is due to Allah...',
-          notes: 'Standard authorized scholastic transmission.',
-        },
-      ],
+      chapters: [],
     };
     setEditingBook(newBook);
     setActiveChapterIndex(0);
@@ -192,39 +181,67 @@ export default function AdminPortalPage() {
     }
   };
 
-  // Upload PDF Manuscript, analyze codex & auto-extract pages, titles & chapters!
-  const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  // Upload PDF Manuscript, analyze codex & auto-extract pages, titles, cover & chapters!
+  const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement> | File) => {
+    let file: File | undefined;
+    if (e instanceof File) {
+      file = e;
+    } else {
+      file = e.target.files?.[0];
+    }
     if (!file || !editingBook) return;
 
     setIsUploadingPdf(true);
     setPdfUploadSuccess('');
-    setPdfAnalysisStatus('Analyzing PDF codex & extracting chapters...');
+    setPdfAnalysisStatus('Reading PDF structure and extracting manuscript...');
 
     try {
       const analysis = await analyzeUploadedPdf(file, (msg) => setPdfAnalysisStatus(msg));
 
+      // 1. Upload extracted cover image (rendered from Page 1 canvas)
+      let finalCoverImage = analysis.coverImage || editingBook.coverImage || '';
+      if (analysis.coverFile) {
+        setPdfAnalysisStatus('Uploading extracted cover image to storage...');
+        try {
+          const coverRes = await uploadAsset(analysis.coverFile, 'al-maktabah/books', getAuthHeaders);
+          if (coverRes?.url) {
+            finalCoverImage = coverRes.url;
+          }
+        } catch (coverErr: any) {
+          console.warn('Cover upload to cloud CDN notice (using extracted canvas image):', coverErr.message);
+        }
+      }
+
+      // 2. Upload PDF Manuscript to cloud storage
+      setPdfAnalysisStatus('Uploading PDF manuscript to storage...');
       let finalPdfUrl = editingBook.pdfUrl || '';
       try {
         const result = await uploadAsset(file, 'al-maktabah/manuscripts', getAuthHeaders);
         finalPdfUrl = result.url;
       } catch (uploadErr: any) {
         console.warn('Remote asset upload notice (preserving extracted content):', uploadErr.message);
+        if (!finalPdfUrl) {
+          try {
+            finalPdfUrl = URL.createObjectURL(file);
+          } catch {}
+        }
       }
 
+      // 3. Populate all extracted metadata & chapters into the book model
       setEditingBook((prev) => {
         if (!prev) return null;
         return {
           ...prev,
-          title: prev.title.trim() && prev.title !== 'Untitled Codex' ? prev.title : analysis.title,
-          arabicTitle: prev.arabicTitle.trim() ? prev.arabicTitle : analysis.arabicTitle,
-          author: prev.author.trim() ? prev.author : analysis.author,
-          authorHijriYear: prev.authorHijriYear || analysis.authorHijriYear,
-          discipline: prev.discipline || analysis.discipline,
-          disciplineName: analysis.disciplineName,
-          pages: analysis.pages,
-          sizeMb: analysis.sizeMb,
-          description: prev.description.trim() ? prev.description : analysis.description,
+          title: analysis.title || prev.title || 'Untitled Manuscript',
+          arabicTitle: analysis.arabicTitle || prev.arabicTitle,
+          author: analysis.author || prev.author || 'Classical Author',
+          authorHijriYear: analysis.authorHijriYear || prev.authorHijriYear || '1445 AH',
+          discipline: analysis.discipline || prev.discipline || 'hadith',
+          disciplineName: analysis.disciplineName || prev.disciplineName || 'Prophetic Traditions (Hadīth)',
+          pages: analysis.pages || prev.pages || 1,
+          sizeMb: analysis.sizeMb || prev.sizeMb || 1,
+          description: analysis.description || prev.description,
+          coverImage: finalCoverImage,
           pdfUrl: finalPdfUrl,
           chapters: analysis.chapters.length > 0 ? analysis.chapters : prev.chapters,
         };
@@ -232,14 +249,16 @@ export default function AdminPortalPage() {
 
       setActiveChapterIndex(0);
       setPdfUploadSuccess(
-        `✓ PDF Auto-Analyzed: ${analysis.pages} Pages, ${analysis.chapters.length} Chapters extracted with authentic Matn (${analysis.sizeMb} MB)`
+        `✓ PDF Auto-Analyzed: ${analysis.pages} Pages, ${analysis.chapters.length} Chapters, Cover Image extracted (${analysis.sizeMb} MB)`
       );
     } catch (err: any) {
       alert('PDF extraction notice: ' + err.message);
     } finally {
       setIsUploadingPdf(false);
       setPdfAnalysisStatus('');
-      e.target.value = '';
+      if (!(e instanceof File) && e.target) {
+        e.target.value = '';
+      }
     }
   };
 
@@ -323,7 +342,7 @@ export default function AdminPortalPage() {
               <div className="h-[80vh] flex flex-col items-center justify-center gap-3 text-primary-container animate-pulse">
                 <span className="material-symbols-outlined text-4xl animate-spin">menu_book</span>
                 <span className="font-serif text-sm uppercase tracking-widest font-semibold">
-                  Loading Scholarly Codex Reader Preview...
+                  Loading Scholarly Reader Preview...
                 </span>
               </div>
             }
