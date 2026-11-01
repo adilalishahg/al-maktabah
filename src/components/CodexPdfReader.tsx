@@ -77,16 +77,23 @@ const PdfPageSlotItem: React.FC<PdfPageSlotItemProps> = React.memo(({
       ref={slotRef}
       id={`pdf-page-slot-${pageNum}`}
       data-page-num={pageNum}
-      className={`pdf-page-slot transition-all duration-200 relative bg-night-card shadow-2xl rounded-sm overflow-hidden flex flex-col items-center justify-center border mx-auto ${
-        isCurrent ? 'ring-2 ring-tertiary border-tertiary' : 'border-emerald-border'
+      className={`pdf-page-slot transition-all duration-200 relative bg-[#fdfbf7] dark:bg-night-card shadow-md sm:shadow-2xl rounded-xs sm:rounded-sm overflow-hidden flex flex-col items-center justify-center border mx-auto ${
+        isCurrent ? 'ring-2 ring-tertiary border-tertiary' : 'border-stone-200 dark:border-emerald-border'
       }`}
       style={{
         width: `${computedPageWidth}px`,
         maxWidth: isMobile && activeScale <= 1.0 ? '100%' : undefined,
         minHeight: slotHeight > 0 ? `${slotHeight}px` : undefined,
         contentVisibility: 'auto',
+        containIntrinsicSize: slotHeight > 0 ? `auto ${computedPageWidth}px auto ${slotHeight}px` : undefined,
       }}
     >
+      {/* Subtle Background Placeholder while page image or canvas streams */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-stone-400 dark:text-emerald-900/40 select-none">
+        <span className="material-symbols-outlined text-3xl sm:text-4xl opacity-30">menu_book</span>
+        <span className="text-label-xs font-serif opacity-40 mt-1">Page {pageNum}</span>
+      </div>
+
       {/* Page Number Watermark Badge */}
       <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-xs text-label-xs font-mono text-tertiary-fixed border border-emerald-border z-10 pointer-events-none">
         {pageNum} / {totalPages}
@@ -104,12 +111,12 @@ const PdfPageSlotItem: React.FC<PdfPageSlotItemProps> = React.memo(({
               onAspectRatioDetected?.(img.naturalHeight / img.naturalWidth);
             }
           }}
-          className="w-full h-auto object-contain select-none block"
+          className="w-full h-auto object-contain select-none block relative z-1"
         />
       ) : (
         <canvas
           ref={canvasRef}
-          className={`block ${!isRendered ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+          className={`block relative z-1 ${!isRendered ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
         />
       )}
     </div>
