@@ -109,6 +109,7 @@ export function usePdfReader({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const renderTasksRef = useRef<Map<number, any>>(new Map());
 
   const activeScale = externalScale !== undefined ? externalScale : internalScale;
   const isSidebarOpen = sidebarOpenExternal !== undefined ? sidebarOpenExternal : internalSidebarOpen;
@@ -221,10 +222,32 @@ export function usePdfReader({
     };
   }, [effectivePdfUrl, isCloudinary, book.pages, chapters.length]);
 
-  // Render a specific page canvas
+  // Cancel all in-flight render tasks when scaling or changing documents
+  useEffect(() => {
+    return () => {
+      renderTasksRef.current.forEach((task) => {
+        try {
+          task.cancel();
+        } catch {}
+      });
+      renderTasksRef.current.clear();
+    };
+  }, [pdfDoc, activeScale]);
+
+  // Render a specific page canvas with concurrency cancellation guard
   const renderPage = useCallback(
     async (pageNum: number, canvasEl: HTMLCanvasElement) => {
       if (!pdfDoc || !canvasEl || isCloudinary) return;
+
+      // Cancel any active render task on this page before starting a new one
+      const existingTask = renderTasksRef.current.get(pageNum);
+      if (existingTask) {
+        try {
+          existingTask.cancel();
+        } catch {}
+        renderTasksRef.current.delete(pageNum);
+      }
+
       try {
         const page = await pdfDoc.getPage(pageNum);
         const viewport = page.getViewport({ scale: activeScale });
@@ -237,10 +260,17 @@ export function usePdfReader({
           canvasContext: ctx,
           viewport,
         };
-        await page.render(renderContext).promise;
+        const renderTask = page.render(renderContext);
+        renderTasksRef.current.set(pageNum, renderTask);
+
+        await renderTask.promise;
         setRenderedPages((prev) => new Set(prev).add(pageNum));
-      } catch (e) {
-        console.warn(`Render error on page ${pageNum}:`, e);
+      } catch (e: any) {
+        if (e?.name !== 'RenderingCancelledException') {
+          console.warn(`Render error on page ${pageNum}:`, e);
+        }
+      } finally {
+        renderTasksRef.current.delete(pageNum);
       }
     },
     [pdfDoc, activeScale, isCloudinary]

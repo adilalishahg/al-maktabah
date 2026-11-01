@@ -1,11 +1,105 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { BookChapter } from '@/types/bookContent';
 import type { CodexPdfReaderProps } from '@/types/components';
 import { usePdfReader } from '@/hooks/usePdfReader';
 import { PdfControlToolbar } from '@/components/pdf/PdfControlToolbar';
 import { PdfThumbnailSidebar } from '@/components/pdf/PdfThumbnailSidebar';
+
+interface PdfPageSlotItemProps {
+  pageNum: number;
+  totalPages: number;
+  currentPage: number;
+  activeScale: number;
+  isCloudinary: boolean;
+  effectivePdfUrl: string;
+  bookTitle: string;
+  getCloudinaryPageUrl: (url: string, page: number) => string;
+  renderPage: (pageNum: number, canvasEl: HTMLCanvasElement) => Promise<void>;
+  isRendered: boolean;
+}
+
+const PdfPageSlotItem: React.FC<PdfPageSlotItemProps> = React.memo(({
+  pageNum,
+  totalPages,
+  currentPage,
+  activeScale,
+  isCloudinary,
+  effectivePdfUrl,
+  bookTitle,
+  getCloudinaryPageUrl,
+  renderPage,
+  isRendered,
+}) => {
+  const isCurrent = pageNum === currentPage;
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const slotRef = useRef<HTMLDivElement | null>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    if (isCloudinary) return;
+    const el = slotRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setInView(true);
+          }
+        });
+      },
+      { rootMargin: '600px 0px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [isCloudinary]);
+
+  useEffect(() => {
+    if (!isCloudinary && inView && canvasRef.current) {
+      renderPage(pageNum, canvasRef.current);
+    }
+  }, [isCloudinary, inView, pageNum, renderPage, activeScale]);
+
+  return (
+    <div
+      ref={slotRef}
+      id={`pdf-page-slot-${pageNum}`}
+      data-page-num={pageNum}
+      className={`pdf-page-slot transition-all duration-200 relative bg-night-card shadow-2xl rounded-sm overflow-hidden flex flex-col items-center border ${
+        isCurrent ? 'ring-2 ring-tertiary border-tertiary' : 'border-emerald-border'
+      }`}
+      style={{
+        width: `${Math.round(800 * activeScale)}px`,
+        minHeight: `${Math.round(1100 * activeScale)}px`,
+        contentVisibility: 'auto',
+        containIntrinsicSize: `${Math.round(800 * activeScale)}px ${Math.round(1100 * activeScale)}px`,
+      }}
+    >
+      {/* Page Number Watermark Badge */}
+      <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-xs text-label-xs font-mono text-tertiary-fixed border border-emerald-border z-10">
+        {pageNum} / {totalPages}
+      </div>
+
+      {isCloudinary ? (
+        <img
+          src={getCloudinaryPageUrl(effectivePdfUrl, pageNum)}
+          alt={`Page ${pageNum} of ${bookTitle}`}
+          loading="lazy"
+          decoding="async"
+          className="w-full h-auto object-contain select-none"
+        />
+      ) : (
+        <canvas
+          ref={canvasRef}
+          className={`w-full h-auto block ${!isRendered ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+        />
+      )}
+    </div>
+  );
+});
+PdfPageSlotItem.displayName = 'PdfPageSlotItem';
 
 export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
   book,
@@ -49,6 +143,7 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
     toggleSidebar,
     getCloudinaryPageUrl,
     scrollToPage,
+    renderPage,
     handlePageInputSubmit,
   } = usePdfReader({
     book,
@@ -155,45 +250,24 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
                 </div>
               )}
 
-                      {/* Render Every Page Slot */}
-                      {Array.from({ length: totalPages }, (_, idx) => {
-                        const pageNum = idx + 1;
-                        const isCurrent = pageNum === currentPage;
-
-                        return (
-                          <div
-                            key={pageNum}
-                            id={`pdf-page-slot-${pageNum}`}
-                            data-page-num={pageNum}
-                            className={`pdf-page-slot transition-all duration-200 relative bg-night-card shadow-2xl rounded-sm overflow-hidden flex flex-col items-center border ${isCurrent ? 'ring-2 ring-tertiary border-tertiary' : 'border-emerald-border'
-                              }`}
-                            style={{
-                              width: `${Math.round(800 * activeScale)}px`,
-                              minHeight: `${Math.round(1100 * activeScale)}px`,
-                            }}
-                          >
-                            {/* Page Number Watermark Badge */}
-                            <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-xs text-label-xs font-mono text-tertiary-fixed border border-emerald-border z-10">
-                              {pageNum} / {totalPages}
-                            </div>
-
-                    {/* High-Performance Cloudinary Auto-Streaming Image */ }
-                    {
-                          isCloudinary?(
-                      <img
-                        src = { getCloudinaryPageUrl(effectivePdfUrl, pageNum) }
-                        alt = {`Page ${pageNum} of ${book.title}`}
-                        loading = "lazy"
-                        className = "w-full h-auto object-contain select-none"
-                        />
-                    ) : (
-                      /* Fallback PDF.js HTML5 Canvas */
-                      <canvas
-                        className={`w-full h-auto block ${!renderedPages.has(pageNum) ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
-                      />
-                    )}
-                    </div>
-                  );
+              {/* Virtualized On-Demand Page Slots */}
+              {Array.from({ length: totalPages }, (_, idx) => {
+                const pageNum = idx + 1;
+                return (
+                  <PdfPageSlotItem
+                    key={pageNum}
+                    pageNum={pageNum}
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    activeScale={activeScale}
+                    isCloudinary={isCloudinary}
+                    effectivePdfUrl={effectivePdfUrl}
+                    bookTitle={book.title}
+                    getCloudinaryPageUrl={getCloudinaryPageUrl}
+                    renderPage={renderPage}
+                    isRendered={renderedPages.has(pageNum)}
+                  />
+                );
               })}
                 </div>
               ) : (
@@ -244,3 +318,5 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
                   </div>
                 );
 };
+
+export const ManuscriptPdfReader = CodexPdfReader;

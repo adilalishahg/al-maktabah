@@ -92,21 +92,21 @@ export const AdminEditorTab: React.FC<AdminEditorTabProps> = ({
   // STEP 1: INITIAL STATE -> Show Big Prominent Document Uploader
   if (!hasPdfAttached && !manualMode) {
     return (
-      <div className="bg-surface-container-lowest border border-surface-container rounded-3xl shadow-sm overflow-hidden animate-fade-in p-6 sm:p-10 space-y-6">
+      <div className="w-[calc(100vw-2rem)] sm:max-w-xl lg:max-w-4xl mx-auto my-auto max-h-[90vh] overflow-y-auto bg-surface-container-lowest border border-surface-container rounded-2xl sm:rounded-3xl shadow-sm p-4 sm:p-8 md:p-10 space-y-5 sm:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-surface-container pb-4">
+        <div className="flex items-center justify-between border-b border-surface-container pb-4 gap-2">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-tertiary">
               Interactive Manuscript Studio
             </span>
-            <h2 className="font-display text-2xl font-bold text-primary">
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-primary">
               Upload Manuscript Document
             </h2>
           </div>
           <button
             type="button"
             onClick={() => setActiveTab('books')}
-            className="px-3.5 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-on-surface-variant hover:text-on-surface cursor-pointer transition-colors"
+            className="px-3.5 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-on-surface-variant hover:text-on-surface cursor-pointer transition-colors shrink-0"
           >
             Close
           </button>
@@ -118,7 +118,7 @@ export const AdminEditorTab: React.FC<AdminEditorTabProps> = ({
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={() => !isUploadingPdf && bigFileInputRef.current?.click()}
-          className={`relative border-2 border-dashed rounded-3xl p-10 sm:p-16 text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-5 ${
+          className={`relative border-2 border-dashed rounded-2xl sm:rounded-3xl p-5 sm:p-10 md:p-14 text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-4 sm:gap-5 ${
             isDragging
               ? 'border-emerald-500 bg-emerald-50/20 scale-[1.01]'
               : 'border-emerald-800/30 hover:border-emerald-700 bg-surface-container-low/40 hover:bg-emerald-950/10'
@@ -134,18 +134,18 @@ export const AdminEditorTab: React.FC<AdminEditorTabProps> = ({
 
           {isUploadingPdf ? (
             /* Uploading & Analyzing Progress Screen */
-            <div className="py-8 space-y-5 flex flex-col items-center max-w-md mx-auto">
-              <div className="relative w-20 h-20 flex items-center justify-center">
+            <div className="py-6 sm:py-8 space-y-4 sm:space-y-5 flex flex-col items-center max-w-md mx-auto w-full px-2">
+              <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
                 <div className="absolute inset-0 rounded-full border-4 border-emerald-500/20 border-t-emerald-600 animate-spin" />
-                <span className="material-symbols-outlined text-4xl text-emerald-700 animate-pulse">
+                <span className="material-symbols-outlined text-3xl sm:text-4xl text-emerald-700 animate-pulse">
                   picture_as_pdf
                 </span>
               </div>
-              <div className="space-y-2">
-                <h3 className="font-display text-xl font-bold text-primary">
+              <div className="space-y-1.5 text-center">
+                <h3 className="font-display text-lg sm:text-xl font-bold text-primary">
                   Analyzing PDF &amp; Ingesting Content...
                 </h3>
-                <p className="text-xs font-medium text-on-surface-variant animate-pulse font-mono">
+                <p className="text-xs font-medium text-on-surface-variant animate-pulse font-mono break-all sm:break-normal">
                   {pdfAnalysisStatus || 'Extracting page 1 cover image, metadata & chapters...'}
                 </p>
               </div>
@@ -156,17 +156,17 @@ export const AdminEditorTab: React.FC<AdminEditorTabProps> = ({
           ) : (
             /* Idle Uploader Dropzone */
             <>
-              <div className="w-20 h-20 rounded-2xl bg-primary-container/10 border border-emerald-highlight/30 flex items-center justify-center text-primary group-hover:scale-105 transition-transform shadow-sm">
-                <span className="material-symbols-outlined text-4xl text-emerald-800">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-primary-container/10 border border-emerald-highlight/30 flex items-center justify-center text-primary group-hover:scale-105 transition-transform shadow-sm">
+                <span className="material-symbols-outlined text-3xl sm:text-4xl text-emerald-800">
                   upload_file
                 </span>
               </div>
 
-              <div className="space-y-1.5 max-w-lg">
-                <h3 className="font-display text-2xl font-bold text-primary">
+              <div className="space-y-1.5 max-w-lg px-2">
+                <h3 className="font-display text-xl sm:text-2xl font-bold text-primary">
                   Click to Upload or Drag &amp; Drop PDF
                 </h3>
-                <p className="text-sm text-on-surface-variant font-arabic text-emerald-900 font-semibold">
+                <p className="text-xs sm:text-sm text-on-surface-variant font-arabic text-emerald-900 font-semibold">
                   اسحب ملف المخطوط (PDF) وأفلته هنا، أو اضغط للتصفح والرفع
                 </p>
                 <p className="text-xs text-on-surface-variant/80">
@@ -174,8 +174,8 @@ export const AdminEditorTab: React.FC<AdminEditorTabProps> = ({
                 </p>
               </div>
 
-              {/* Feature extraction pills */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2 max-w-2xl w-full">
+              {/* Feature extraction pills - 1 col on mobile, 2 on tablet, 4 on desktop */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pt-2 max-w-2xl w-full">
                 <div className="p-3 rounded-xl bg-surface-container-lowest border border-surface-container text-left space-y-1 shadow-xs">
                   <span className="text-emerald-700 font-bold text-xs flex items-center gap-1">
                     <span className="material-symbols-outlined text-sm">auto_stories</span> Title &amp; Author
@@ -240,9 +240,9 @@ export const AdminEditorTab: React.FC<AdminEditorTabProps> = ({
 
   // STEP 2: AUTO-COMPLETED EDITOR VIEW (After PDF Upload or Manual Entry)
   return (
-    <div className="bg-surface-container-lowest border border-surface-container rounded-2xl shadow-sm overflow-hidden animate-fade-in space-y-6 p-4 sm:p-8">
+    <div className="w-full max-w-full bg-surface-container-lowest border border-surface-container rounded-2xl shadow-sm overflow-hidden animate-fade-in space-y-6 p-3 sm:p-6 md:p-8">
       {/* Top Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-surface-container pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 border-b border-surface-container pb-4">
         <div>
           <span className="text-xs font-bold uppercase text-tertiary">Interactive Manuscript Editor</span>
           <h2 className="font-display text-2xl font-bold text-primary">
@@ -419,7 +419,7 @@ export const AdminEditorTab: React.FC<AdminEditorTabProps> = ({
                   onClick={() => setShowCodexModal(true)}
                   className="text-label-xs text-tertiary underline cursor-pointer"
                 >
-                  Inspect Codex
+                  Inspect PDF
                 </button>
               )}
             </div>

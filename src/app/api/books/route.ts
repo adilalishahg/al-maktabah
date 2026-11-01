@@ -13,6 +13,8 @@ export async function GET(request: Request) {
     const category = searchParams.get('category')?.toLowerCase() || '';
     const admin = searchParams.get('admin') === 'true';
     const full = searchParams.get('full') === 'true';
+    const limitParam = searchParams.get('limit');
+    const selectParam = searchParams.get('select');
 
     const db = await connectToDatabase();
 
@@ -37,8 +39,17 @@ export async function GET(request: Request) {
 
       // Lean Projection Architecture: Exclude heavy chapter content blobs on catalog listing queries
       let queryBuilder = BookModel.find(filter).sort({ createdAt: -1 });
-      if (!admin && !full) {
+      if (selectParam) {
+        queryBuilder = queryBuilder.select(selectParam.replace(/,/g, ' '));
+      } else if (!admin && !full) {
         queryBuilder = queryBuilder.select('-chapters.content -chapters.translation -chapters.notes');
+      }
+
+      if (limitParam) {
+        const limitNum = parseInt(limitParam, 10);
+        if (limitNum > 0) {
+          queryBuilder = queryBuilder.limit(limitNum);
+        }
       }
 
       const books = await queryBuilder.lean();
@@ -59,18 +70,30 @@ export async function GET(request: Request) {
       );
     }
 
-    // When MongoDB is not connected, return empty list with fallback cache headers
+    // When MongoDB is not connected, return fallback in-memory codices with cache headers
     const fallbackCache = admin
       ? 'no-store, no-cache, must-revalidate'
       : 'public, s-maxage=60, stale-while-revalidate=600';
 
+    const fallbackLimit = limitParam ? parseInt(limitParam, 10) : 6;
+    const fallbackData = INITIAL_DETAILED_BOOKS.slice(0, fallbackLimit > 0 ? fallbackLimit : 6).map((b) => ({
+      _id: b.id,
+      id: b.id,
+      title: b.title,
+      arabicTitle: b.arabicTitle,
+      author: b.author,
+      discipline: b.discipline,
+      disciplineName: b.disciplineName,
+      pages: b.pages,
+    }));
+
     return NextResponse.json(
       {
         success: true,
-        source: 'No Database Connection',
-        count: 0,
-        data: [],
-        message: 'MongoDB is not connected. Add MONGODB_URI to .env.local to load live codices from database.',
+        source: 'Fallback Archive Codices',
+        count: fallbackData.length,
+        data: fallbackData,
+        message: 'Serving fallback in-memory codices.',
       },
       {
         headers: {

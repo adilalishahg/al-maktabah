@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import type { Book } from '../types/library';
 import type { BookDetailModalProps } from '../types/components';
 import { getBookSlug } from '@/utils/slug';
@@ -22,9 +23,25 @@ export const BookDetailModal: React.FC<BookDetailModalProps> = ({
     setTimeout(() => setCopiedCitation(false), 2500);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
+      onClick={onClose}
+    >
       <div 
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="book-modal-title"
         className="w-full max-w-3xl bg-surface-container-lowest rounded-2xl shadow-2xl border border-outline-variant overflow-hidden max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
@@ -34,8 +51,8 @@ export const BookDetailModal: React.FC<BookDetailModalProps> = ({
             <span className="w-8 h-8 rounded-lg bg-primary-container text-on-primary flex items-center justify-center shrink-0">
               <span className="material-symbols-outlined text-base">auto_stories</span>
             </span>
-            <span className="font-label-sm uppercase tracking-wider text-primary font-bold text-xs sm:text-sm truncate">
-              Scholarly Manuscript Record
+            <span id="book-modal-title" className="font-label-sm uppercase tracking-wider text-primary font-bold text-xs sm:text-sm truncate">
+              {book.title}
             </span>
             {book.verified && (
               <span className="hidden sm:inline-flex items-center gap-1 text-label-sm font-semibold text-tertiary px-2 py-0.5 rounded-full bg-surface-container-lowest border border-tertiary/20 shrink-0">
@@ -43,7 +60,11 @@ export const BookDetailModal: React.FC<BookDetailModalProps> = ({
               </span>
             )}
           </div>
-          <button onClick={onClose} className="p-1 rounded-full text-on-surface-variant hover:text-on-surface cursor-pointer shrink-0">
+          <button
+            onClick={onClose}
+            aria-label="Close manuscript modal"
+            className="p-1 rounded-full text-on-surface-variant hover:text-on-surface cursor-pointer shrink-0"
+          >
             <span className="material-symbols-outlined text-lg">close</span>
           </button>
         </div>
@@ -53,8 +74,19 @@ export const BookDetailModal: React.FC<BookDetailModalProps> = ({
           {/* Hero Split */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-start">
             <div className="md:col-span-4 shrink-0">
-              <div className="relative rounded-xl overflow-hidden shadow-lg border border-surface-container-high max-w-xs mx-auto md:max-w-none">
-                <img src={book.coverImage} alt={book.title} className="w-full h-52 sm:h-64 object-cover" />
+              <div className="relative rounded-xl overflow-hidden shadow-lg border border-surface-container-high max-w-xs mx-auto md:max-w-none w-full h-52 sm:h-64">
+                <Image
+                  src={book.coverImage}
+                  alt={book.title}
+                  fill
+                  sizes="(max-width: 768px) 300px, 240px"
+                  className="object-cover"
+                  unoptimized={
+                    !book.coverImage.includes('images.unsplash.com') &&
+                    !book.coverImage.includes('res.cloudinary.com') &&
+                    !book.coverImage.includes('lh3.googleusercontent.com')
+                  }
+                />
                 <div className="absolute top-2 left-2">
                   <span className="px-2 py-0.5 rounded bg-primary-container text-on-primary font-label-sm text-xs font-semibold shadow-xs">
                     {book.badge || book.disciplineName}

@@ -30,7 +30,7 @@ export function validateUploadFile(file: File, buffer: Buffer): FileValidationRe
   if (lastDot === -1) {
     return {
       valid: false,
-      error: 'File extension is required to establish codex mime-type.',
+      error: 'File extension is required to establish document mime-type.',
     };
   }
 

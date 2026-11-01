@@ -51,48 +51,55 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
       className={`z-30 !mt-0 bg-surface-container-lowest/95 backdrop-blur-md p-1.5 sm:p-2 rounded-xl sm:rounded-2xl border border-surface-container shadow-xs select-none w-full shrink-0 ${isStandaloneRoute ? 'relative' : 'sticky'
         }`}
     >
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-3" role="toolbar" aria-label="Master Reader Controls">
         {/* Group 1: Navigation, Chapter TOC Drawer Button & Book Title */}
         <div className="flex items-center justify-between md:justify-start gap-1.5 sm:gap-2.5 min-w-0 w-full md:w-auto">
           <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
             <button
               onClick={() => onNavigate('browse-library')}
+              aria-label="Back to Catalog"
               className="p-1.5 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors shrink-0 cursor-pointer"
               title="Back to Catalog"
             >
-              <span className="material-symbols-outlined text-lg sm:text-xl">arrow_back</span>
+              <span className="material-symbols-outlined text-lg sm:text-xl" aria-hidden="true">arrow_back</span>
             </button>
 
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-label="Table of Contents (Chapters)"
+              aria-expanded={sidebarOpen}
+              aria-controls="reader-toc-drawer"
               className={`px-2 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs shrink-0 cursor-pointer ${sidebarOpen
                 ? 'bg-primary text-on-primary ring-2 ring-primary/20'
                 : 'bg-surface-container hover:bg-surface-container-high text-primary'
                 }`}
               title="Table of Contents (Chapters)"
             >
-              <span className="material-symbols-outlined text-sm sm:text-base">menu_book</span>
+              <span className="material-symbols-outlined text-sm sm:text-base" aria-hidden="true">menu_book</span>
               <span className="hidden sm:inline">Index &amp; Chapters</span>
               <span className="bg-primary-container text-on-primary px-1.5 py-0.2 rounded-full text-label-xs font-mono font-bold">
                 {chaptersCount}
               </span>
             </button>
 
-            <div className="hidden lg:block w-px h-5 bg-surface-container shrink-0 mx-0.5" />
+            <div className="hidden lg:block w-px h-5 bg-surface-container shrink-0 mx-0.5" aria-hidden="true" />
 
             <div className="min-w-0 truncate">
               <h1 className="font-title-md font-bold text-xs sm:text-sm text-primary truncate max-w-32 sm:max-w-xs md:max-w-sm">
                 {book.title}
               </h1>
-              <span className="text-label-xs sm:text-label-sm text-tertiary font-arabic truncate block leading-tight">
+              <span className="text-label-xs sm:text-label-sm text-tertiary font-arabic truncate block leading-tight" dir="rtl" lang="ar">
                 {book.arabicTitle}
               </span>
             </div>
           </div>
 
           {/* Mobile-only Mode Switcher on Top Row */}
-          <div className="flex md:hidden items-center bg-surface-container-low rounded-xl p-0.5 border border-surface-container shrink-0">
+          <div className="flex md:hidden items-center bg-surface-container-low rounded-xl p-0.5 border border-surface-container shrink-0" role="tablist" aria-label="Format Mode Mobile">
             <button
+              role="tab"
+              aria-selected={readingFormat === 'facsimile'}
+              aria-label="Facsimile Continuous Manuscript PDF View"
               onClick={() => setReadingFormat('facsimile')}
               className={`px-2 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${readingFormat === 'facsimile'
                 ? 'bg-primary text-on-primary shadow-xs'
@@ -100,10 +107,13 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
                 }`}
               title="Facsimile Continuous Manuscript"
             >
-              <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
+              <span className="material-symbols-outlined text-sm" aria-hidden="true">picture_as_pdf</span>
               <span className="hidden xs:inline">PDF</span>
             </button>
             <button
+              role="tab"
+              aria-selected={readingFormat === 'matn'}
+              aria-label="Digitized Arabic Matn & Translation View"
               onClick={() => setReadingFormat('matn')}
               className={`px-2 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${readingFormat === 'matn'
                 ? 'bg-primary text-on-primary shadow-xs'
@@ -111,16 +121,17 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
                 }`}
               title="Digitized Arabic Matn & Translation"
             >
-              <span className="material-symbols-outlined text-sm">auto_stories</span>
+              <span className="material-symbols-outlined text-sm" aria-hidden="true">auto_stories</span>
               <span className="hidden xs:inline">Matn</span>
             </button>
           </div>
         </div>
 
         {/* Group 2: Center Page Jump Box on Desktop */}
-        <div className="hidden md:flex items-center gap-1 bg-surface-container-low px-2 py-1 rounded-xl border border-surface-container shrink-0">
+        <div className="hidden md:flex items-center gap-1 bg-surface-container-low px-2 py-1 rounded-xl border border-surface-container shrink-0" role="group" aria-label="Page Navigation">
           <button
             type="button"
+            aria-label="Previous Page"
             onClick={() => {
               const prev = Math.max(1, parseInt(pageInput || '1', 10) - 1);
               handlePageChange(prev);
@@ -204,8 +215,11 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
           </div>
 
           {/* Desktop Mode Switcher */}
-          <div className="hidden md:flex items-center bg-surface-container-low rounded-xl p-0.5 border border-surface-container shrink-0">
+          <div className="hidden md:flex items-center bg-surface-container-low rounded-xl p-0.5 border border-surface-container shrink-0" role="tablist" aria-label="Format Mode">
             <button
+              role="tab"
+              aria-selected={readingFormat === 'facsimile'}
+              aria-label={`Facsimile Continuous Manuscript PDF View (${book.pages} pages)`}
               onClick={() => setReadingFormat('facsimile')}
               className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${readingFormat === 'facsimile'
                 ? 'bg-primary text-on-primary shadow-xs'
@@ -213,10 +227,13 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
                 }`}
               title="Facsimile Continuous Manuscript"
             >
-              <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
+              <span className="material-symbols-outlined text-sm" aria-hidden="true">picture_as_pdf</span>
               <span>PDF ({book.pages})</span>
             </button>
             <button
+              role="tab"
+              aria-selected={readingFormat === 'matn'}
+              aria-label="Digitized Arabic Matn & Translation View"
               onClick={() => setReadingFormat('matn')}
               className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${readingFormat === 'matn'
                 ? 'bg-primary text-on-primary shadow-xs'
@@ -224,44 +241,48 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
                 }`}
               title="Digitized Arabic Matn & Translation"
             >
-              <span className="material-symbols-outlined text-sm">auto_stories</span>
+              <span className="material-symbols-outlined text-sm" aria-hidden="true">auto_stories</span>
               <span>Matn</span>
             </button>
           </div>
 
           {/* Interactive Zoom Controls */}
-          <div className="flex items-center bg-surface-container-low rounded-xl px-1 py-0.5 border border-surface-container shadow-xs shrink-0">
+          <div className="flex items-center bg-surface-container-low rounded-xl px-1 py-0.5 border border-surface-container shadow-xs shrink-0" role="group" aria-label="Zoom and Font Size Controls">
             <button
               onClick={() => {
                 setZoomScale((s) => Math.max(0.6, Number((s - 0.15).toFixed(2))));
                 setFontSize((f) => Math.max(16, f - 2));
               }}
+              aria-label="Zoom Out and Decrease Font Size (-)"
               className="p-1 rounded text-on-surface hover:bg-surface-container cursor-pointer transition-colors"
               title="Zoom Out (-)"
             >
-              <span className="material-symbols-outlined text-sm">zoom_out</span>
+              <span className="material-symbols-outlined text-sm" aria-hidden="true">zoom_out</span>
             </button>
 
-            <span
+            <button
+              type="button"
               onClick={() => {
                 setZoomScale(1.0);
                 setFontSize(22);
               }}
-              className="px-1 text-label-sm font-mono font-bold text-primary cursor-pointer hover:underline"
+              aria-label={`Reset Zoom from ${Math.round(zoomScale * 100)}% to 100%`}
+              className="px-1 text-label-sm font-mono font-bold text-primary cursor-pointer hover:underline bg-transparent border-0"
               title="Click to Reset Zoom (100%)"
             >
               {Math.round(zoomScale * 100)}%
-            </span>
+            </button>
 
             <button
               onClick={() => {
                 setZoomScale((s) => Math.min(2.5, Number((s + 0.15).toFixed(2))));
                 setFontSize((f) => Math.min(36, f + 2));
               }}
+              aria-label="Zoom In and Increase Font Size (+)"
               className="p-1 rounded text-on-surface hover:bg-surface-container cursor-pointer transition-colors"
               title="Zoom In (+)"
             >
-              <span className="material-symbols-outlined text-sm">zoom_in</span>
+              <span className="material-symbols-outlined text-sm" aria-hidden="true">zoom_in</span>
             </button>
 
             <button
@@ -269,6 +290,7 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
                 setZoomScale(1.0);
                 setFontSize(22);
               }}
+              aria-label="Fit to Width (100%)"
               className="hidden sm:inline-block px-1.5 py-0.5 text-label-xs rounded bg-surface-container hover:bg-surface-container-high text-on-surface-variant cursor-pointer ml-0.5 font-semibold"
               title="Fit to Width (100%)"
             >
@@ -278,30 +300,36 @@ export const ReaderMasterToolbar: React.FC<ReaderMasterToolbarProps> = ({
 
           {/* Theme Selector */}
           {onThemeChange && (
-            <div className="flex items-center bg-surface-container-low rounded-xl p-0.5 border border-surface-container shrink-0">
+            <div className="flex items-center bg-surface-container-low rounded-xl p-0.5 border border-surface-container shrink-0" role="group" aria-label="Reader Theme Selection">
               <button
                 onClick={() => onThemeChange('parchment')}
+                aria-label="Light Parchment Theme"
+                aria-pressed={theme === 'parchment'}
                 className={`p-1 rounded-lg transition-colors cursor-pointer ${theme === 'parchment' ? 'bg-surface-container-lowest shadow-xs text-primary' : 'text-on-surface-variant'
                   }`}
                 title="Light Theme"
               >
-                <span className="material-symbols-outlined text-sm text-tertiary">light_mode</span>
+                <span className="material-symbols-outlined text-sm text-tertiary" aria-hidden="true">light_mode</span>
               </button>
               <button
                 onClick={() => onThemeChange('sepia')}
+                aria-label="Sepia Paper Theme"
+                aria-pressed={theme === 'sepia'}
                 className={`p-1 rounded-lg transition-colors cursor-pointer ${theme === 'sepia' ? 'bg-surface-container-lowest shadow-xs text-primary' : 'text-on-surface-variant'
                   }`}
                 title="Sepia Paper"
               >
-                <span className="material-symbols-outlined text-sm text-tertiary">auto_stories</span>
+                <span className="material-symbols-outlined text-sm text-tertiary" aria-hidden="true">auto_stories</span>
               </button>
               <button
                 onClick={() => onThemeChange('night')}
+                aria-label="Dark Emerald Night Theme"
+                aria-pressed={theme === 'night'}
                 className={`p-1 rounded-lg transition-colors cursor-pointer ${theme === 'night' ? 'bg-surface-container-lowest shadow-xs text-primary' : 'text-on-surface-variant'
                   }`}
                 title="Dark Emerald"
               >
-                <span className="material-symbols-outlined text-sm text-primary">dark_mode</span>
+                <span className="material-symbols-outlined text-sm text-primary" aria-hidden="true">dark_mode</span>
               </button>
             </div>
           )}

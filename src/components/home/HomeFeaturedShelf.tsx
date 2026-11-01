@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import Image from 'next/image';
 import type { Book } from '@/types/library';
 import type { FeaturedShelfConfig } from '@/types/homeSettings';
 import { getBookSlug } from '@/utils/slug';
@@ -119,12 +120,17 @@ export const HomeFeaturedShelf: React.FC<HomeFeaturedShelfProps> = ({
                 className="relative h-60 bg-surface-container-high overflow-hidden cursor-pointer"
                 onClick={() => onSelectBook(book)}
               >
-                <img
+                <Image
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   src={book.coverImage}
                   alt={book.title}
-                  loading="lazy"
-                  decoding="async"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  unoptimized={
+                    !book.coverImage.includes('images.unsplash.com') &&
+                    !book.coverImage.includes('res.cloudinary.com') &&
+                    !book.coverImage.includes('lh3.googleusercontent.com')
+                  }
                 />
                 <div className="absolute inset-y-0 left-0 w-3 bg-gradient-to-r from-black/40 via-black/15 to-transparent pointer-events-none" />
                 <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none" />

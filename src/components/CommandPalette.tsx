@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import type { Book, CategoryScience } from '../types/library';
 import type { CommandPaletteProps } from '../types/components';
 
@@ -11,26 +12,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   onNavigate
 }) => {
   const [query, setQuery] = useState('');
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        if (isOpen) {
-          onClose();
-        } else {
-          // Trigger open via parent or key
-        }
-      }
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
   const filteredBooks = books.filter(b => 
     b.title.toLowerCase().includes(query.toLowerCase()) ||
@@ -45,17 +27,66 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     c.tags.some(t => t.toLowerCase().includes(query.toLowerCase()))
   );
 
+  const visibleBooks = filteredBooks.slice(0, 5);
+
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [query]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        if (isOpen) {
+          onClose();
+        }
+      }
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+      if (!isOpen) return;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setSelectedIndex((prev) => Math.min(prev + 1, Math.max(0, visibleBooks.length - 1)));
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setSelectedIndex((prev) => Math.max(prev - 1, 0));
+      } else if (e.key === 'Enter') {
+        if (visibleBooks[selectedIndex]) {
+          e.preventDefault();
+          onSelectBook(visibleBooks[selectedIndex]);
+          onClose();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose, visibleBooks, selectedIndex, onSelectBook]);
+
+  if (!isOpen) return null;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-10 sm:pt-20 px-3 sm:px-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center pt-10 sm:pt-20 px-3 sm:px-4 bg-black/60 backdrop-blur-sm animate-fade-in"
+      onClick={onClose}
+    >
       <div 
+        role="dialog"
+        aria-modal="true"
+        aria-label="Universal Catalog Search and Command Palette"
         className="w-full max-w-2xl bg-surface-container-lowest rounded-2xl shadow-2xl border border-outline-variant overflow-hidden max-h-[85vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center px-3 sm:px-4 py-3 border-b border-surface-container-high bg-surface-container-low/50">
-          <span className="material-symbols-outlined text-tertiary-container text-xl sm:text-2xl mr-2 sm:mr-3 shrink-0">search</span>
+          <span className="material-symbols-outlined text-tertiary-container text-xl sm:text-2xl mr-2 sm:mr-3 shrink-0" aria-hidden="true">search</span>
           <input
             type="text"
-            className="w-full bg-transparent border-0 font-body-md text-sm sm:text-base text-on-surface placeholder:text-outline focus:outline-none"
+            role="combobox"
+            aria-expanded="true"
+            aria-autocomplete="list"
+            aria-label="Search treatises, isnāds, authors, disciplines..."
+            className="w-full bg-transparent border-0 font-body-md text-sm sm:text-base text-on-surface placeholder:text-outline focus:outline-none focus:ring-0"
             placeholder="Search treatises, isnāds, authors, disciplines..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -63,7 +94,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           />
           <button 
             onClick={onClose}
-            className="p-1 rounded-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container text-xs px-2 shrink-0"
+            aria-label="Close search dialog"
+            className="p-1 rounded-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container text-xs px-2 shrink-0 cursor-pointer"
           >
             ESC
           </button>
@@ -101,7 +133,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                   className="flex items-center gap-2 px-3 py-2 rounded-lg text-left hover:bg-surface-container text-primary font-medium"
                 >
                   <span className="material-symbols-outlined text-tertiary-container text-base">history_edu</span>
-                  <span>Illuminated Codices Archive</span>
+                  <span>Illuminated Manuscripts Archive</span>
                 </button>
               </div>
             </div>
@@ -110,29 +142,55 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           {/* Book Results */}
           {filteredBooks.length > 0 && (
             <div className="p-2 space-y-1">
-              <p className="font-label-sm uppercase tracking-wider text-on-surface-variant text-label-sm px-2 py-1">Classical Books & Treatises</p>
-              {filteredBooks.slice(0, 5).map((book) => (
-                <button
-                  key={book.id}
-                  onClick={() => {
-                    onSelectBook(book);
-                    onClose();
-                  }}
-                  className="w-full flex items-center justify-between p-2.5 rounded-lg hover:bg-surface-container-low text-left transition-colors group"
-                >
-                  <div className="flex items-center gap-3">
-                    <img src={book.coverImage} alt={book.title} className="w-10 h-12 object-cover rounded shadow-xs" />
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-title-md text-primary font-semibold group-hover:text-tertiary">{book.title}</span>
-                        <span className="font-display text-sm text-tertiary">{book.arabicTitle}</span>
+              <p className="font-label-sm uppercase tracking-wider text-on-surface-variant text-label-sm px-2 py-1">Classical Books &amp; Treatises</p>
+              {visibleBooks.map((book, idx) => {
+                const isSelected = selectedIndex === idx;
+                return (
+                  <button
+                    key={book.id}
+                    onClick={() => {
+                      onSelectBook(book);
+                      onClose();
+                    }}
+                    onMouseEnter={() => setSelectedIndex(idx)}
+                    aria-selected={isSelected}
+                    className={`w-full flex items-center justify-between p-2.5 rounded-lg text-left transition-colors cursor-pointer group ${
+                      isSelected
+                        ? 'bg-surface-container-high ring-1 ring-tertiary/40'
+                        : 'hover:bg-surface-container-low'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="relative w-10 h-12 rounded shadow-xs shrink-0 overflow-hidden">
+                        <Image
+                          src={book.coverImage}
+                          alt={book.title}
+                          fill
+                          sizes="40px"
+                          className="object-cover"
+                          unoptimized={
+                            !book.coverImage.includes('images.unsplash.com') &&
+                            !book.coverImage.includes('res.cloudinary.com') &&
+                            !book.coverImage.includes('lh3.googleusercontent.com')
+                          }
+                        />
                       </div>
-                      <p className="font-body-sm text-on-surface-variant text-xs">{book.author} • {book.authorHijriYear}</p>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className={`font-title-md font-semibold ${isSelected ? 'text-tertiary' : 'text-primary'}`}>
+                            {book.title}
+                          </span>
+                          <span className="font-arabic text-sm text-tertiary" dir="rtl" lang="ar">
+                            {book.arabicTitle}
+                          </span>
+                        </div>
+                        <p className="font-body-sm text-on-surface-variant text-xs">{book.author} • {book.authorHijriYear}</p>
+                      </div>
                     </div>
-                  </div>
-                  <span className="text-xs px-2 py-1 rounded bg-surface-container font-label-sm text-on-surface-variant">{book.disciplineName}</span>
-                </button>
-              ))}
+                    <span className="text-xs px-2 py-1 rounded bg-surface-container font-label-sm text-on-surface-variant">{book.disciplineName}</span>
+                  </button>
+                );
+              })}
             </div>
           )}
 

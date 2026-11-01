@@ -18,8 +18,8 @@ export const AdminBulkChapterModal: React.FC<AdminBulkChapterModalProps> = ({
   if (!showBulkModal) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="w-full max-w-3xl bg-emerald-card border border-emerald-border rounded-2xl shadow-2xl p-6 space-y-4 animate-fade-in text-white">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+      <div className="w-[calc(100vw-2rem)] sm:max-w-2xl lg:max-w-3xl mx-auto my-auto max-h-[90vh] overflow-y-auto bg-emerald-card border border-emerald-border rounded-2xl shadow-2xl p-4 sm:p-6 space-y-4 animate-fade-in text-white">
         <div className="flex items-center justify-between border-b border-emerald-border pb-3">
           <div className="flex items-center gap-2">
             <span className="w-8 h-8 rounded-lg bg-primary-container border border-emerald-highlight/30 text-tertiary-fixed flex items-center justify-center">

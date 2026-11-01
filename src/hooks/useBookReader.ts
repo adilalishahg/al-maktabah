@@ -136,6 +136,40 @@ export function useBookReader({ book, initialChapterId }: UseBookReaderOptions):
     }
   }, [activeChapter, book.title]);
 
+  // Global accessible reader keyboard shortcuts:
+  // [ or PageUp: Previous chapter
+  // ] or PageDown: Next chapter
+  // M: Toggle between Facsimile PDF and Classical Matn text
+  // T: Toggle Table of Contents sidebar
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const activeEl = document.activeElement;
+      const isInputActive =
+        activeEl &&
+        (activeEl.tagName === 'INPUT' ||
+          activeEl.tagName === 'TEXTAREA' ||
+          (activeEl as HTMLElement).isContentEditable);
+      if (isInputActive) return;
+
+      if (e.key === '[' || e.key === 'PageUp') {
+        e.preventDefault();
+        handlePrevChapter();
+      } else if (e.key === ']' || e.key === 'PageDown') {
+        e.preventDefault();
+        handleNextChapter();
+      } else if ((e.key === 'm' || e.key === 'M') && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setReadingFormat((prev) => (prev === 'facsimile' ? 'matn' : 'facsimile'));
+      } else if ((e.key === 't' || e.key === 'T') && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setSidebarOpen((prev) => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handlePrevChapter, handleNextChapter]);
+
   return {
     chapters,
     currentChapterIndex,

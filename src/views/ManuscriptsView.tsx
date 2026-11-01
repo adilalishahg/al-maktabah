@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import type { ManuscriptCodex } from '../types/library';
 import type { ManuscriptsViewProps } from '../types/views';
 
@@ -12,12 +13,12 @@ export const ManuscriptsView: React.FC<ManuscriptsViewProps> = ({ manuscripts })
       <div className="space-y-2">
         <div className="inline-flex items-center gap-2 text-xs font-label-sm uppercase tracking-wider text-tertiary font-semibold">
           <span className="material-symbols-outlined text-sm">auto_stories</span>
-          <span>Imperial Codices &amp; Paleography Archive</span>
+          <span>Illuminated Manuscripts &amp; Paleography Archive</span>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4">
           <div>
             <h1 className="font-display font-headline-lg text-2xl sm:text-3xl md:text-headline-lg text-primary font-bold">
-              Illuminated Manuscripts &amp; Rare Codices
+              Illuminated Manuscripts &amp; Rare Folios
             </h1>
             <p className="font-body-md text-xs sm:text-body-md text-on-surface-variant max-w-2xl mt-1 leading-relaxed">
               Ultra-high density 4K scans of historical parchment leaves, gold leaf illumination (<em>tadhhīb</em>), and scribal colophons preserved from historical libraries in Istanbul, Cairo, and Damascus.
@@ -76,13 +77,21 @@ export const ManuscriptsView: React.FC<ManuscriptsViewProps> = ({ manuscripts })
               className="transition-transform duration-300 origin-center max-w-xl shadow-2xl rounded-lg overflow-hidden border border-night-border"
               style={{ transform: `scale(${zoomLevel / 100})` }}
             >
-              <img
-                src={selectedCodex.image}
-                alt={selectedCodex.title}
-                loading="lazy"
-                decoding="async"
-                className="w-full h-auto object-cover max-h-reader-tall"
-              />
+              <div className="relative w-full h-[460px]">
+                <Image
+                  src={selectedCodex.image}
+                  alt={selectedCodex.title}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 600px"
+                  priority
+                  className="object-contain"
+                  unoptimized={
+                    !selectedCodex.image.includes('images.unsplash.com') &&
+                    !selectedCodex.image.includes('res.cloudinary.com') &&
+                    !selectedCodex.image.includes('lh3.googleusercontent.com')
+                  }
+                />
+              </div>
             </div>
             <div className="absolute bottom-3 left-3 px-3 py-1 bg-black/75 backdrop-blur-sm rounded-lg text-white text-label-sm font-mono flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
@@ -94,7 +103,7 @@ export const ManuscriptsView: React.FC<ManuscriptsViewProps> = ({ manuscripts })
           <div className="lg:col-span-4 p-6 bg-surface-container-low/50 space-y-4 border-l border-surface-container text-xs">
             <div className="space-y-1">
               <span className="font-label-sm uppercase tracking-wider text-tertiary font-semibold block">
-                Codicological Specification
+                Manuscript Specification
               </span>
               <div className="font-arabic text-xl font-bold text-primary">{selectedCodex.arabicTitle}</div>
             </div>
@@ -147,9 +156,9 @@ export const ManuscriptsView: React.FC<ManuscriptsViewProps> = ({ manuscripts })
         </div>
       </div>
 
-      {/* Codex Thumbnails Shelf */}
+      {/* Manuscript Thumbnails Shelf */}
       <div className="space-y-3">
-        <h3 className="font-title-md text-base font-bold text-primary">Browse Digitized Archive Codices</h3>
+        <h3 className="font-title-md text-base font-bold text-primary">Browse Digitized Archival Manuscripts</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           {manuscripts.map((ms) => (
             <div
@@ -161,13 +170,20 @@ export const ManuscriptsView: React.FC<ManuscriptsViewProps> = ({ manuscripts })
                   : 'border-surface-container hover:border-outline-variant shadow-xs'
               }`}
             >
-              <img
-                src={ms.image}
-                alt={ms.title}
-                loading="lazy"
-                decoding="async"
-                className="w-14 h-16 object-cover rounded shadow-2xs shrink-0"
-              />
+              <div className="relative w-14 h-16 rounded shadow-2xs shrink-0 overflow-hidden">
+                <Image
+                  src={ms.image}
+                  alt={ms.title}
+                  fill
+                  sizes="56px"
+                  className="object-cover"
+                  unoptimized={
+                    !ms.image.includes('images.unsplash.com') &&
+                    !ms.image.includes('res.cloudinary.com') &&
+                    !ms.image.includes('lh3.googleusercontent.com')
+                  }
+                />
+              </div>
               <div className="min-w-0">
                 <h4 className="font-semibold text-xs text-primary truncate">{ms.title}</h4>
                 <p className="text-label-sm text-tertiary font-medium">{ms.eraHijri}</p>

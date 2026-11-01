@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import type { Book } from '../types/library';
 import type { LatestReleasesViewProps } from '../types/views';
 import { getBookSlug } from '@/utils/slug';
@@ -66,14 +67,23 @@ export const LatestReleasesView: React.FC<LatestReleasesViewProps> = ({
             className="p-4 sm:p-6 bg-surface-container-lowest rounded-2xl border border-surface-container shadow-sm hover:shadow-md transition-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6"
           >
             <div className="flex items-start gap-3 sm:gap-4">
-              <img
-                src={item.book.coverImage}
-                alt={item.book.title}
-                loading="lazy"
-                decoding="async"
-                className="w-14 h-18 sm:w-16 sm:h-20 object-cover rounded-lg shadow-xs shrink-0 cursor-pointer"
+              <div
+                className="relative w-14 h-18 sm:w-16 sm:h-20 rounded-lg shadow-xs shrink-0 cursor-pointer overflow-hidden"
                 onClick={() => onSelectBook(item.book)}
-              />
+              >
+                <Image
+                  src={item.book.coverImage}
+                  alt={item.book.title}
+                  fill
+                  sizes="64px"
+                  className="object-cover"
+                  unoptimized={
+                    !item.book.coverImage.includes('images.unsplash.com') &&
+                    !item.book.coverImage.includes('res.cloudinary.com') &&
+                    !item.book.coverImage.includes('lh3.googleusercontent.com')
+                  }
+                />
+              </div>
               <div className="space-y-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="px-2 py-0.5 rounded bg-primary-container text-on-primary font-label-sm text-label-sm font-semibold">

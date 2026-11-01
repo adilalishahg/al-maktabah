@@ -1,13 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import type { IsnadNode } from '../types/library';
 import type { NarratorBiographyModalProps } from '../types/components';
 
 export const NarratorBiographyModal: React.FC<NarratorBiographyModalProps> = ({ narrator, onClose }) => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   if (!narrator) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
+      onClick={onClose}
+    >
       <div 
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="narrator-name-title"
         className="w-full max-w-lg bg-surface-container-lowest rounded-2xl shadow-2xl border border-outline-variant overflow-hidden max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
@@ -16,7 +32,7 @@ export const NarratorBiographyModal: React.FC<NarratorBiographyModalProps> = ({ 
           <div className="flex items-center justify-between relative z-10">
             <div className="flex items-center gap-2">
               <span className="w-8 h-8 rounded-lg bg-tertiary-container/30 flex items-center justify-center text-tertiary-fixed shrink-0">
-                <span className="material-symbols-outlined text-lg">history_edu</span>
+                <span className="material-symbols-outlined text-lg" aria-hidden="true">history_edu</span>
               </span>
               <span className="font-label-sm uppercase tracking-wider text-tertiary-fixed font-semibold text-xs sm:text-label-sm">
                 ‘Ilm ar-Rijāl Biographical Registry
@@ -24,6 +40,7 @@ export const NarratorBiographyModal: React.FC<NarratorBiographyModalProps> = ({ 
             </div>
             <button 
               onClick={onClose}
+              aria-label="Close narrator biography"
               className="text-on-primary-container hover:text-on-primary rounded-full p-1 cursor-pointer shrink-0"
             >
               <span className="material-symbols-outlined text-lg">close</span>
@@ -31,8 +48,8 @@ export const NarratorBiographyModal: React.FC<NarratorBiographyModalProps> = ({ 
           </div>
 
           <div className="mt-2.5 sm:mt-3 relative z-10">
-            <h3 className="font-title-lg text-lg sm:text-xl font-bold text-on-primary">{narrator.name}</h3>
-            <p className="font-arabic text-lg sm:text-xl text-tertiary-fixed font-semibold mt-0.5">{narrator.arabicName}</p>
+            <h3 id="narrator-name-title" className="font-title-lg text-lg sm:text-xl font-bold text-on-primary">{narrator.name}</h3>
+            <p className="font-arabic text-lg sm:text-xl text-tertiary-fixed font-semibold mt-0.5" dir="rtl" lang="ar">{narrator.arabicName}</p>
           </div>
 
           {/* Watermark */}

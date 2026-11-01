@@ -102,9 +102,9 @@
   --spacing-gutter: 1.5rem;
   --spacing-gutter-mobile: 1rem;
 
-  --font-display: "Playfair Display", Georgia, serif;
-  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-arabic: "Amiri", "Traditional Arabic", serif;
+  --font-display: var(--font-playfair), "Playfair Display", Georgia, serif;
+  --font-sans: var(--font-jakarta), "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-arabic: var(--font-amiri), "Amiri", "Traditional Arabic", serif;
 }
 
 :root {
@@ -156,16 +156,16 @@ body {
 
 /* Typography Utility Classes matching design system */
 .font-display {
-  font-family: "Playfair Display", Georgia, serif;
+  font-family: var(--font-display);
 }
 
 .font-arabic {
-  font-family: "Amiri", "Traditional Arabic", serif;
+  font-family: var(--font-arabic);
   line-height: 1.85;
 }
 
 .font-headline-lg {
-  font-family: "Playfair Display", Georgia, serif;
+  font-family: var(--font-display);
   font-size: 36px;
   line-height: 44px;
   letter-spacing: -0.015em;
@@ -173,56 +173,56 @@ body {
 }
 
 .font-headline-md {
-  font-family: "Playfair Display", Georgia, serif;
+  font-family: var(--font-display);
   font-size: 28px;
   line-height: 36px;
   font-weight: 500;
 }
 
 .font-headline-sm {
-  font-family: "Playfair Display", Georgia, serif;
+  font-family: var(--font-display);
   font-size: 22px;
   line-height: 30px;
   font-weight: 500;
 }
 
 .font-title-lg {
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: var(--font-sans);
   font-size: 18px;
   line-height: 26px;
   font-weight: 600;
 }
 
 .font-title-md {
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: var(--font-sans);
   font-size: 16px;
   line-height: 24px;
   font-weight: 600;
 }
 
 .font-body-lg {
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: var(--font-sans);
   font-size: 18px;
   line-height: 28px;
   font-weight: 400;
 }
 
 .font-body-md {
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: var(--font-sans);
   font-size: 15px;
   line-height: 24px;
   font-weight: 400;
 }
 
 .font-body-sm {
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: var(--font-sans);
   font-size: 13px;
   line-height: 20px;
   font-weight: 400;
 }
 
 .font-label-md {
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: var(--font-sans);
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.04em;
@@ -230,7 +230,7 @@ body {
 }
 
 .font-label-sm {
-  font-family: "Plus Jakarta Sans", sans-serif;
+  font-family: var(--font-sans);
   font-size: 11px;
   line-height: 14px;
   letter-spacing: 0.06em;
@@ -252,6 +252,23 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-feature-settings: 'liga';
+}
+
+/* Root Viewport Overflow Protection */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Hide scrollbar utility for horizontally scrollable pill containers */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 /* Custom scrollbars for scholar reader panes */

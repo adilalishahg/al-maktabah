@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import type { ReaderTheme } from '../types/library';
 import type { HeaderProps } from '../types/components';
 
@@ -99,10 +100,12 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={() => onNavigate('home')}
           className="flex items-center gap-2 sm:gap-space-md shrink-0 cursor-pointer select-none"
         >
-          <img
+          <Image
             alt="Al-Maktabah Brand Logo"
             className="h-7 sm:h-8 w-auto object-contain"
-            decoding="async"
+            priority
+            width={36}
+            height={32}
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkk5vdhfETWDMXgUobuz8b7OFIRxT1RnZyf7NS9WywvGhN2DjXfBC38oWKpOPBa1Qs_m1ca4JDUU4MPkxVPn_Sc46Y9KuVauZl1My3j3Je5ikE7fJ0utasVbauXGLar-TbkdJmDkpxhfmPHXPvXvl3Bffa8uNNmdDFvmiUQbiT0GyDAuAJEGh7OHztOzMPqH7Ugw6p3FwSAO-cR9R2gvZLOgmsldiGILWTav5h_tWWlYQ6vJe9X8xI"
           />
           <div className="flex flex-col">
@@ -165,44 +168,52 @@ export const Header: React.FC<HeaderProps> = ({
           </button> */}
 
           {/* Theme Switcher Trio (sm+) */}
-          <div className="hidden sm:flex items-center bg-surface-container-low rounded-lg p-0.5 gap-0.5 border border-surface-container shrink-0">
+          <div className="hidden sm:flex items-center bg-surface-container-low rounded-lg p-0.5 gap-0.5 border border-surface-container shrink-0" role="group" aria-label="Reading Theme Selection">
             <button
               onClick={() => onThemeChange('parchment')}
-              className={`p-1.5 rounded text-xs flex items-center transition-all ${currentTheme === 'parchment'
+              aria-label="Light Parchment Theme"
+              aria-pressed={currentTheme === 'parchment'}
+              className={`p-1.5 rounded text-xs flex items-center transition-all cursor-pointer ${currentTheme === 'parchment'
                 ? 'bg-surface-container-lowest text-on-surface shadow-xs'
                 : 'text-on-surface-variant hover:text-on-surface'
                 }`}
               title="Light Parchment Theme"
             >
-              <span className="material-symbols-outlined text-sm text-tertiary-container">light_mode</span>
+              <span className="material-symbols-outlined text-sm text-tertiary-container" aria-hidden="true">light_mode</span>
             </button>
             <button
               onClick={() => onThemeChange('sepia')}
-              className={`p-1.5 rounded text-xs flex items-center transition-all ${currentTheme === 'sepia'
+              aria-label="Warm Sepia Parchment Theme"
+              aria-pressed={currentTheme === 'sepia'}
+              className={`p-1.5 rounded text-xs flex items-center transition-all cursor-pointer ${currentTheme === 'sepia'
                 ? 'bg-surface-container-lowest text-on-surface shadow-xs'
                 : 'text-on-surface-variant hover:text-on-surface'
                 }`}
               title="Warm Sepia Parchment"
             >
-              <span className="material-symbols-outlined text-sm text-tertiary">auto_stories</span>
+              <span className="material-symbols-outlined text-sm text-tertiary" aria-hidden="true">auto_stories</span>
             </button>
             <button
               onClick={() => onThemeChange('night')}
-              className={`p-1.5 rounded text-xs flex items-center transition-all ${currentTheme === 'night'
+              aria-label="Night Emerald Theme"
+              aria-pressed={currentTheme === 'night'}
+              className={`p-1.5 rounded text-xs flex items-center transition-all cursor-pointer ${currentTheme === 'night'
                 ? 'bg-surface-container-lowest text-on-surface shadow-xs'
                 : 'text-on-surface-variant hover:text-on-surface'
                 }`}
               title="Night Emerald Theme"
             >
-              <span className="material-symbols-outlined text-sm text-primary-container">dark_mode</span>
+              <span className="material-symbols-outlined text-sm text-primary-container" aria-hidden="true">dark_mode</span>
             </button>
           </div>
 
           {/* Language Switcher (md+) */}
-          <div className="hidden md:flex items-center bg-surface-container-high rounded-lg p-0.5 border border-surface-container shrink-0">
+          <div className="hidden md:flex items-center bg-surface-container-high rounded-lg p-0.5 border border-surface-container shrink-0" role="group" aria-label="Language Selector">
             <button
               onClick={() => onLangChange('EN')}
-              className={`px-2 py-1 rounded font-label-sm text-xs font-semibold transition-colors ${currentLang === 'EN'
+              aria-label="Switch interface language to English"
+              aria-pressed={currentLang === 'EN'}
+              className={`px-2 py-1 rounded font-label-sm text-xs font-semibold transition-colors cursor-pointer ${currentLang === 'EN'
                 ? 'bg-surface-container-lowest text-on-surface shadow-xs'
                 : 'text-on-surface-variant hover:text-on-surface'
                 }`}
@@ -211,7 +222,11 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
             <button
               onClick={() => onLangChange('AR')}
-              className={`px-2 py-1 rounded font-label-sm text-xs font-semibold transition-colors ${currentLang === 'AR'
+              aria-label="التبديل إلى اللغة العربية"
+              aria-pressed={currentLang === 'AR'}
+              lang="ar"
+              dir="rtl"
+              className={`px-2 py-1 rounded font-label-sm text-xs font-semibold transition-colors cursor-pointer ${currentLang === 'AR'
                 ? 'bg-surface-container-lowest text-on-surface shadow-xs'
                 : 'text-on-surface-variant hover:text-on-surface'
                 }`}
@@ -224,13 +239,14 @@ export const Header: React.FC<HeaderProps> = ({
           <a
             href="/admin"
             title="Open Admin Portal"
+            aria-label="Open Admin Portal"
             className="flex items-center gap-1.5 p-1 rounded-full hover:bg-surface-container-high transition-colors group shrink-0"
           >
-            <img
+            <Image
               alt="Scholar Profile / Admin"
               className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover ring-2 ring-tertiary-container ring-offset-2 ring-offset-surface shrink-0 group-hover:scale-105 transition-transform"
-              loading="lazy"
-              decoding="async"
+              width={32}
+              height={32}
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuCp6hjwy-OtUiOFhXULVfc39TXd10KeuRXfFUG5sIqXVsYPcK5Q3_sXBUEWdWMQiSBlB-RSNxE5NSOG1gAp2qrAfJdN9ukCek7BibNabA20PebeMtnMMzmI8puJlGt9eWVf06upC4lVHJo3seg2JriFqz6XknjL28boYGcDkKgVHJ7UJLGLIr5O_cfctFnbYX28zDj5WwUvVllMUdmi0tkU4ok2-XSiS14eZeUo7chnLI3iQWQdDkYf"
             />
             <span className="hidden lg:inline text-label-sm font-bold text-tertiary px-1.5 py-0.5 rounded-md bg-tertiary-container/15 border border-tertiary/20">
@@ -240,8 +256,10 @@ export const Header: React.FC<HeaderProps> = ({
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden p-1.5 sm:p-2 rounded-lg text-on-surface hover:bg-surface-container transition-colors"
+            className="xl:hidden p-1.5 sm:p-2 rounded-lg text-on-surface hover:bg-surface-container transition-colors cursor-pointer"
             aria-label="Toggle navigation"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation-menu"
           >
             <span className="material-symbols-outlined text-2xl">
               {mobileMenuOpen ? 'close' : 'menu'}
@@ -252,7 +270,12 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Mobile & Tablet Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="xl:hidden bg-surface-container-lowest/95 backdrop-blur-xl border-b border-surface-container p-4 space-y-3 animate-fade-in shadow-xl max-h-[calc(100vh-5rem)] overflow-y-auto">
+        <div
+          id="mobile-navigation-menu"
+          role="region"
+          aria-label="Mobile Navigation Menu"
+          className="xl:hidden bg-surface-container-lowest/95 backdrop-blur-xl border-b border-surface-container p-4 space-y-3 animate-fade-in shadow-xl max-h-[calc(100vh-5rem)] overflow-y-auto"
+        >
           {/* Search bar inside drawer */}
           <div
             onClick={() => {

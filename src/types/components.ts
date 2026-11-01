@@ -97,6 +97,8 @@ export interface CodexPdfReaderProps {
   className?: string;
 }
 
+export type ManuscriptPdfReaderProps = CodexPdfReaderProps;
+
 /**
  * Prop types for AdminHomeSettingsView master homepage section manager.
  */

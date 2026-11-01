@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import type { Book } from '../types/library';
 import type { DownloadModalProps } from '../types/components';
 
@@ -64,9 +65,25 @@ Preserved under Academic Waqf (Open Access).
     }, 800);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
+      onClick={onClose}
+    >
       <div 
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="download-modal-title"
         className="w-full max-w-md max-h-[90vh] flex flex-col bg-surface-container-lowest rounded-2xl shadow-2xl border border-outline-variant overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
@@ -74,16 +91,20 @@ Preserved under Academic Waqf (Open Access).
         <div className="bg-primary-container text-on-primary p-4 sm:p-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="w-10 h-10 rounded-xl bg-tertiary-container/30 flex items-center justify-center text-tertiary-fixed shrink-0">
-              <span className="material-symbols-outlined text-xl">download</span>
+              <span className="material-symbols-outlined text-xl" aria-hidden="true">download</span>
             </span>
             <div>
               <span className="font-label-sm uppercase tracking-wider text-tertiary-fixed text-xs font-semibold block">
                 Free Academic Waqf Download
               </span>
-              <h3 className="font-title-md font-bold text-on-primary leading-tight mt-0.5">{book.title}</h3>
+              <h3 id="download-modal-title" className="font-title-md font-bold text-on-primary leading-tight mt-0.5">{book.title}</h3>
             </div>
           </div>
-          <button onClick={onClose} className="text-on-primary-container hover:text-on-primary p-1">
+          <button
+            onClick={onClose}
+            aria-label="Close download modal"
+            className="text-on-primary-container hover:text-on-primary p-1 rounded-full cursor-pointer"
+          >
             <span className="material-symbols-outlined text-lg">close</span>
           </button>
         </div>
@@ -91,9 +112,22 @@ Preserved under Academic Waqf (Open Access).
         {/* Content */}
         <div className="p-4 sm:p-6 space-y-4 overflow-y-auto">
           <div className="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low border border-surface-container">
-            <img src={book.coverImage} alt={book.title} className="w-12 h-16 object-cover rounded shadow-xs shrink-0" />
+            <div className="relative w-12 h-16 rounded shadow-xs shrink-0 overflow-hidden">
+              <Image
+                src={book.coverImage}
+                alt={book.title}
+                fill
+                sizes="48px"
+                className="object-cover"
+                unoptimized={
+                  !book.coverImage.includes('images.unsplash.com') &&
+                  !book.coverImage.includes('res.cloudinary.com') &&
+                  !book.coverImage.includes('lh3.googleusercontent.com')
+                }
+              />
+            </div>
             <div className="min-w-0">
-              <div className="font-arabic text-base font-bold text-primary truncate">{book.arabicTitle}</div>
+              <div className="font-arabic text-base font-bold text-primary truncate" dir="rtl" lang="ar">{book.arabicTitle}</div>
               <div className="text-xs text-on-surface-variant">{book.author} ({book.authorHijriYear})</div>
               <div className="text-xs text-tertiary font-medium mt-0.5">{book.pages} pages • {book.sizeMb} MB total</div>
             </div>
