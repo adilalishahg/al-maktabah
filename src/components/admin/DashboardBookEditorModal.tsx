@@ -58,7 +58,7 @@ export const DashboardBookEditorModal: React.FC<DashboardBookEditorModalProps> =
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => setEditorPreviewMode(editorPreviewMode === 'edit' ? 'preview' : 'edit')}
@@ -67,20 +67,27 @@ export const DashboardBookEditorModal: React.FC<DashboardBookEditorModalProps> =
             <span className="material-symbols-outlined text-sm">
               {editorPreviewMode === 'edit' ? 'preview' : 'code'}
             </span>
-            <span>{editorPreviewMode === 'edit' ? 'Live Formatted Preview' : 'Back to Editor'}</span>
+            <span>{editorPreviewMode === 'edit' ? 'Preview' : 'Editor'}</span>
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-on-primary/80 hover:text-on-primary transition-colors cursor-pointer"
-            title="Cancel"
+            className="px-3 py-1.5 rounded-lg bg-surface/20 hover:bg-surface/30 text-xs font-semibold text-on-primary transition-colors cursor-pointer"
           >
-            <span className="material-symbols-outlined text-lg">close</span>
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="dashboard-book-modal-form"
+            className="px-4 py-1.5 rounded-lg bg-tertiary-container text-black font-bold text-xs sm:text-sm hover:bg-tertiary shadow-sm flex items-center gap-1.5 transition-all cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-base">cloud_done</span>
+            <span>Save &amp; Publish</span>
           </button>
         </div>
       </div>
 
-      <form onSubmit={handleSaveBook} className="p-4 sm:p-6 space-y-6">
+      <form id="dashboard-book-modal-form" onSubmit={handleSaveBook} className="p-4 sm:p-6 space-y-6">
         {/* Top Metadata Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>

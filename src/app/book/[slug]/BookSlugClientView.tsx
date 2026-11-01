@@ -18,9 +18,10 @@ const CommandPalette = lazy(() =>
 
 interface BookSlugClientViewProps {
   slug: string;
+  initialBook?: DetailedBook | null;
 }
 
-export function BookSlugClientView({ slug }: BookSlugClientViewProps) {
+export function BookSlugClientView({ slug, initialBook = null }: BookSlugClientViewProps) {
   const router = useRouter();
   const {
     currentTheme,
@@ -30,62 +31,32 @@ export function BookSlugClientView({ slug }: BookSlugClientViewProps) {
   } = useAppTheme();
 
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
-  const [allBooks, setAllBooks] = useState<Book[]>(() => getPublicLibraryBooks());
+  const [allBooks, setAllBooks] = useState<Book[]>([]);
 
-  // Optimistically find matching book from local store or mock books
-  const [book, setBook] = useState<DetailedBook | null>(() => {
-    const stored = getStoredBooks();
-    const storedMatch = stored.find((b) => matchesBookSlug(b, slug));
-    if (storedMatch) return storedMatch;
+  // Hydration-safe initial state: initialized strictly with initialBook from server.
+  // This guarantees SSR and Client initial renders match 100% with no hydration mismatch!
+  const [book, setBook] = useState<DetailedBook | null>(initialBook);
+  const [isLoading, setIsLoading] = useState<boolean>(!initialBook);
 
-    const initialMatch = INITIAL_DETAILED_BOOKS.find((b) => matchesBookSlug(b, slug));
-    if (initialMatch) return initialMatch;
-
-    const publicMatch = BOOKS.find((b) => matchesBookSlug(b, slug));
-    if (publicMatch) {
-      return {
-        id: publicMatch.id,
-        title: publicMatch.title,
-        arabicTitle: publicMatch.arabicTitle,
-        author: publicMatch.author,
-        authorHijriYear: publicMatch.authorHijriYear,
-        discipline: publicMatch.discipline,
-        disciplineName: publicMatch.disciplineName,
-        coverImage: publicMatch.coverImage,
-        pdfUrl: publicMatch.pdfUrl,
-        description: publicMatch.description,
-        pages: publicMatch.pages,
-        sizeMb: publicMatch.sizeMb,
-        edition: publicMatch.edition,
-        volumes: publicMatch.volumes,
-        verified: publicMatch.verified,
-        published: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        formats: publicMatch.formats,
-        chapters: [
-          {
-            id: 'ch-1',
-            number: 1,
-            title: 'Foundational Recension & Matn',
-            arabicTitle: publicMatch.arabicTitle,
-            startPage: 1,
-            content: 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\nالْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى رَسُولِ اللَّهِ وَعَلَى آلِهِ وَصَحْبِهِ أَجْمَعِينَ.',
-            translation: 'In the name of Allah, the Entirely Merciful, the Especially Merciful. All praise is due to Allah, Lord of the worlds, and peace and blessings be upon the Messenger of Allah.',
-            notes: 'Critical edition verified against primary codices with full isnād transmission.',
-          },
-        ],
-      };
-    }
-    return null;
-  });
-
-  const [isLoading, setIsLoading] = useState<boolean>(!book);
-
-  // Stale-While-Revalidate: fetch complete manuscript and chapters from API
+  // Client-side hydration & sync in useEffect (runs safely after mount, preventing hydration errors)
   useEffect(() => {
     let active = true;
 
+    // Safely populate command palette books on client
+    setAllBooks(getPublicLibraryBooks());
+
+    // If initialBook was not found on server (e.g. newly created in browser localStorage),
+    // hydrate from localStorage safely on client
+    if (!book) {
+      const stored = getStoredBooks();
+      const localMatch = stored.find((b) => matchesBookSlug(b, slug));
+      if (localMatch && active) {
+        setBook(localMatch);
+        setIsLoading(false);
+      }
+    }
+
+    // Always fetch latest authoritative data from API
     fetch(`/api/books/${encodeURIComponent(slug)}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((json) => {

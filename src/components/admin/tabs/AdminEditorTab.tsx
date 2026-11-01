@@ -240,60 +240,99 @@ export const AdminEditorTab: React.FC<AdminEditorTabProps> = ({
 
   // STEP 2: AUTO-COMPLETED EDITOR VIEW (After PDF Upload or Manual Entry)
   return (
-    <div className="w-full max-w-full bg-surface-container-lowest border border-surface-container rounded-2xl shadow-sm overflow-hidden animate-fade-in space-y-6 p-3 sm:p-6 md:p-8">
-      {/* Top Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 border-b border-surface-container pb-4">
-        <div>
-          <span className="text-xs font-bold uppercase text-tertiary">Interactive Manuscript Editor</span>
-          <h2 className="font-display text-2xl font-bold text-primary">
-            {editingBook.title || 'Untitled Treatise'}
-          </h2>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setShowCodexModal(true)}
-            className="px-3 py-1.5 rounded-lg bg-tertiary/20 hover:bg-tertiary/30 text-xs font-bold text-tertiary border border-tertiary/30 transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
-            title="Open Full-Page Continuous PDF Reader"
-          >
-            <span className="material-symbols-outlined text-sm">auto_stories</span>
-            <span>📖 Read Full PDF ({editingBook.pages} Pgs)</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setEditorPreviewMode(editorPreviewMode === 'edit' ? 'preview' : 'edit')}
-            className="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-primary transition-colors flex items-center gap-1 cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-sm">
-              {editorPreviewMode === 'edit' ? 'preview' : 'code'}
-            </span>
-            <span>{editorPreviewMode === 'edit' ? 'Live Formatted Preview' : 'Editor View'}</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('books')}
-            className="px-3 py-1.5 rounded-lg bg-surface-container text-xs font-semibold text-on-surface-variant hover:text-on-surface cursor-pointer"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-
-      {/* Auto-analysis Success Banner */}
-      {pdfUploadSuccess && (
-        <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-xs font-semibold text-emerald-800 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-base text-emerald-700">check_circle</span>
-            <span>{pdfUploadSuccess}</span>
+    <div className="w-full max-w-full bg-surface-container-lowest border border-surface-container rounded-2xl shadow-sm overflow-hidden animate-fade-in p-3 sm:p-6 md:p-8">
+      <form id="admin-book-editor-form" onSubmit={handleSaveBook} className="space-y-6">
+        {/* Top Header with Primary Save & Cancel Actions */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-4 border-b border-surface-container pb-4">
+          <div className="min-w-0">
+            <span className="text-xs font-bold uppercase text-tertiary">Interactive Manuscript Editor</span>
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-primary truncate">
+              {editingBook.title || 'Untitled Treatise'}
+            </h2>
           </div>
-          <span className="text-label-xs font-mono text-emerald-900 bg-emerald-100 px-2 py-0.5 rounded-full">
-            Extracted from PDF
-          </span>
-        </div>
-      )}
 
-      <form onSubmit={handleSaveBook} className="space-y-6">
+          {/* Primary Action Buttons placed right at the Top of the Page */}
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setShowCodexModal(true)}
+              className="px-2.5 py-1.5 rounded-xl bg-tertiary/15 hover:bg-tertiary/25 text-xs font-bold text-tertiary border border-tertiary/30 transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+              title="Open Full-Page Continuous PDF Reader"
+            >
+              <span className="material-symbols-outlined text-sm">auto_stories</span>
+              <span className="hidden xs:inline">Read Full PDF</span>
+              <span className="font-mono text-label-xs">({editingBook.pages} Pgs)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setEditorPreviewMode(editorPreviewMode === 'edit' ? 'preview' : 'edit')}
+              className="px-2.5 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-primary transition-colors flex items-center gap-1 cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-sm">
+                {editorPreviewMode === 'edit' ? 'preview' : 'code'}
+              </span>
+              <span>{editorPreviewMode === 'edit' ? 'Live Formatted Preview' : 'Editor View'}</span>
+            </button>
+
+            {/* Cancel Button at Top */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('books')}
+              className="px-3.5 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-on-surface-variant hover:text-on-surface cursor-pointer transition-colors"
+            >
+              Cancel
+            </button>
+
+            {/* Save & Publish Button at Top */}
+            <button
+              type="submit"
+              disabled={isSaving}
+              className="px-4 sm:px-5 py-1.5 sm:py-2 rounded-xl bg-primary-container text-on-primary font-bold text-xs sm:text-sm hover:bg-primary shadow-sm flex items-center gap-1.5 sm:gap-2 disabled:opacity-50 cursor-pointer transition-all"
+            >
+              {isSaving ? (
+                <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <span className="material-symbols-outlined text-base">cloud_upload</span>
+              )}
+              <span>{isSaving ? 'Syncing...' : 'Save & Publish'}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Top Prominent Publishing & Visibility Toolbar */}
+        <div className="flex flex-wrap items-center justify-between gap-3 bg-surface-container-low/80 border border-surface-container p-3 rounded-xl">
+          <label className="flex items-center gap-2 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={editingBook.published}
+              onChange={(e) => setEditingBook({ ...editingBook, published: e.target.checked })}
+              className="w-4 h-4 accent-primary rounded cursor-pointer"
+            />
+            <span className="text-xs font-bold text-primary">Publish to Public Site Immediately</span>
+            <span className="text-label-xs text-on-surface-variant hidden sm:inline">
+              ({editingBook.published ? 'Visible to public readers' : 'Draft mode'})
+            </span>
+          </label>
+
+          <div className="flex items-center gap-2 text-xs text-on-surface-variant font-medium">
+            <span className="material-symbols-outlined text-sm text-emerald-700">verified</span>
+            <span>{editingBook.pages || 0} Pages &bull; {editingBook.chapters?.length || 0} Chapters</span>
+          </div>
+        </div>
+
+        {/* Auto-analysis Success Banner */}
+        {pdfUploadSuccess && (
+          <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-xs font-semibold text-emerald-800 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-base text-emerald-700">check_circle</span>
+              <span>{pdfUploadSuccess}</span>
+            </div>
+            <span className="text-label-xs font-mono text-emerald-900 bg-emerald-100 px-2 py-0.5 rounded-full">
+              Extracted from PDF
+            </span>
+          </div>
+        )}
         {/* Row 1: English Title, Arabic Title, Author & Hijri Year */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
