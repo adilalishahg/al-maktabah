@@ -32,6 +32,11 @@ export interface UsePdfReaderReturn {
   activeChapter: BookChapter | null;
   renderedPages: Set<number>;
   containerRef: React.RefObject<HTMLDivElement | null>;
+  pageAspectRatio: number;
+  fitWidthScale: number;
+  computedPageWidth: number;
+  isMobile: boolean;
+  setPageAspectRatio: React.Dispatch<React.SetStateAction<number>>;
   setPageInputValue: (val: string) => void;
   setInternalScale: (scale: number | ((s: number) => number)) => void;
   setViewMode: (mode: 'pdf' | 'text') => void;
@@ -111,8 +116,65 @@ export function usePdfReader({
   const observerRef = useRef<IntersectionObserver | null>(null);
   const renderTasksRef = useRef<Map<number, any>>(new Map());
 
+  const [containerWidth, setContainerWidth] = useState<number>(() => {
+    if (typeof window !== 'undefined') return window.innerWidth;
+    return 800;
+  });
+  const [pageAspectRatio, setPageAspectRatio] = useState<number>(1.414);
+  const [unscaledPageWidth, setUnscaledPageWidth] = useState<number>(800);
+
   const activeScale = externalScale !== undefined ? externalScale : internalScale;
   const isSidebarOpen = sidebarOpenExternal !== undefined ? sidebarOpenExternal : internalSidebarOpen;
+
+  // Responsive mobile threshold
+  const isMobile = containerWidth < 768;
+
+  // Track container width via ResizeObserver and window resize events
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const updateDimensions = () => {
+      if (el.clientWidth > 0) {
+        setContainerWidth(el.clientWidth);
+      }
+    };
+
+    updateDimensions();
+
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => {
+        updateDimensions();
+      });
+      ro.observe(el);
+    }
+
+    window.addEventListener('resize', updateDimensions);
+    return () => {
+      if (ro) ro.disconnect();
+      window.removeEventListener('resize', updateDimensions);
+    };
+  }, []);
+
+  // Compute available width accounting for safe padding (12px on mobile, 32px on desktop)
+  const padding = isMobile ? 12 : 32;
+  const availableWidth = Math.max(260, containerWidth - padding);
+
+  // Dynamic Fit-To-Width scale for unscaled PDF page
+  const fitWidthScale = unscaledPageWidth > 0 ? availableWidth / unscaledPageWidth : 1.0;
+
+  // Dynamic CSS display width for page slot:
+  // On mobile (< 768px): activeScale acts as zoom multiplier relative to fit-to-width.
+  // 1.0 = 100% fits within screen width. Zooming in (> 1.0) allows horizontal panning.
+  // On desktop (>= 768px): baseline is comfortable reading width (~800px) capped at availableWidth.
+  const computedPageWidth = useMemo(() => {
+    if (isMobile) {
+      return Math.round(availableWidth * activeScale);
+    }
+    const baseline = Math.min(800, availableWidth);
+    return Math.round(baseline * activeScale);
+  }, [isMobile, availableWidth, activeScale]);
 
   const toggleSidebar = useCallback(() => {
     if (onToggleSidebarExternal) {
@@ -232,7 +294,7 @@ export function usePdfReader({
       });
       renderTasksRef.current.clear();
     };
-  }, [pdfDoc, activeScale]);
+  }, [pdfDoc, computedPageWidth]);
 
   // Render a specific page canvas with concurrency cancellation guard
   const renderPage = useCallback(
@@ -250,10 +312,30 @@ export function usePdfReader({
 
       try {
         const page = await pdfDoc.getPage(pageNum);
-        const viewport = page.getViewport({ scale: activeScale });
-        canvasEl.width = viewport.width;
-        canvasEl.height = viewport.height;
-        const ctx = canvasEl.getContext('2d');
+        const unscaled = page.getViewport({ scale: 1.0 });
+
+        if (unscaled.width > 0 && unscaled.height > 0) {
+          setUnscaledPageWidth(unscaled.width);
+          setPageAspectRatio(unscaled.height / unscaled.width);
+        }
+
+        const cssWidth = computedPageWidth;
+        const cssHeight = Math.round(cssWidth * (unscaled.height / unscaled.width));
+        const renderScale = cssWidth / unscaled.width;
+
+        // DevicePixelRatio for crisp HiDPI Retina rendering (capped at 2.5)
+        const dpr = typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 2.5) : 1;
+        const viewport = page.getViewport({ scale: renderScale * dpr });
+
+        // Physical canvas buffer dimensions
+        canvasEl.width = Math.floor(viewport.width);
+        canvasEl.height = Math.floor(viewport.height);
+
+        // Logical CSS styling dimensions
+        canvasEl.style.width = `${cssWidth}px`;
+        canvasEl.style.height = `${cssHeight}px`;
+
+        const ctx = canvasEl.getContext('2d', { alpha: false });
         if (!ctx) return;
 
         const renderContext = {
@@ -273,7 +355,7 @@ export function usePdfReader({
         renderTasksRef.current.delete(pageNum);
       }
     },
-    [pdfDoc, activeScale, isCloudinary]
+    [pdfDoc, computedPageWidth, isCloudinary]
   );
 
   const scrollToPage = useCallback(
@@ -369,6 +451,11 @@ export function usePdfReader({
     activeChapter,
     renderedPages,
     containerRef,
+    pageAspectRatio,
+    fitWidthScale,
+    computedPageWidth,
+    isMobile,
+    setPageAspectRatio,
     setPageInputValue,
     setInternalScale,
     setViewMode,

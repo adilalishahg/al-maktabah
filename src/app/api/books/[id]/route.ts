@@ -5,6 +5,7 @@ import { INITIAL_DETAILED_BOOKS } from '@/data/bookStore';
 import { verifyAdminRequest } from '@/lib/authGuard';
 import { matchesBookSlug } from '@/utils/slug';
 import { BookInputSchema } from '@/lib/validationSchemas';
+import { normalizeCloudinaryPdfUrl } from '@/lib/cloudinary';
 
 export async function GET(
   request: Request,
@@ -91,6 +92,9 @@ export async function PUT(
     }
 
     const validated = parseResult.data;
+    if (validated.pdfUrl) {
+      validated.pdfUrl = normalizeCloudinaryPdfUrl(validated.pdfUrl);
+    }
     const db = await connectToDatabase();
 
     if (db) {

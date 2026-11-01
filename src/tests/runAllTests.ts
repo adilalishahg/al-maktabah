@@ -21,6 +21,8 @@ import sitemapGenerator from '../app/sitemap';
 import robotsGenerator from '../app/robots';
 import { INITIAL_DETAILED_BOOKS, getStoredBooks } from '../data/bookStore';
 import { BookInputSchema, CategoryInputSchema } from '../lib/validationSchemas';
+import { getDownloadablePdfUrl, parseCloudinaryUrl, isCloudinaryUrl } from '../lib/cloudinary';
+import { GET as downloadProxyGet } from '../app/api/books/download/route';
 
 let passed = 0;
 let failed = 0;
@@ -136,6 +138,25 @@ async function runAllTests() {
 
   const testBook = INITIAL_DETAILED_BOOKS[0];
   assert(Boolean(testBook.title && testBook.author), 'Canonical book available for Schema.org/Book metadata');
+
+  // --- SUITE 5: CLOUDINARY ASSETS & DOWNLOAD PROXY PIPELINE ---
+  console.log('\n▶ [5/5] SUITE: Cloudinary Normalization & Download Proxy');
+  const sampleCloudinaryPdf = 'https://res.cloudinary.com/dvgxeiwoz/image/upload/v1793470773/al-maktabah/manuscripts/sample.pdf';
+  assert(isCloudinaryUrl(sampleCloudinaryPdf), 'Detects Cloudinary CDN origin');
+
+  const parsedCld = parseCloudinaryUrl(sampleCloudinaryPdf);
+  assert(Boolean(parsedCld && parsedCld.cloudName === 'dvgxeiwoz' && parsedCld.resourceType === 'image'), 'Parses Cloudinary URL components correctly');
+
+  const downloadablePdfUrl = getDownloadablePdfUrl(sampleCloudinaryPdf, 'Sahih al-Bukhari');
+  assert(downloadablePdfUrl.includes('fl_attachment'), 'Injects Cloudinary forced attachment download flag');
+
+  const missingUrlReq = new Request('http://localhost:3000/api/books/download');
+  const missingUrlRes = await downloadProxyGet(missingUrlReq);
+  assert(missingUrlRes.status === 400, 'Rejects download proxy request without target url parameter');
+
+  const untrustedReq = new Request('http://localhost:3000/api/books/download?url=https://malicious-domain.com/hack.pdf');
+  const untrustedRes = await downloadProxyGet(untrustedReq);
+  assert(untrustedRes.status === 403, 'Enforces SSRF defense by rejecting untrusted domains');
 
   console.log('\n================================================================');
   console.log(`  SUMMARY: ${passed} Passed, ${failed} Failed out of ${passed + failed} Total Assertions`);

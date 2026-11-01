@@ -12,12 +12,16 @@ interface PdfPageSlotItemProps {
   totalPages: number;
   currentPage: number;
   activeScale: number;
+  computedPageWidth: number;
+  pageAspectRatio: number;
+  isMobile: boolean;
   isCloudinary: boolean;
   effectivePdfUrl: string;
   bookTitle: string;
   getCloudinaryPageUrl: (url: string, page: number) => string;
   renderPage: (pageNum: number, canvasEl: HTMLCanvasElement) => Promise<void>;
   isRendered: boolean;
+  onAspectRatioDetected?: (ratio: number) => void;
 }
 
 const PdfPageSlotItem: React.FC<PdfPageSlotItemProps> = React.memo(({
@@ -25,12 +29,16 @@ const PdfPageSlotItem: React.FC<PdfPageSlotItemProps> = React.memo(({
   totalPages,
   currentPage,
   activeScale,
+  computedPageWidth,
+  pageAspectRatio,
+  isMobile,
   isCloudinary,
   effectivePdfUrl,
   bookTitle,
   getCloudinaryPageUrl,
   renderPage,
   isRendered,
+  onAspectRatioDetected,
 }) => {
   const isCurrent = pageNum === currentPage;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -60,25 +68,27 @@ const PdfPageSlotItem: React.FC<PdfPageSlotItemProps> = React.memo(({
     if (!isCloudinary && inView && canvasRef.current) {
       renderPage(pageNum, canvasRef.current);
     }
-  }, [isCloudinary, inView, pageNum, renderPage, activeScale]);
+  }, [isCloudinary, inView, pageNum, renderPage, computedPageWidth]);
+
+  const slotHeight = Math.round(computedPageWidth * pageAspectRatio);
 
   return (
     <div
       ref={slotRef}
       id={`pdf-page-slot-${pageNum}`}
       data-page-num={pageNum}
-      className={`pdf-page-slot transition-all duration-200 relative bg-night-card shadow-2xl rounded-sm overflow-hidden flex flex-col items-center border ${
+      className={`pdf-page-slot transition-all duration-200 relative bg-night-card shadow-2xl rounded-sm overflow-hidden flex flex-col items-center justify-center border mx-auto ${
         isCurrent ? 'ring-2 ring-tertiary border-tertiary' : 'border-emerald-border'
       }`}
       style={{
-        width: `${Math.round(800 * activeScale)}px`,
-        minHeight: `${Math.round(1100 * activeScale)}px`,
+        width: `${computedPageWidth}px`,
+        maxWidth: isMobile && activeScale <= 1.0 ? '100%' : undefined,
+        minHeight: slotHeight > 0 ? `${slotHeight}px` : undefined,
         contentVisibility: 'auto',
-        containIntrinsicSize: `${Math.round(800 * activeScale)}px ${Math.round(1100 * activeScale)}px`,
       }}
     >
       {/* Page Number Watermark Badge */}
-      <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-xs text-label-xs font-mono text-tertiary-fixed border border-emerald-border z-10">
+      <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-xs text-label-xs font-mono text-tertiary-fixed border border-emerald-border z-10 pointer-events-none">
         {pageNum} / {totalPages}
       </div>
 
@@ -88,12 +98,18 @@ const PdfPageSlotItem: React.FC<PdfPageSlotItemProps> = React.memo(({
           alt={`Page ${pageNum} of ${bookTitle}`}
           loading="lazy"
           decoding="async"
-          className="w-full h-auto object-contain select-none"
+          onLoad={(e) => {
+            const img = e.currentTarget;
+            if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+              onAspectRatioDetected?.(img.naturalHeight / img.naturalWidth);
+            }
+          }}
+          className="w-full h-auto object-contain select-none block"
         />
       ) : (
         <canvas
           ref={canvasRef}
-          className={`w-full h-auto block ${!isRendered ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+          className={`block ${!isRendered ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
         />
       )}
     </div>
@@ -139,6 +155,11 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
     activeChapter,
     renderedPages,
     containerRef,
+    pageAspectRatio,
+    fitWidthScale,
+    computedPageWidth,
+    isMobile,
+    setPageAspectRatio,
     setPageInputValue,
     toggleSidebar,
     getCloudinaryPageUrl,
@@ -260,12 +281,16 @@ export const CodexPdfReader: React.FC<CodexPdfReaderProps> = ({
                     totalPages={totalPages}
                     currentPage={currentPage}
                     activeScale={activeScale}
+                    computedPageWidth={computedPageWidth}
+                    pageAspectRatio={pageAspectRatio}
+                    isMobile={isMobile}
                     isCloudinary={isCloudinary}
                     effectivePdfUrl={effectivePdfUrl}
                     bookTitle={book.title}
                     getCloudinaryPageUrl={getCloudinaryPageUrl}
                     renderPage={renderPage}
                     isRendered={renderedPages.has(pageNum)}
+                    onAspectRatioDetected={setPageAspectRatio}
                   />
                 );
               })}

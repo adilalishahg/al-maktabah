@@ -5,6 +5,7 @@ import { INITIAL_DETAILED_BOOKS } from '@/data/bookStore';
 import { BOOKS } from '@/data/mockLibrary';
 import { verifyAdminRequest } from '@/lib/authGuard';
 import { BookInputSchema } from '@/lib/validationSchemas';
+import { normalizeCloudinaryPdfUrl } from '@/lib/cloudinary';
 
 export async function GET(request: Request) {
   try {
@@ -138,6 +139,7 @@ export async function POST(request: Request) {
     const validated = parseResult.data;
     const bookData = {
       ...validated,
+      pdfUrl: validated.pdfUrl ? normalizeCloudinaryPdfUrl(validated.pdfUrl) : validated.pdfUrl,
       id: validated.id || 'book-' + Date.now(),
       updatedAt: new Date().toISOString(),
       createdAt: validated.createdAt || new Date().toISOString(),

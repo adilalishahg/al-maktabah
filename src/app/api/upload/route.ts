@@ -103,7 +103,10 @@ export async function POST(request: Request) {
       cloudinaryForm.append('signature', signature);
       cloudinaryForm.append('folder', folder);
 
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
+      const isPdf = validation.mimeType === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+      const uploadEndpoint = isPdf ? 'raw' : 'auto';
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${uploadEndpoint}/upload`, {
         method: 'POST',
         body: cloudinaryForm,
       });

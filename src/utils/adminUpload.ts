@@ -5,6 +5,7 @@ export async function uploadAsset(
 ): Promise<{ url: string; provider: string }> {
   // 1. Try direct upload to Cloudinary (bypassing Vercel 4.5MB server payload limit)
   try {
+    const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
     const paramRes = await fetch(`/api/upload?folder=${encodeURIComponent(folder)}`, {
       headers: getAuthHeaders(),
     });
@@ -18,7 +19,9 @@ export async function uploadAsset(
         directForm.append('signature', config.signature);
         directForm.append('folder', config.folder);
 
-        const cdnRes = await fetch(`https://api.cloudinary.com/v1_1/${config.cloudName}/auto/upload`, {
+        // Upload PDFs under 'raw' endpoint to avoid image transformation and ACL restrictions
+        const uploadEndpoint = isPdf ? 'raw' : 'auto';
+        const cdnRes = await fetch(`https://api.cloudinary.com/v1_1/${config.cloudName}/${uploadEndpoint}/upload`, {
           method: 'POST',
           body: directForm,
         });

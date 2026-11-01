@@ -66,7 +66,7 @@ export const Header: React.FC<HeaderProps> = ({
       } z-50 bg-surface/95 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-surface-container shrink-0`}
     >
       {/* Top Banner: Daily Insight Calligraphy & Hijri Date */}
-      <div className="w-full bg-primary-container text-on-primary py-1 sm:py-1.5 px-4 sm:px-6 lg:px-8">
+      <div className={`w-full bg-primary-container text-on-primary py-1 sm:py-1.5 px-4 sm:px-6 lg:px-8 ${isReaderRoute ? 'hidden md:block' : ''}`}>
         <div className="w-full max-w-7xl xl:max-w-archive-xl 2xl:max-w-archive-2xl mx-auto flex items-center justify-between font-body-sm text-xs sm:text-body-sm">
           <div className="flex items-center gap-2 sm:gap-space-md min-w-0 truncate">
             <span className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-md sm:rounded-lg bg-tertiary-container text-on-primary font-label-sm text-label-xs sm:text-label-sm font-semibold tracking-wide uppercase shrink-0">
